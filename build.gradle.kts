@@ -1,15 +1,24 @@
 buildscript {
-        ext {
-                compose_version = '1.6.0'
-                        kotlin_version = '1.9.10'
-                            }
-                                repositories {
-                                        google()
-                                                mavenCentral()
-                                                    }
-                                                        dependencies {
-                                                                classpath "com.android.tools.build:gradle:8.3.0"
-                                                                        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-                                                                            }
-                                                                            }
+    val kotlin_version = "1.9.10"
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.1.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+tasks.register("clean", Delete::class) {
+    delete(rootProject.buildDir)
 }
