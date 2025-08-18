@@ -16,9 +16,6 @@ jobs:
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-        with:
-          gradle-wrappers: |
-            TapnexEmpire/gradle/wrapper/gradle-wrapper.jar
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
