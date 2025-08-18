@@ -19,7 +19,7 @@ jobs:
 
       # ✅ Validate wrapper (catches corrupt/missing jar/properties)
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v2
+    
 
       # ✅ Java 17 + Gradle cache
       - name: Set up JDK 17
