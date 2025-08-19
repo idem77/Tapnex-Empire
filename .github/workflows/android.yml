@@ -47,7 +47,3 @@ jobs:
       # Build project
       - name: Build with Gradle
         run: ./gradlew build
-
-      # Run Tests
-      - name: Run Tests
-        run: ./gradlew test
