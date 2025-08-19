@@ -1,5 +1,10 @@
-NavHost(navController = navController, startDestination = "splash") {
-            composable("splash") { SplashScreen(navController) }
-                composable("home") { HomeScreen(navController) }
-}
+package com.tapnex.empire
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 }
