@@ -4,13 +4,13 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -21,20 +21,52 @@ jobs:
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
+        with:
+          min-wrapper-count: 1
+          allow-snapshots: false
 
-      - name: Make Gradlew executable
-        run: chmod +x ./gradlew
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
-      - name: Show projects & tasks (debug aid)
+      # Debug helpers: show projects & tasks so we know what's available
+      - name: Show Gradle projects
+        run: ./gradlew projects --stacktrace --info || true
+
+      - name: Show all tasks
+        run: ./gradlew tasks --all --stacktrace --info || true
+
+      # Build step with smart fallback:
+      # 1) if any module has assembleDebug -> run it
+      # 2) else try :app:assembleDebug specifically
+      # 3) else do plain ./gradlew build (non-Android projects)
+      - name: Build (auto-detect)
         run: |
-          ./gradlew projects
-          ./gradlew tasks --all
+          set -e
+          if ./gradlew tasks --all | grep -q ":.*assembleDebug"; then
+            echo "Found an Android assembleDebug task. Running it..."
+            ./gradlew assembleDebug -x test --stacktrace --info
+          elif ./gradlew tasks --all | grep -q ":app:assembleDebug"; then
+            echo "Found :app:assembleDebug. Running it..."
+            ./gradlew :app:assembleDebug -x test --stacktrace --info
+          else
+            echo "No assembleDebug found. Running generic build..."
+            ./gradlew build --stacktrace --info
+          fi
 
-      - name: Build Debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace --info
-
-      - name: Upload Debug APK
+      # Upload any APKs from any module
+      - name: Upload APKs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: android-apks
+          path: "**/build/outputs/apk/**/*.apk"
+
+      # Upload build reports/logs if something fails
+      - name: Upload build reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-reports
+          path: |
+            **/build/reports/**
+            **/build/outputs/logs/**
