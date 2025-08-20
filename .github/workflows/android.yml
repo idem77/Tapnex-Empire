@@ -2,7 +2,8 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -10,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -19,54 +20,28 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Validate Gradle Wrapper
+      - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-        with:
-          min-wrapper-count: 1
-          allow-snapshots: false
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
 
-      # Debug helpers: show projects & tasks so we know what's available
-      - name: Show Gradle projects
-        run: ./gradlew projects --stacktrace --info || true
+      # 🔹 Build Debug APK
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
-      - name: Show all tasks
-        run: ./gradlew tasks --all --stacktrace --info || true
-
-      # Build step with smart fallback:
-      # 1) if any module has assembleDebug -> run it
-      # 2) else try :app:assembleDebug specifically
-      # 3) else do plain ./gradlew build (non-Android projects)
-      - name: Build (auto-detect)
-        run: |
-          set -e
-          if ./gradlew tasks --all | grep -q ":.*assembleDebug"; then
-            echo "Found an Android assembleDebug task. Running it..."
-            ./gradlew assembleDebug -x test --stacktrace --info
-          elif ./gradlew tasks --all | grep -q ":app:assembleDebug"; then
-            echo "Found :app:assembleDebug. Running it..."
-            ./gradlew :app:assembleDebug -x test --stacktrace --info
-          else
-            echo "No assembleDebug found. Running generic build..."
-            ./gradlew build --stacktrace --info
-          fi
-
-      # Upload any APKs from any module
-      - name: Upload APKs
-        if: always()
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: android-apks
-          path: "**/build/outputs/apk/**/*.apk"
+          name: android-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
 
-      # Upload build reports/logs if something fails
-      - name: Upload build reports
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-reports
-          path: |
-            **/build/reports/**
-            **/build/outputs/logs/**
+      # 🔹 Build Release APK (uncomment later when needed)
+      # - name: Build Release APK
+      #   run: ./gradlew assembleRelease
+      #
+      # - name: Upload Release APK
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: android-release-apk
+      #     path: app/build/outputs/apk/release/*.apk
