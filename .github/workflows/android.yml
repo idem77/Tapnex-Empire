@@ -1,10 +1,10 @@
-name: Android CI
+name: Android Build
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -17,18 +17,18 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: 17
 
-      - name: Grant execute permission for Gradlew
+      - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      # 🔹 Build Debug APK (use :app:assembleDebug)
-      - name: Build Debug APK
-        run: ./gradlew :app:assembleDebug
+      - name: Build with Gradle (show all errors)
+        run: ./gradlew build --stacktrace --warning-mode=all
 
-      - name: Upload Debug APK
+      - name: Archive Build Reports (optional)
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: android-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: build-reports
+          path: app/build/reports/
