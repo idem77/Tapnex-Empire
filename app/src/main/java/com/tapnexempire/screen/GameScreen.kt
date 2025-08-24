@@ -1,41 +1,24 @@
-package com.tapnexEmpire.ui
+package com.tapnexempire.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tapnexEmpire.components.GameTile
+import com.tapnexempire.components.GameTile
 
 @Composable
-fun GamesScreen() {
-            Scaffold(
-                        topBar = {
-                                            TopAppBar(
-                                                                title = { Text("Play & Win") }
-                                            )
-                        }
-            ) { paddingValues ->
-                    LazyColumn(
-                                    modifier = Modifier
-                                                    .padding(paddingValues)
-                                                                    .padding(16.dp)
-                    ) {
-                                    items(5) { index ->
-                                                    GameTile(
-                                                                            title = "Game $index",
-                                                                                                description = "Exciting game number $index. Play now and win coins!"
-                                                    )
-                                                                    Spacer(modifier = Modifier.height(12.dp))
-                                    }
-                    }
-            }
-}
-                                                    )}
-                    }
-                    )}
-                                            )
-                        }
-            )
+fun GameScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(text = "Games", style = MaterialTheme.typography.h5)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        GameTile(name = "Ludo", coins = 50)
+        Spacer(modifier = Modifier.height(8.dp))
+        GameTile(name = "Quiz", coins = 30)
+    }
 }
