@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TapnexEmpire"
+rootProject.name = "Tapnex-Empire"
 include(":app")
