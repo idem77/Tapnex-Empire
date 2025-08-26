@@ -1,3 +1,8 @@
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+}
+
 android {
     namespace = "com.tapnexempire"
     compileSdk = 34
@@ -13,8 +18,13 @@ android {
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
+    }
+
+    packaging {
+        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     }
 }
 
@@ -32,4 +42,7 @@ dependencies {
 
     // ✅ Activity Compose
     implementation("androidx.activity:activity-compose:1.8.2")
+
+    // (Optional) Lifecycle support
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 }
