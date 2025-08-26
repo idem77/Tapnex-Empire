@@ -1,8 +1,7 @@
 <resources>
-    <!-- Apna custom theme banado -->
+    <!-- Material3 ka default day/night theme -->
     <style name="Theme.TapnexEmpire" parent="Theme.Material3.DayNight">
-        <!-- Agar NoActionBar chahiye to yaha set karo -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <!-- Material2 wale attr hatao (windowActionBar, windowNoTitle NOT ALLOWED) -->
+        <!-- Yaha apne colors set kar sakte ho agar chaho -->
     </style>
 </resources>
