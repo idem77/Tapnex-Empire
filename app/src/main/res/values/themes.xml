@@ -1,7 +1,6 @@
 <resources>
-    <!-- Material3 ka default day/night theme -->
-    <style name="Theme.TapnexEmpire" parent="Theme.Material3.DayNight">
-        <!-- Material2 wale attr hatao (windowActionBar, windowNoTitle NOT ALLOWED) -->
-        <!-- Yaha apne colors set kar sakte ho agar chaho -->
+    <!-- Apna app ka Material3 theme -->
+    <style name="Theme.TapnexEmpire" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Yaha tum apne custom colors set kar sakte ho -->
     </style>
 </resources>
