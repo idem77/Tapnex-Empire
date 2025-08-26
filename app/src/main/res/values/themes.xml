@@ -1,6 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme using Material3 -->
-    <style name="Theme.TapnexEmpire" parent="Theme.Material3">
-        <!-- No need for colorPrimaryVariant in M3 -->
-    </style>
+<resources>
+    <!-- ✅ Material 3 Theme -->
+    <style name="Theme.TapnexEmpire" parent="Theme.Material3.DayNight.NoActionBar" />
 </resources>
