@@ -1,4 +1,8 @@
 <resources>
-    <!-- ✅ Material 3 Theme -->
-    <style name="Theme.TapnexEmpire" parent="Theme.Material3.DayNight.NoActionBar" />
+    <!-- Apna custom theme banado -->
+    <style name="Theme.TapnexEmpire" parent="Theme.Material3.DayNight">
+        <!-- Agar NoActionBar chahiye to yaha set karo -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>
