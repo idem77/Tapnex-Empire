@@ -3,9 +3,7 @@ package com.tapnexempire
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
-import com.tapnexempire.screen.HomeScreen
-import com.tapnexempire.screen.SplashScreen
+import com.tapnexempire.navigation.AppNavigation
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,15 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TapnexEmpireTheme {
-                var showSplash by remember { mutableStateOf(true) }
-
-                if (showSplash) {
-                    SplashScreen {
-                        showSplash = false
-                    }
-                } else {
-                    HomeScreen()
-                }
+                AppNavigation()
             }
         }
     }
