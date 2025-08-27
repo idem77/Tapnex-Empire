@@ -5,20 +5,19 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val LightColors = lightColorScheme(
+    primary = Purple500,
+    secondary = Teal200
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val DarkColors = darkColorScheme(
+    primary = Purple200,
+    secondary = Teal200
 )
 
 @Composable
@@ -26,16 +25,19 @@ fun TapnexEmpireTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val colors = if (darkTheme) DarkColors else LightColors
+
     val view = LocalView.current
     if (!view.isInEditMode) {
-        val window = (LocalContext.current as Activity).window
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-        window.statusBarColor = colorScheme.primary.toArgb()
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colors.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+        }
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colors,
         typography = Typography,
         content = content
     )
