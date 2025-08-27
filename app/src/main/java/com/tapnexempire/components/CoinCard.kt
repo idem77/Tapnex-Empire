@@ -1,46 +1,30 @@
 package com.tapnexempire.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
-fun CoinCard(coins: Int) {
-        Box(
-                    modifier = Modifier
-                                .fillMaxWidth()
-                                            .padding(16.dp)
-                                                        .height(120.dp)
-                                                                    .background(Color(0xFF1F1F1F), RoundedCornerShape(20.dp)),
-                                                                            contentAlignment = Alignment.Center
+fun CoinCard(balance: Int, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = MaterialTheme.shapes.large
+    ) {
+        Row(
+            Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(
-                                                        text = "$coins Coins",
-                                                                        style = MaterialTheme.typography.headlineMedium,
-                                                                                        color = Color.Yellow,
-                                                                                                        fontSize = 24.sp,
-                                                                                                                        fontWeight = FontWeight.Bold
-                                    )
-                                                Text(
-                                                                    text = "Total Balance",
-                                                                                    color = Color.White.copy(alpha = 0.6f)
-                                                )
-                    }
+            Text("Coins: ", style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.width(8.dp))
+            Text("$balance", style = MaterialTheme.typography.headlineSmall)
         }
-}
-                                                )
-                                    )
-                    }
-        }
-        )
+    }
 }
