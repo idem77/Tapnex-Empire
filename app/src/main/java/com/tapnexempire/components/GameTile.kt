@@ -1,34 +1,26 @@
 package com.tapnexempire.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
-fun GameTile(name: String, onClick: () -> Unit) {
-        Box(
-                    modifier = Modifier
-                                .fillMaxWidth()
-                                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                                                        .background(Color.DarkGray, shape = RoundedCornerShape(16.dp))
-                                                                    .clickable { onClick() }
-                                                                                .padding(20.dp)
-        ) {
-                    Text(
-                                    text = name,
-                                                fontSize = 18.sp,
-                                                            color = Color.White
-                    )
+fun GameTile(title: String, onPlay: () -> Unit) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = MaterialTheme.shapes.large,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Text(title, style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(8.dp))
+            PrimaryButton(text = "Play", onClick = onPlay)
         }
-}
-                    )
-        }
-        )
+    }
 }
