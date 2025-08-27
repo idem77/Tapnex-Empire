@@ -3,27 +3,20 @@ package com.tapnexempire.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(onTimeout: () -> Unit) {
-    LaunchedEffect(Unit) {
-        delay(2000) // 2 seconds splash delay
-        onTimeout()
+fun SplashScreen(onFinished: () -> Unit) {
+    LaunchedEffect(true) {
+        delay(1500)
+        onFinished()
     }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "TapnexEmpire 👑",
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 32.sp
-        )
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Tapnex Empire", style = MaterialTheme.typography.headlineLarge)
     }
 }
