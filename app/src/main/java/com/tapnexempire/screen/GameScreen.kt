@@ -1,27 +1,16 @@
 package com.tapnexempire.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tapnexempire.components.GameTile
 
 @Composable
 fun GameScreen() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Games", style = MaterialTheme.typography.titleLarge) }
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text("Welcome to TapnexEmpire!", style = MaterialTheme.typography.bodyLarge)
-        }
+    Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        GameTile(title = "Ludo") { /* TODO Phase-2 */ }
+        GameTile(title = "Quiz") { /* TODO Phase-2 */ }
+        GameTile(title = "Spin & Win") { /* TODO Phase-2 */ }
     }
 }
