@@ -1,29 +1,35 @@
-package com.tapnexempire.screen
+package com.tapnexempire.screens.home
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.tapnexempire.components.PrimaryButton
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.tapnexempire.components.BottomNavBar
 
 @Composable
-fun HomeScreen(
-    goToWallet: () -> Unit,
-    goToGames: () -> Unit,
-    goToTasks: () -> Unit,
-    goToRedeem: () -> Unit,
-    goToHelp: () -> Unit,
-    goToOffers: () -> Unit
-) {
-    Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Welcome King 👑", style = MaterialTheme.typography.headlineSmall)
-        PrimaryButton("Wallet", onClick = goToWallet)
-        PrimaryButton("Games", onClick = goToGames)
-        PrimaryButton("Tasks", onClick = goToTasks)
-        PrimaryButton("Redeem", onClick = goToRedeem)
-        PrimaryButton("Help", onClick = goToHelp)
-        PrimaryButton("Offers", onClick = goToOffers)
+fun HomeScreen() {
+    val navController = rememberNavController()
+
+    Scaffold(
+        bottomBar = { BottomNavBar(navController) }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "wallet",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("wallet") { PlaceholderScreen("Wallet Screen") }
+            composable("games") { PlaceholderScreen("Games Screen") }
+            composable("offers") { PlaceholderScreen("Offers Screen") }
+            composable("tasks") { PlaceholderScreen("Tasks Screen") }
+            composable("rewards") { PlaceholderScreen("Rewards Screen") }
+            composable("redeem") { PlaceholderScreen("Redeem Screen") }
+            composable("profile") { PlaceholderScreen("Profile Screen") }
+            composable("help") { PlaceholderScreen("Help Screen") }
+        }
     }
 }
