@@ -1,4 +1,4 @@
-package com.tapnexempire.screens.home
+package com.tapnexempire.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
