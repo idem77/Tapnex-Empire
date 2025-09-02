@@ -1,19 +1,10 @@
-package com.tapnexempire
+package com.tapnexempire.navigation
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.tapnexempire.navigation.NavGraph
-import com.tapnexempire.ui.theme.TapnexEmpireTheme
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.rememberNavController
 
-class App : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            TapnexEmpireTheme {
-                // Yahan se pura navigation start hoga
-                NavGraph()
-            }
-        }
-    }
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+    NavGraph(navController = navController)
 }
