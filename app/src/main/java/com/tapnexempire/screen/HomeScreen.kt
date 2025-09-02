@@ -1,35 +1,63 @@
-package com.tapnexempire.screens
+package com.tapnexempire.screen
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.tapnexempire.components.BottomNavBar
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.tapnexempire.ui.theme.NeonBlue
+import com.tapnexempire.ui.theme.Gold
 
 @Composable
-fun HomeScreen() {
-    val navController = rememberNavController()
+fun HomeScreen(navController: NavHostController) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                "Home Screen",
+                fontSize = 28.sp,
+                color = NeonBlue
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
-    Scaffold(
-        bottomBar = { BottomNavBar(navController) }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "wallet",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("wallet") { PlaceholderScreen("Wallet Screen") }
-            composable("games") { PlaceholderScreen("Games Screen") }
-            composable("offers") { PlaceholderScreen("Offers Screen") }
-            composable("tasks") { PlaceholderScreen("Tasks Screen") }
-            composable("rewards") { PlaceholderScreen("Rewards Screen") }
-            composable("redeem") { PlaceholderScreen("Redeem Screen") }
-            composable("profile") { PlaceholderScreen("Profile Screen") }
-            composable("help") { PlaceholderScreen("Help Screen") }
+            Button(
+                onClick = { navController.navigate("help") },
+                colors = ButtonDefaults.buttonColors(containerColor = Gold)
+            ) {
+                Text("Go to Help")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { navController.navigate("profile") },
+                colors = ButtonDefaults.buttonColors(containerColor = Gold)
+            ) {
+                Text("Go to Profile")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { navController.navigate("wallet") },
+                colors = ButtonDefaults.buttonColors(containerColor = Gold)
+            ) {
+                Text("Go to Wallet")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { navController.navigate("redeem") },
+                colors = ButtonDefaults.buttonColors(containerColor = Gold)
+            ) {
+                Text("Go to Redeem")
+            }
         }
     }
 }
