@@ -1,11 +1,12 @@
-package com.tapnexempire.screens
+package com.tapnexempire.screen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun PlaceholderScreen(title: String) {
@@ -13,6 +14,9 @@ fun PlaceholderScreen(title: String) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = title)
+        Text(
+            text = title,
+            fontSize = 24.sp
+        )
     }
 }
