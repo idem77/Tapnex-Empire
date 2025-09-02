@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.tapnexempire.screen.AuthScreen
 import com.tapnexempire.screen.HomeScreen
+import com.tapnexempire.screen.HelpScreen
 import com.tapnexempire.screen.PlaceholderScreen
 
 @Composable
@@ -21,7 +22,7 @@ fun AppNavGraph(navController: NavHostController) {
             HomeScreen(navController)
         }
         composable("help") {
-            PlaceholderScreen("Help Screen")
+            HelpScreen(navController)
         }
         composable("profile") {
             PlaceholderScreen("Profile Screen")
