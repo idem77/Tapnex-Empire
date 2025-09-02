@@ -4,17 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.tapnexempire.repository.AuthRepository
-import com.tapnexempire.screens.auth.AuthScreen
-import com.tapnexempire.screens.home.HomeScreen
+import com.tapnexempire.screens.HomeScreen
+import com.tapnexempire.screens.PlaceholderScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
-    val repo = AuthRepository()
-    val startDestination = if (repo.isUserLoggedIn()) "home" else "auth"
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable("auth") { AuthScreen(navController) }
+fun NavGraph(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = "auth"
+    ) {
+        composable("auth") { PlaceholderScreen("Auth Screen") }
         composable("home") { HomeScreen() }
     }
 }
