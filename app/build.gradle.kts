@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tapnexempire"
+    namespace = "com.tapnex.app"
     compileSdk = 34
 
     defaultConfig {
