@@ -3,8 +3,9 @@ package com.tapnexempire
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.tapnexempire.navigation.AppNavGraph
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
@@ -14,9 +15,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TapnexEmpireTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     val navController = rememberNavController()
-                    AppNavGraph(navController) // <-- correct name
+                    AppNavGraph(navController = navController)
                 }
             }
         }
