@@ -3,7 +3,8 @@ package com.tapnexempire
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.tapnexempire.navigation.AppNavigation
+import androidx.navigation.compose.rememberNavController
+import com.tapnexempire.navigation.NavGraph
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +12,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TapnexEmpireTheme {
-                AppNavigation()
+                val navController = rememberNavController()
+                NavGraph(navController = navController)
             }
         }
     }
