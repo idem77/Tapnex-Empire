@@ -1,4 +1,4 @@
-package com.tapnexempire.screens.tasks
+package com.tapnexempire.screen.tasks
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme.NeonBlue
+import com.tapnexempire.ui.theme
 
 data class TaskItem(
     val title: String,
