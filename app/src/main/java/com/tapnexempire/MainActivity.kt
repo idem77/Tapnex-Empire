@@ -7,7 +7,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.rememberNavController
 import com.tapnexempire.navigation.AppNavGraph
-import com.tapnexempire.ui.TapnexEmpireTheme
+import com.tapnexempire.ui.theme.TapnexEmpireTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
