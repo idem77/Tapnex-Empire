@@ -1,36 +1,39 @@
 package com.tapnexempire.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 
-private val LightColors = lightColorScheme(
-    primary = Purple500,
+private val DarkColorScheme = darkColorScheme(
+    primary = RoyalBlue,
     secondary = Gold,
-    background = White,
-    surface = White,
-    onPrimary = White,
-    onSecondary = Black,
-    onBackground = Black,
-    onSurface = Black
+    tertiary = NeonGreen,
+    background = MidnightBlack,
+    surface = MidnightBlack,
+    onPrimary = PureWhite,
+    onSecondary = PureWhite,
+    onBackground = PureWhite,
+    onSurface = PureWhite
 )
 
-private val DarkColors = darkColorScheme(
-    primary = Purple200,
+private val LightColorScheme = lightColorScheme(
+    primary = RoyalBlue,
     secondary = Gold,
-    background = Black,
-    surface = Black,
-    onPrimary = Black,
-    onSecondary = White,
-    onBackground = White,
-    onSurface = White
+    tertiary = NeonGreen,
+    background = PureWhite,
+    surface = PureWhite,
+    onPrimary = PureWhite,
+    onSecondary = MidnightBlack,
+    onBackground = MidnightBlack,
+    onSurface = MidnightBlack
 )
 
 @Composable
 fun TapnexEmpireTheme(
-    darkTheme: Boolean = false,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) DarkColors else LightColors
+    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colors,
