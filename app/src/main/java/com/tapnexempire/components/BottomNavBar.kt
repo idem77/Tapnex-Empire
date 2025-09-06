@@ -1,33 +1,42 @@
 package com.tapnexempire.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
+import androidx.compose.runtime.getValue
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import com.tapnexempire.ui.theme.RoyalTeal
+import com.tapnexempire.ui.theme.VibrantCoral
 
-data class BottomNavItem(val route: String, val label: String, val icon: ImageVector)
+sealed class BottomNavItem(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
+    object Home : BottomNavItem("home", "Home", Icons.Default.Home)
+    object Wallet : BottomNavItem("wallet", "Wallet", Icons.Default.AccountBalanceWallet)
+    object Task : BottomNavItem("task", "Tasks", Icons.Default.Star)
+    object Game : BottomNavItem("game", "Games", Icons.Default.VideogameAsset)
+    object Redeem : BottomNavItem("redeem", "Redeem", Icons.Default.Redeem)
+    object Tournament : BottomNavItem("tournament", "Tournaments", Icons.Default.EmojiEvents)
+    object Profile : BottomNavItem("profile", "Profile", Icons.Default.Person)
+}
+
+val bottomNavItems = listOf(
+    BottomNavItem.Home,
+    BottomNavItem.Wallet,
+    BottomNavItem.Task,
+    BottomNavItem.Game,
+    BottomNavItem.Redeem,
+    BottomNavItem.Tournament,
+    BottomNavItem.Profile
+)
 
 @Composable
-fun BottomNavBar(navController: NavController) {
-    val items = listOf(
-        BottomNavItem("wallet", "Wallet", Icons.Default.AccountBalanceWallet),
-        BottomNavItem("games", "Games", Icons.Default.SportsEsports),
-        BottomNavItem("offers", "Offers", Icons.Default.LocalOffer),
-        BottomNavItem("tasks", "Tasks", Icons.Default.CheckCircle),
-        BottomNavItem("rewards", "Rewards", Icons.Default.Star),
-        BottomNavItem("redeem", "Redeem", Icons.Default.Money),
-        BottomNavItem("profile", "Profile", Icons.Default.Person),
-        BottomNavItem("help", "Help", Icons.Default.Help)
-    )
+fun BottomNavBar(navController: NavHostController) {
+    NavigationBar(containerColor = RoyalTeal) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar {
-        val navBackStackEntry = navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry.value?.destination?.route
-
-        items.forEach { item ->
+        bottomNavItems.forEach { item ->
             NavigationBarItem(
                 selected = currentRoute == item.route,
                 onClick = {
@@ -36,8 +45,15 @@ fun BottomNavBar(navController: NavController) {
                         launchSingleTop = true
                     }
                 },
+                icon = { Icon(item.icon, contentDescription = item.label) },
                 label = { Text(item.label) },
-                icon = { Icon(item.icon, contentDescription = item.label) }
+                alwaysShowLabel = true,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = VibrantCoral,
+                    selectedTextColor = VibrantCoral,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             )
         }
     }
