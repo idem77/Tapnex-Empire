@@ -1,160 +1,86 @@
-package com.tapnexempire.screens.redeem
+package com.tapnexempire.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
-import com.tapnexempire.ui.theme.NeonBlue
-
-data class RedeemOption(
-    val coins: Int,
-    val reward: String
-)
+import androidx.compose.ui.text.font.FontWeight
+import com.tapnexempire.ui.theme.RoyalTeal
+import com.tapnexempire.ui.theme.VibrantCoral
+import com.tapnexempire.ui.theme.SoftCream
+import com.tapnexempire.ui.theme.White
+import com.tapnexempire.components.GradientButton
 
 @Composable
-fun RedeemScreen() {
-    val redeemOptions = listOf(
-        RedeemOption(1000, "₹10"),
-        RedeemOption(3000, "₹30"),
-        RedeemOption(5000, "₹50"),
-        RedeemOption(10000, "₹100")
-    )
-
-    var selectedOption by remember { mutableStateOf<RedeemOption?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
+fun RedeemScreen(
+    balanceCoins: Int = 2340,
+    onRedeem: (coins: Int) -> Unit = {}
+) {
+    Surface(modifier = Modifier.fillMaxSize(), color = SoftCream) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
-                .padding(padding)
                 .padding(16.dp)
         ) {
-            Text(
-                text = "Redeem Coins",
-                color = NeonBlue,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            Text("Redeem Coins", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Spacer(modifier = Modifier.height(20.dp))
 
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f)
+            // Balance card
+            val gradient = Brush.horizontalGradient(listOf(RoyalTeal, VibrantCoral))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(10.dp, RoundedCornerShape(20.dp))
+                    .background(brush = gradient, shape = RoundedCornerShape(20.dp))
+                    .padding(20.dp)
             ) {
-                items(redeemOptions) { option ->
-                    RedeemCard(
-                        option = option,
-                        isSelected = selectedOption == option,
-                        onClick = { selectedOption = option }
-                    )
+                Column {
+                    Text("Your Balance", color = White.copy(0.9f))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text("$balanceCoins Coins", color = White, fontWeight = FontWeight.Bold, fontSize = 26.sp)
+                    Text("≈ ₹${balanceCoins / 100}", color = White.copy(0.8f), fontSize = 14.sp)
                 }
             }
 
-            Button(
-                onClick = {
-                    if (selectedOption != null) showDialog = true
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = NeonBlue),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                enabled = selectedOption != null
-            ) {
-                Text("Redeem Now", color = Color.Black, fontWeight = FontWeight.Bold)
-            }
-        }
+            Spacer(modifier = Modifier.height(26.dp))
 
-        // Confirmation Dialog
-        if (showDialog && selectedOption != null) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = {
-                    Text("Confirm Redeem", color = NeonBlue, fontWeight = FontWeight.Bold)
-                },
-                text = {
-                    Text(
-                        "Are you sure you want to redeem ${selectedOption!!.coins} coins for ${selectedOption!!.reward}?",
-                        color = Color.White
-                    )
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            // ✅ Show snackbar when redeemed
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = "🎉 Successfully redeemed ${selectedOption!!.reward}",
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                            showDialog = false
-                            selectedOption = null
-                        }
-                    ) {
-                        Text("Yes", color = NeonBlue, fontWeight = FontWeight.Bold)
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDialog = false }) {
-                        Text("Cancel", color = Color.Gray)
-                    }
-                },
-                containerColor = Color.DarkGray
-            )
+            // Redeem options
+            RedeemOption("₹10 Paytm", 1000, onRedeem)
+            Spacer(modifier = Modifier.height(14.dp))
+            RedeemOption("₹50 Paytm", 5000, onRedeem)
+            Spacer(modifier = Modifier.height(14.dp))
+            RedeemOption("₹100 Paytm", 10000, onRedeem)
         }
     }
 }
 
 @Composable
-fun RedeemCard(option: RedeemOption, isSelected: Boolean, onClick: () -> Unit) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) NeonBlue.copy(alpha = 0.3f) else Color.DarkGray
-        ),
+private fun RedeemOption(title: String, coins: Int, onRedeem: (coins: Int) -> Unit) {
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(6.dp)
+            .shadow(8.dp, RoundedCornerShape(18.dp))
+            .background(White, RoundedCornerShape(18.dp))
+            .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(
-                    text = "${option.reward} Reward",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Requires ${option.coins} Coins",
-                    color = Color.LightGray,
-                    fontSize = 14.sp
-                )
+                Text(title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("$coins Coins", color = VibrantCoral, fontSize = 14.sp, fontWeight = FontWeight.Medium)
             }
-            if (isSelected) {
-                Text("Selected", color = NeonBlue, fontWeight = FontWeight.Bold)
+            GradientButton(text = "Redeem", modifier = Modifier.width(120.dp)) {
+                onRedeem(coins)
             }
         }
     }
