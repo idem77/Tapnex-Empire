@@ -10,3 +10,7 @@ val DarkCharcoal = Color(0xFF1C1C1E) // #1C1C1E
 val WarmGrey = Color(0xFF8E8E93)     // #8E8E93
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
+
+// Added so AuthScreen (and others) don't fail — minimal safe additions
+val NeonBlue = Color(0xFF1B9CFC)   // bright neon blue (used in AuthScreen)
+val Gold = Color(0xFFFFD700)       // classic gold
