@@ -1,110 +1,74 @@
-package com.tapnexempire.screen.tasks
+package com.tapnexempire.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme
-
-data class TaskItem(
-    val title: String,
-    val reward: Int,
-    val isCompleted: Boolean = false
-)
+import androidx.compose.ui.text.font.FontWeight
+import com.tapnexempire.ui.theme.RoyalTeal
+import com.tapnexempire.ui.theme.VibrantCoral
+import com.tapnexempire.ui.theme.SoftCream
+import com.tapnexempire.ui.theme.White
+import com.tapnexempire.components.GradientButton
 
 @Composable
-fun TasksScreen() {
-    val tasks = listOf(
-        TaskItem("Watch a video", 50),
-        TaskItem("Daily login bonus", 100),
-        TaskItem("Complete 1 game", 200),
-        TaskItem("Invite a friend", 500),
-        TaskItem("Complete 5 quizzes", 300)
-    )
+fun TaskScreen(
+    onCollectReward: () -> Unit = {}
+) {
+    Surface(modifier = Modifier.fillMaxSize(), color = SoftCream) {
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            Text("Daily Tasks", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Spacer(modifier = Modifier.height(20.dp))
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Daily Tasks",
-            color = NeonBlue,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(tasks) { task ->
-                TaskCard(task)
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                items(3) { index ->
+                    TaskItem(
+                        title = when (index) {
+                            0 -> "Login Bonus"
+                            1 -> "Play 1 Game"
+                            else -> "Watch 1 Ad"
+                        },
+                        reward = when (index) {
+                            0 -> "+50 Coins"
+                            1 -> "+100 Coins"
+                            else -> "+30 Coins"
+                        },
+                        onCollect = onCollectReward
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun TaskCard(task: TaskItem) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
+private fun TaskItem(title: String, reward: String, onCollect: () -> Unit) {
+    val gradient = Brush.horizontalGradient(listOf(RoyalTeal, VibrantCoral))
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
-            .clickable { /* handle task click */ },
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(6.dp)
+            .shadow(8.dp, RoundedCornerShape(18.dp))
+            .background(White, RoundedCornerShape(18.dp))
+            .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(
-                    text = task.title,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "+${task.reward} Coins",
-                    color = NeonBlue,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Text(title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(reward, color = VibrantCoral, fontSize = 14.sp, fontWeight = FontWeight.Medium)
             }
-
-            if (task.isCompleted) {
-                Text(
-                    text = "Completed",
-                    color = Color.Green,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            } else {
-                Button(
-                    onClick = { /* mark as complete */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = NeonBlue)
-                ) {
-                    Text("Start", color = Color.Black)
-                }
-            }
+            GradientButton(text = "Collect", modifier = Modifier.width(110.dp)) { onCollect() }
         }
     }
 }
