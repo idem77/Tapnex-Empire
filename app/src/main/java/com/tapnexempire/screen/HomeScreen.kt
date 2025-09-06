@@ -46,7 +46,7 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = "Welcome, Queen!", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(text = "Welcome, In Tapnex empire!", fontWeight = FontWeight.Bold, fontSize = 20.sp)
                     Text(text = "Play & earn coins", fontSize = 14.sp, color = com.tapnexempire.ui.theme.WarmGrey)
                 }
                 IconButton(onClick = onWalletClick) {
