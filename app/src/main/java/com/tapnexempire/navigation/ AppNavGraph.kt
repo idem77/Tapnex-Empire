@@ -10,22 +10,30 @@ import com.tapnexempire.screen.*
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "splash") {
 
-        composable("splash") { SplashScreen(onContinue = { navController.navigate("home") }) }
+        // Splash screen → goes to Home
+        composable("splash") {
+            SplashScreen(onTimeout = {
+                navController.navigate("home") {
+                    popUpTo("splash") { inclusive = true }
+                }
+            })
+        }
 
-        composable("home") { HomeScreen(
-            onWalletClick = { navController.navigate("wallet") },
-            onTaskClick = { navController.navigate("task") },
-            onGameClick = { navController.navigate("game") },
-            onRedeemClick = { navController.navigate("redeem") },
-            onTournamentClick = { navController.navigate("tournament") },
-            onProfileClick = { navController.navigate("profile") }
-        )}
+        // Home screen → navigation buttons
+        composable("home") {
+            HomeScreen(
+                onWalletClick = { navController.navigate("wallet") },
+                onGameClick = { navController.navigate("game") }
+            )
+        }
 
+        // Other screens (simple)
         composable("wallet") { WalletScreen() }
         composable("task") { TaskScreen() }
         composable("game") { GameScreen() }
         composable("redeem") { RedeemScreen() }
         composable("tournament") { TournamentScreen() }
         composable("profile") { ProfileScreen() }
+        composable("auth") { AuthScreen() }
     }
 }
