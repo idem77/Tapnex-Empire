@@ -1,117 +1,55 @@
-package com.tapnexempire.screens.wallet
+package com.tapnexempire.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme.NeonBlue
+import androidx.compose.ui.text.font.FontWeight
+import com.tapnexempire.ui.theme.RoyalTeal
+import com.tapnexempire.ui.theme.VibrantCoral
+import com.tapnexempire.ui.theme.SoftCream
+import com.tapnexempire.ui.theme.White
+import com.tapnexempire.components.GradientButton
 
 @Composable
-fun WalletScreen() {
-    val balance = 1250 // dummy balance
-    val transactions = listOf(
-        "Added 500 Coins",
-        "Redeemed 200 Coins",
-        "Reward +50 Coins",
-        "Task Completed +100 Coins"
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Balance Card
-        Card(
-            colors = CardDefaults.cardColors(containerColor = NeonBlue),
+fun WalletScreen(
+    onRedeemClick: () -> Unit = {}
+) {
+    Surface(modifier = Modifier.fillMaxSize(), color = SoftCream) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            shape = MaterialTheme.shapes.extraLarge,
-            elevation = CardDefaults.cardElevation(10.dp)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Text("My Wallet", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Spacer(modifier = Modifier.height(20.dp))
+
+            val gradient = Brush.horizontalGradient(listOf(RoyalTeal, VibrantCoral))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .shadow(10.dp, RoundedCornerShape(24.dp))
+                    .background(brush = gradient, shape = RoundedCornerShape(24.dp))
+                    .padding(20.dp)
             ) {
-                Text(
-                    text = "Your Balance",
-                    color = Color.White,
-                    fontSize = 20.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "$balance Coins",
-                    color = Color.Yellow,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Buttons
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(
-                onClick = { /* Add Coins Action */ },
-                colors = ButtonDefaults.buttonColors(containerColor = NeonBlue),
-                shape = MaterialTheme.shapes.large
-            ) {
-                Text("Add Coins", color = Color.White)
-            }
-            Button(
-                onClick = { /* Redeem Action */ },
-                colors = ButtonDefaults.buttonColors(containerColor = NeonBlue),
-                shape = MaterialTheme.shapes.large
-            ) {
-                Text("Redeem", color = Color.White)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Recent Transactions
-        Text(
-            text = "Recent Transactions",
-            color = NeonBlue,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.align(Alignment.Start)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn {
-            items(transactions) { item ->
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    shape = MaterialTheme.shapes.medium
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxHeight()
                 ) {
-                    Text(
-                        text = item,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(12.dp)
-                    )
+                    Text("Available Balance", color = White.copy(0.9f), fontSize = 16.sp)
+                    Text("2,340 Coins", color = White, fontWeight = FontWeight.Bold, fontSize = 32.sp)
+                    GradientButton(text = "Redeem", onClick = onRedeemClick)
                 }
             }
         }
     }
-}
+}          
