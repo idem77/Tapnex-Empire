@@ -27,8 +27,12 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Other screens (simple)
-        composable("wallet") { WalletScreen() }
+        // Wallet screen → redeem button goes to Redeem
+        composable("wallet") {
+            WalletScreen(onRedeemClick = { navController.navigate("redeem") })
+        }
+
+        // Other screens (no params)
         composable("task") { TaskScreen() }
         composable("game") { GameScreen() }
         composable("redeem") { RedeemScreen() }
