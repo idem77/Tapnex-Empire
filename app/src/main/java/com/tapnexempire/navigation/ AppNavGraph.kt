@@ -1,6 +1,8 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,10 +39,10 @@ fun AppNavGraph() {
                 WalletScreen(onRedeemClick = { navController.navigate("redeem") })
             }
             composable("task") {
-                TaskScreen(onTaskClick = { /* future task click logic */ })
+                TaskScreen(onTaskClick = { /* future logic */ })
             }
             composable("game") {
-                GameScreen()
+                GameScreen(onPlayClick = { /* play logic */ })
             }
             composable("redeem") {
                 RedeemScreen(onBackClick = { navController.popBackStack() })
@@ -64,11 +66,11 @@ fun AppNavGraph() {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
-        BottomNavItem("Home", "home"),
-        BottomNavItem("Wallet", "wallet"),
-        BottomNavItem("Tasks", "task"),
-        BottomNavItem("Tournament", "tournament"),
-        BottomNavItem("Profile", "profile")
+        BottomNavItem("Home", "home", Icons.Default.Home),
+        BottomNavItem("Wallet", "wallet", Icons.Default.AccountBalanceWallet),
+        BottomNavItem("Tasks", "task", Icons.Default.List),
+        BottomNavItem("Tournament", "tournament", Icons.Default.EmojiEvents),
+        BottomNavItem("Profile", "profile", Icons.Default.Person),
     )
 
     NavigationBar {
@@ -77,6 +79,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
         items.forEach { item ->
             NavigationBarItem(
+                icon = { Icon(item.icon, contentDescription = item.label) },
                 label = { Text(item.label) },
                 selected = currentRoute == item.route,
                 onClick = {
@@ -93,4 +96,4 @@ fun BottomNavigationBar(navController: NavHostController) {
     }
 }
 
-data class BottomNavItem(val label: String, val route: String)
+data class BottomNavItem(val label: String, val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
