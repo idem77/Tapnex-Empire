@@ -1,24 +1,14 @@
 package com.tapnexempire.screen
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text("Daily Rewards", style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(8.dp))
-
-        Text("✅ Daily Login +10")
-        Text("🎮 Play 4 Games +90")
-        Text("🎥 Watch a Video +10")
-        Text("👫 Share with Friends +50")
+fun TaskScreen(onTaskClick: () -> Unit = {}) {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Tasks") }) }
+    ) { padding ->
+        Text("Task screen content", modifier = Modifier.padding(padding))
     }
 }
