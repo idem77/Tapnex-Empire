@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TapnexEmpireTheme {
                 val navController = rememberNavController()
-                AppNavGraph(navController)  // ✅ navController pass karo
+                AppNavGraph(navController) // ✅ clean + flexible
             }
         }
     }
