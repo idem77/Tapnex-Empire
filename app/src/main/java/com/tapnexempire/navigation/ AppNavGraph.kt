@@ -1,43 +1,96 @@
 package com.tapnexempire.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.tapnexempire.screen.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "splash") {
+fun AppNavGraph() {
+    val navController = rememberNavController()
 
-        // Splash screen → goes to Home
-        composable("splash") {
-            SplashScreen(onTimeout = {
-                navController.navigate("home") {
-                    popUpTo("splash") { inclusive = true }
-                }
-            })
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
         }
-
-        // Home screen → navigation buttons
-        composable("home") {
-            HomeScreen(
-                onWalletClick = { navController.navigate("wallet") },
-                onGameClick = { navController.navigate("game") }
-            )
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("home") {
+                HomeScreen(
+                    onWalletClick = { navController.navigate("wallet") },
+                    onGameClick = { navController.navigate("game") }
+                )
+            }
+            composable("wallet") {
+                WalletScreen(onRedeemClick = { navController.navigate("redeem") })
+            }
+            composable("task") {
+                TaskScreen(onTaskClick = { /* future task click logic */ })
+            }
+            composable("game") {
+                GameScreen()
+            }
+            composable("redeem") {
+                RedeemScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("tournament") {
+                TournamentScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("profile") {
+                ProfileScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("splash") {
+                SplashScreen(onTimeout = { navController.navigate("auth") })
+            }
+            composable("auth") {
+                AuthScreen(onContinue = { navController.navigate("home") })
+            }
         }
-
-        // Wallet screen → redeem button goes to Redeem
-        composable("wallet") {
-            WalletScreen(onRedeemClick = { navController.navigate("redeem") })
-        }
-
-        // Other screens (no params)
-        composable("task") { TaskScreen() }
-        composable("game") { GameScreen() }
-        composable("redeem") { RedeemScreen() }
-        composable("tournament") { TournamentScreen() }
-        composable("profile") { ProfileScreen() }
-        composable("auth") { AuthScreen() }
     }
 }
+
+@Composable
+fun BottomNavigationBar(navController: NavHostController) {
+    val items = listOf(
+        BottomNavItem("Home", "home"),
+        BottomNavItem("Wallet", "wallet"),
+        BottomNavItem("Tasks", "task"),
+        BottomNavItem("Tournament", "tournament"),
+        BottomNavItem("Profile", "profile")
+    )
+
+    NavigationBar {
+        val navBackStackEntry = navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry.value?.destination?.route
+
+        items.forEach { item ->
+            NavigationBarItem(
+                label = { Text(item.label) },
+                selected = currentRoute == item.route,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+    }
+}
+
+data class BottomNavItem(val label: String, val route: String)
