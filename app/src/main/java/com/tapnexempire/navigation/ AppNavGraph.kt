@@ -10,23 +10,17 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.tapnexempire.screen.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavGraph() {
-    val navController = rememberNavController()
-
+fun AppNavGraph(navController: NavHostController) { // ✅ param added
     Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController = navController)
-        }
+        bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "home",
+            startDestination = "splash", // ✅ splash se start
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") {
@@ -39,10 +33,10 @@ fun AppNavGraph() {
                 WalletScreen(onRedeemClick = { navController.navigate("redeem") })
             }
             composable("task") {
-                TaskScreen(onTaskClick = { /* future logic */ })
+                TaskScreen(onTaskClick = { /* logic */ })
             }
             composable("game") {
-                GameScreen(onPlayClick = { /* play logic */ })
+                GameScreen(onPlayClick = { /* logic */ })
             }
             composable("redeem") {
                 RedeemScreen(onBackClick = { navController.popBackStack() })
@@ -96,4 +90,8 @@ fun BottomNavigationBar(navController: NavHostController) {
     }
 }
 
-data class BottomNavItem(val label: String, val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
+data class BottomNavItem(
+    val label: String,
+    val route: String,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector
+)
