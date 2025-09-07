@@ -10,17 +10,19 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState  // ✅ FIXED import
 import com.tapnexempire.screen.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavGraph(navController: NavHostController) { // ✅ param added
+fun AppNavGraph(navController: NavHostController) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "splash", // ✅ splash se start
+            startDestination = "splash", // ✅ Start from splash
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") {
