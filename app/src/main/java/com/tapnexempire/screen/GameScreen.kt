@@ -3,33 +3,26 @@ package com.tapnexempire.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier   // ✅ Fix added
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
+import com.tapnexempire.components.TopBar
 
 @Composable
-fun GameScreen(onPlayClick: () -> Unit = {}) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+fun GameScreen(
+    onPlayClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = { TopBar(title = "Games", onBackClick = onBackClick) }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text(
-                text = "Game Screen",
-                style = MaterialTheme.typography.headlineMedium
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { onPlayClick() },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Play Now")
-            }
+            Text("Play Ludo or other games", style = MaterialTheme.typography.bodyLarge)
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = onPlayClick) { Text("Start Ludo") }
         }
     }
 }
