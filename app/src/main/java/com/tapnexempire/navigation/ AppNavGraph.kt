@@ -1,7 +1,7 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -24,18 +24,26 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
             // ✅ Splash
             composable("splash") {
                 SplashScreen(
-                    onTimeout = { navController.navigate("auth") { popUpTo("splash") { inclusive = true } } }
+                    onTimeout = {
+                        navController.navigate("auth") {
+                            popUpTo("splash") { inclusive = true }
+                        }
+                    }
                 )
             }
 
             // ✅ Auth
             composable("auth") {
                 AuthScreen(
-                    onContinue = { navController.navigate("home") { popUpTo("auth") { inclusive = true } } }
+                    onContinue = {
+                        navController.navigate("home") {
+                            popUpTo("auth") { inclusive = true }
+                        }
+                    }
                 )
             }
 
-            // ✅ Home (with params)
+            // ✅ Home
             composable("home") {
                 HomeScreen(
                     onWalletClick = { navController.navigate("wallet") },
@@ -43,13 +51,49 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
                 )
             }
 
-            // ✅ Other screens
-            composable("wallet") { WalletScreen(onRedeemClick = { navController.navigate("redeem") }) }
-            composable("task") { TaskScreen() }
-            composable("game") { GameScreen(onPlayClick = { /* TODO: launch game */ }) }
-            composable("redeem") { RedeemScreen() }
-            composable("tournament") { TournamentScreen() }
-            composable("profile") { ProfileScreen() }
+            // ✅ Wallet
+            composable("wallet") {
+                WalletScreen(
+                    onRedeemClick = { navController.navigate("redeem") },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            // ✅ Task
+            composable("task") {
+                TaskScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            // ✅ Game
+            composable("game") {
+                GameScreen(
+                    onPlayClick = { /* TODO: add actual play logic */ },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            // ✅ Redeem
+            composable("redeem") {
+                RedeemScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            // ✅ Tournament
+            composable("tournament") {
+                TournamentScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            // ✅ Profile
+            composable("profile") {
+                ProfileScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
         }
     }
 }
