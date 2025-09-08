@@ -22,7 +22,7 @@ fun AppNavGraph(navController: NavHostController) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "home", // ✅ Start from splash
+            startDestination = "splash", // ✅ Start from splash
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") {
