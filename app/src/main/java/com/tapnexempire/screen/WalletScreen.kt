@@ -5,19 +5,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tapnexempire.components.TopBar
 
 @Composable
-fun WalletScreen(onRedeemClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text("Wallet Balance: 1540 coins", style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(16.dp))
-
-        Button(onClick = onRedeemClick) {
-            Text("Redeem Rewards")
+fun WalletScreen(
+    onRedeemClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = { TopBar(title = "Wallet", onBackClick = onBackClick) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            Text("Your Coins: 1000", style = MaterialTheme.typography.headlineSmall)
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRedeemClick) { Text("Redeem Coins") }
         }
     }
 }
