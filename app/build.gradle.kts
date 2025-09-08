@@ -51,21 +51,27 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    // Material3 (pin a version so styles resolve)
+    // Material3
     implementation("androidx.compose.material3:material3:1.3.0")
 
-    // Material icons (needed for wallet, games, offers, etc.)
+    // Material icons (needed for VideogameAsset, Redeem, etc.)
     implementation("androidx.compose.material:material-icons-extended")
 
-    // Compose Navigation
+    // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.2")
 
-    // (Optional but safe) classic Material XML for any XML-based components
+    // Classic Material XML (optional but safe)
     implementation("com.google.android.material:material:1.12.0")
 
     // Lifecycle / Activity
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
     implementation("androidx.activity:activity-compose:1.9.2")
+
+    // Firebase (all managed via BoM)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-analytics")
 
     // Debug tools
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -77,10 +83,4 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-}        
- dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-analytics")
-}    
+}
