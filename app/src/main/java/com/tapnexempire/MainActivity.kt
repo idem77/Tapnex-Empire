@@ -3,19 +3,21 @@ package com.tapnexempire
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.navigation.compose.rememberNavController
-import com.tapnexempire.navigation.AppNavGraph
+import androidx.compose.material3.Surface
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
+import com.tapnexempire.ui.navigation.AppNavHost
+import com.tapnexempire.ui.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TapnexEmpireTheme {
-                val navController = rememberNavController()
-                AppNavGraph(navController) // ✅ clean + flexible
+                Surface {
+                    val vm: MainViewModel = viewModel()
+                    AppNavHost(viewModel = vm)
+                }
             }
         }
     }
