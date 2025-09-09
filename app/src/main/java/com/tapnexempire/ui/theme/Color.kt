@@ -2,15 +2,11 @@ package com.tapnexempire.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Queen-picked palette
-val RoyalTeal = Color(0xFF1ABC9C)    // #1ABC9C
-val VibrantCoral = Color(0xFFFF6B6B) // #FF6B6B
-val SoftCream = Color(0xFFFFF8F0)    // #FFF8F0
-val DarkCharcoal = Color(0xFF1C1C1E) // #1C1C1E
-val WarmGrey = Color(0xFF8E8E93)     // #8E8E93
-val White = Color(0xFFFFFFFF)
-val Black = Color(0xFF000000)
-
-// Added so AuthScreen (and others) don't fail — minimal safe additions
-val NeonBlue = Color(0xFF1B9CFC)   // bright neon blue (used in AuthScreen)
-val Gold = Color(0xFFFFD700)       // classic gold
+// Queen's heart palette: deep purple -> rose-gold accents -> teal
+val Purple900 = Color(0xFF1A0B3B)
+val Purple700 = Color(0xFF2A0F5E)
+val RoseGold = Color(0xFFD4A373)   // warm gold-ish
+val TealAccent = Color(0xFF19C2A7) // success accent
+val OffWhite = Color(0xFFFBF7F2)
+val SurfaceDim = Color(0xFF110818)
+val Glow = Color(0xFF6EE7C8)
