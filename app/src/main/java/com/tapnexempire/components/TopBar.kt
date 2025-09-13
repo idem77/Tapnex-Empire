@@ -1,38 +1,46 @@
-package com.tapnexempire.components
+package com.tapnexempire.ui.components
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import com.tapnexempire.ui.theme.RoyalTeal
-import com.tapnexempire.ui.theme.White
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.foundation.layout.fillMaxWidth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(
+fun AppTopBar(
     title: String,
-    onBackClick: (() -> Unit)? = null
+    navigationIcon: ImageVector? = null,
+    onNavigationClick: (() -> Unit)? = null,
+    actions: @Composable (() -> Unit)? = null
 ) {
     TopAppBar(
-        title = { Text(title, color = White) },
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Start
+            )
+        },
         navigationIcon = {
-            onBackClick?.let {
-                IconButton(onClick = it) {
+            navigationIcon?.let {
+                IconButton(onClick = { onNavigationClick?.invoke() }) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = White
+                        imageVector = it,
+                        contentDescription = "Back"
                     )
                 }
             }
         },
+        actions = {
+            actions?.invoke()
+        },
+        modifier = Modifier.fillMaxWidth(),
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = RoyalTeal,
-            titleContentColor = White,
-            navigationIconContentColor = White,
-            actionIconContentColor = White
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
         )
     )
 }
