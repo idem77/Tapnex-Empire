@@ -2,9 +2,9 @@ name: Android Build
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -17,18 +17,17 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
+          java-version: '17'
           distribution: 'temurin'
-          java-version: 17
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x gradlew
 
-      - name: Build with Gradle (show all errors)
-        run: ./gradlew build --stacktrace --warning-mode=all
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
-      - name: Archive Build Reports (optional)
-        if: failure()
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: build-reports
-          path: app/build/reports/
+          name: TapnexEmpire-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
