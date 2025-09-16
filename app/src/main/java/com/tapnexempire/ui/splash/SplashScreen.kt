@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.tapnexempire.R
+
 import com.tapnexempire.navigation.Screen
 import kotlinx.coroutines.delay
 
