@@ -23,9 +23,7 @@ fun SplashScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         scale.animateTo(1f, animationSpec = tween(durationMillis = 1100))
-        // Wait total ~2.0s (animation + display)
-        delay(2000)
-        // Navigate to Login (clear splash)
+        delay(2000) // wait for animation + display
         navController.navigate(Screen.Login.route) {
             popUpTo(Screen.Splash.route) { inclusive = true }
         }
@@ -38,16 +36,8 @@ fun SplashScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // Use app logo if present, else fallback to mipmap launcher
-            val logoRes = try {
-                R.drawable.app_logo
-            } catch (e: Exception) {
-                // fallback
-                R.mipmap.ic_launcher
-            }
-
             Image(
-                painter = painterResource(id = logoRes),
+                painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "App Logo",
                 modifier = Modifier
                     .size(120.dp)
