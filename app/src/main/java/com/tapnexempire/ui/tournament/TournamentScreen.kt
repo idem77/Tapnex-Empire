@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 // Data class for tournament
-data class TournamentItem(
+data class Tournament(
     val id: String,
     val title: String,
     val entryFee: Int,
@@ -21,8 +21,8 @@ data class TournamentItem(
 @Composable
 fun TournamentScreen(navController: NavController) {
     val tournaments = listOf(
-        TournamentItem("1", "Ludo Tournament", 10, 100),
-        TournamentItem("2", "Quiz Tournament", 5, 50)
+        Tournament("1", "Ludo Tournament", 10, 100),
+        Tournament("2", "Quiz Tournament", 5, 50)
     )
 
     Scaffold(
