@@ -12,4 +12,9 @@ sealed class Screen(val route: String) {
     object Recharge : Screen("recharge")
     object Withdraw : Screen("withdraw")
     object Tournament : Screen("tournament")
+
+    // ✅ Add these
+    object Tasks : Screen("tasks")
+    object TournamentList : Screen("tournament_list")
+    object Ludo : Screen("ludo")
 }
