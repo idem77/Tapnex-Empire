@@ -1,4 +1,4 @@
-package com.tapnexempire.ui.tasks
+package com.tapnexempire.ui.task
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
