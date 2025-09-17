@@ -16,9 +16,9 @@ data class TournamentItem(val id: String, val title: String, val fee: Int, val p
 @Composable
 fun TournamentListScreen(navController: NavController) {
     val items = listOf(
-        Tournament("b1","Bronze Arena",100,100),
-        Tournament("s1","Silver Arena",250,100),
-        Tournament("g1","Gold Arena",500,50)
+        Tournamentitem("b1","Bronze Arena",100,100),
+        Tournamentitem("s1","Silver Arena",250,100),
+        Tournamentitem("g1","Gold Arena",500,50)
     )
     Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text("Tournaments") }) }) { padding ->
         LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(12.dp)) {
