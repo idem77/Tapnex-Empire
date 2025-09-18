@@ -9,10 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tapnexempire.navigation.Screen
-import com.tapnexempire.utils.Constants
 
-data class TournamentItem(val id: String, val title: String, val fee: Int, val players: Int)
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TournamentListScreen(navController: NavController) {
     val items = listOf(
@@ -20,8 +18,14 @@ fun TournamentListScreen(navController: NavController) {
         TournamentItem("s1","Silver Arena",250,100),
         TournamentItem("g1","Gold Arena",500,50)
     )
+
     Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text("Tournaments") }) }) { padding ->
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(12.dp)) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(12.dp)
+        ) {
             items(items) { t ->
                 Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                     Column(modifier = Modifier.padding(12.dp)) {
@@ -29,7 +33,9 @@ fun TournamentListScreen(navController: NavController) {
                         Text("Entry: ${t.fee} coins • Players: ${t.players}")
                         Spacer(Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                            TextButton(onClick = { navController.navigate(Screen.TournamentDetail.createRoute(t.id)) }) { Text("View") }
+                            TextButton(onClick = {
+                                navController.navigate(Screen.TournamentDetail.createRoute(t.id))
+                            }) { Text("View") }
                         }
                     }
                 }
