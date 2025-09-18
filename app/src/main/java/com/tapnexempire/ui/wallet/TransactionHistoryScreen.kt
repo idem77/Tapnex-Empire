@@ -9,9 +9,9 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WalletScreen(navController: NavController) {
+fun TransactionHistoryScreen(navController: NavController) {
     Scaffold(
-        topBar = { CenterAlignedTopAppBar(title = { Text("Wallet") }) }
+        topBar = { CenterAlignedTopAppBar(title = { Text("Transaction History") }) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -19,22 +19,11 @@ fun WalletScreen(navController: NavController) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            Text("Current Balance: 1000 coins", style = MaterialTheme.typography.headlineMedium)
+            Text("Transaction History", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(16.dp))
 
-            Button(onClick = { navController.navigate("Recharge") }, modifier = Modifier.fillMaxWidth()) {
-                Text("Recharge Wallet")
-            }
-            Spacer(Modifier.height(8.dp))
-            Button(onClick = { navController.navigate("Withdraw") }, modifier = Modifier.fillMaxWidth()) {
-                Text("Withdraw Coins")
-            }
-            Spacer(Modifier.height(16.dp))
-            
-            // Temporary History placeholder
-            Text("Transaction History", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            Text("No transactions yet") // temporary until real History Composable is ready
+            // Temporary placeholder entries
+            Text("No transactions yet", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
