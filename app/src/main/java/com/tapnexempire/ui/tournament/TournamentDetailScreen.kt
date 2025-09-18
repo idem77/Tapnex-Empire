@@ -1,31 +1,53 @@
 package com.tapnexempire.ui.tournament
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.tapnexempire.utils.Constants
+import com.tapnexempire.navigation.Screen
 
+data class TournamentItem(val id: String, val title: String, val fee: Int, val players: Int)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TournamentDetailScreen(navController: NavController, tournamentId: String) {
-    // TODO: fetch real tournament via id
-    val fee = 100
-    val players = 100
-    val total = fee * players
-    val afterTax = total - (total * Constants.TOURNAMENT_TAX_PERCENT / 100)
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Tournament: $tournamentId", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(12.dp))
-        Text("Entry Fee: $fee coins")
-        Text("Players: $players")
-        Text("Prize Pool after ${Constants.TOURNAMENT_TAX_PERCENT}% tax: $afterTax coins")
-        Spacer(Modifier.height(16.dp))
-        Button(onClick = {
-            // TODO: Join: deduct coins, create participant entry (backend)
-        }, modifier = Modifier.fillMaxWidth()) {
-            Text("Join Now (Pay $fee coins)")
+fun TournamentListScreen(navController: NavController) {
+    // Temporary tournament list
+    val items = listOf(
+        TournamentItem("b1","Bronze Arena",100,100),
+        TournamentItem("s1","Silver Arena",250,100),
+        TournamentItem("g1","Gold Arena",500,50)
+    )
+
+    Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text("Tournaments") }) }) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(12.dp)
+        ) {
+            items(items) { t ->
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(t.title, style = MaterialTheme.typography.titleMedium)
+                        Text("Entry: ${t.fee} coins • Players: ${t.players}")
+                        Spacer(Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                            TextButton(onClick = {
+                                // Temporary navigation to TournamentDetailScreen
+                                navController.navigate(Screen.TournamentDetail.createRoute(t.id))
+                            }) {
+                                Text("View")
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
