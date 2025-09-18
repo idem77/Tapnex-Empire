@@ -2,7 +2,6 @@ package com.tapnexempire.ui.splash
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,10 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.tapnexempire.R
 import com.tapnexempire.navigation.Screen
 import kotlinx.coroutines.delay
 
@@ -22,8 +19,11 @@ fun SplashScreen(navController: NavController) {
     val scale = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
+        // Animate scale
         scale.animateTo(1f, animationSpec = tween(durationMillis = 1100))
-        delay(2000) // wait for animation + display
+        // Wait total ~2s (animation + display)
+        delay(2000)
+        // Navigate to Login screen
         navController.navigate(Screen.Login.route) {
             popUpTo(Screen.Splash.route) { inclusive = true }
         }
@@ -36,15 +36,11 @@ fun SplashScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(120.dp)
-                    .scale(scale.value)
+            // Temporary text instead of logo
+            Text(
+                text = "Tapnex Empire",
+                style = MaterialTheme.typography.headlineMedium
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Tapnex Empire", style = MaterialTheme.typography.headlineMedium)
         }
     }
 }
