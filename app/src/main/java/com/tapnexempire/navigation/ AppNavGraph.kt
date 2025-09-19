@@ -24,8 +24,9 @@ fun AppNavGraph(navController: NavHostController) {
         composable("login") {
             LoginScreen(navController = navController)
         }
-        composable("otp") {
-            OtpVerificationScreen(navController = navController)
+        composable("otp/{phoneNumber}") { backStackEntry ->
+            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber")
+            OtpVerificationScreen(navController = navController, phoneNumber = phoneNumber)
         }
 
         // 🔹 Home
@@ -51,8 +52,9 @@ fun AppNavGraph(navController: NavHostController) {
         composable("tournament_list") {
             TournamentListScreen(navController = navController)
         }
-        composable("tournament_detail") {
-            TournamentDetailScreen(navController = navController)
+        composable("tournament_detail/{tournamentId}") { backStackEntry ->
+            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
+            TournamentDetailScreen(navController = navController, tournamentId = tournamentId)
         }
     }
 }
