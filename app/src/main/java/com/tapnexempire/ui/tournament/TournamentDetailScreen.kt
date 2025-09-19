@@ -2,6 +2,8 @@ package com.tapnexempire.ui.tournament
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -42,7 +44,7 @@ fun TournamentDetailScreen(
             Text("Details about the tournament will appear here.")
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = {
-                // Yaha tum join logic ya payment logic laga sakte ho
+                // Join / payment logic here
             }) {
                 Text("Join Tournament")
             }
