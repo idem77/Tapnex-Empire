@@ -8,44 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.tapnexempire.navigation.Screen
 
-// Sirf ek hi data class rakho
-data class TournamentItem(
-    val id: String,
-    val title: String,
-    val fee: Int,
-    val players: Int
-)
+data class TournamentItem(val id: String, val title: String, val fee: Int, val players: Int)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TournamentListScreen(navController: NavController) {
-    val tournaments = listOf(
+    val items = listOf(
         TournamentItem("b1", "Bronze Arena", 100, 100),
         TournamentItem("s1", "Silver Arena", 250, 100),
         TournamentItem("g1", "Gold Arena", 500, 50)
     )
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Tournaments") }
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(12.dp)
-        ) {
-            items(tournaments) { t ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
+    Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text("Tournaments") }) }) { padding ->
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(12.dp)) {
+            items(items) { t ->
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(t.title, style = MaterialTheme.typography.titleMedium)
                         Text("Entry: ${t.fee} coins • Players: ${t.players}")
@@ -55,12 +33,8 @@ fun TournamentListScreen(navController: NavController) {
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             TextButton(
-                                onClick = {
-                                    navController.navigate(Screen.TournamentDetail.createRoute(t.id))
-                                }
-                            ) {
-                                Text("View")
-                            }
+                                onClick = { navController.navigate("tournament_detail/${t.id}") }
+                            ) { Text("View") }
                         }
                     }
                 }
