@@ -2,73 +2,70 @@ package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
-import com.tapnexempire.ui.auth.SignupScreen
 import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.profile.ProfileScreen
 import com.tapnexempire.ui.splash.SplashScreen
-import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.TournamentScreen
+import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.tournament.TournamentDetailScreen
+import com.tapnexempire.ui.wallet.RechargeScreen
+import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "splash"
+        startDestination = Screen.Splash.route
     ) {
-        // 🔹 Splash Screen
-        composable("splash") {
-            SplashScreen(navController = navController)
+        // Splash
+        composable(Screen.Splash.route) {
+            SplashScreen(navController)
         }
 
-        // 🔹 Login Screen
-        composable("login") {
-            LoginScreen(navController = navController)
+        // Auth
+        composable(Screen.Login.route) {
+            LoginScreen(navController)
+        }
+        composable(Screen.Otp.route) {
+            OtpVerificationScreen(navController)
         }
 
-        // 🔹 Signup Screen
-        composable("signup") {
-            SignupScreen(navController = navController)
+        // Home
+        composable(Screen.Home.route) {
+            HomeScreen(navController)
         }
 
-        // 🔹 OTP Verification with phoneNumber argument
-        composable(
-            route = "otp_verification/{phoneNumber}",
-            arguments = listOf(navArgument("phoneNumber") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber") ?: ""
-            OtpVerificationScreen(navController = navController, phoneNumber = phoneNumber)
+        // Profile
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController)
         }
 
-        // 🔹 Home
-        composable("home") {
-            HomeScreen(navController = navController)
+        // Tournaments
+        composable(Screen.Tournaments.route) {
+            TournamentListScreen(navController)
+        }
+        composable("${Screen.TournamentDetail.route}/{tournamentId}") { backStackEntry ->
+            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
+            TournamentDetailScreen(navController, tournamentId)
         }
 
-        // 🔹 Wallet
-        composable("wallet") {
-            WalletScreen(navController = navController)
+        // Wallet
+        composable(Screen.Wallet.route) {
+            WalletScreen(navController)
         }
-
-        // 🔹 Profile
-        composable("profile") {
-            ProfileScreen(navController = navController)
+        composable(Screen.Recharge.route) {
+            RechargeScreen(navController)
         }
-
-        // 🔹 Task
-        composable("task") {
-            TaskScreen(navController = navController)
+        composable(Screen.Withdraw.route) {
+            WithdrawScreen(navController)
         }
-
-        // 🔹 Tournament
-        composable("tournament") {
-            TournamentScreen(navController = navController)
+        composable(Screen.History.route) {
+            TransactionHistoryScreen(navController)
         }
     }
 }
