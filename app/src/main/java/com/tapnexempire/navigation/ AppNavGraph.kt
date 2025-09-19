@@ -7,65 +7,75 @@ import androidx.navigation.compose.composable
 import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.profile.ProfileScreen
-import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.tournament.TournamentDetailScreen
-import com.tapnexempire.ui.wallet.RechargeScreen
 import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.wallet.RechargeScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
-import com.tapnexempire.ui.wallet.TransactionHistoryScreen
+import com.tapnexempire.ui.history.HistoryScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route
+        startDestination = "login"
     ) {
-        // Splash
-        composable(Screen.Splash.route) {
-            SplashScreen(navController)
+        // Login Screen
+        composable("login") {
+            LoginScreen(
+                onLoginSuccess = { phoneNumber ->
+                    navController.navigate("otp/$phoneNumber")
+                }
+            )
         }
 
-        // Auth
-        composable(Screen.Login.route) {
-            LoginScreen(navController)
-        }
-        composable(Screen.Otp.route) {
-            OtpVerificationScreen(navController)
+        // OTP Verification
+        composable("otp/{phone}") { backStackEntry ->
+            val phone = backStackEntry.arguments?.getString("phone") ?: ""
+            OtpVerificationScreen(
+                phoneNumber = phone,
+                onOtpVerified = {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            )
         }
 
         // Home
-        composable(Screen.Home.route) {
+        composable("home") {
             HomeScreen(navController)
         }
 
-        // Profile
-        composable(Screen.Profile.route) {
-            ProfileScreen(navController)
-        }
-
-        // Tournaments
-        composable(Screen.Tournaments.route) {
+        // Tournament List
+        composable("tournaments") {
             TournamentListScreen(navController)
         }
-        composable("${Screen.TournamentDetail.route}/{tournamentId}") { backStackEntry ->
-            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
-            TournamentDetailScreen(navController, tournamentId)
+
+        // Tournament Detail
+        composable("tournamentDetail/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+            TournamentDetailScreen(tournamentId = id)
         }
 
         // Wallet
-        composable(Screen.Wallet.route) {
+        composable("wallet") {
             WalletScreen(navController)
         }
-        composable(Screen.Recharge.route) {
+
+        // Recharge
+        composable("recharge") {
             RechargeScreen(navController)
         }
-        composable(Screen.Withdraw.route) {
+
+        // Withdraw
+        composable("withdraw") {
             WithdrawScreen(navController)
         }
-        composable(Screen.History.route) {
-            TransactionHistoryScreen(navController)
+
+        // History
+        composable("history") {
+            HistoryScreen(navController)
         }
     }
 }
