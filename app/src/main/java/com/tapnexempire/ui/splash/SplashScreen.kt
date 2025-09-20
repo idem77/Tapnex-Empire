@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tapnexempire.navigation.Screen
@@ -19,11 +18,8 @@ fun SplashScreen(navController: NavController) {
     val scale = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        // Animate scale
         scale.animateTo(1f, animationSpec = tween(durationMillis = 1100))
-        // Wait total ~2s (animation + display)
-        delay(2000)
-        // Navigate to Login screen
+        delay(2000) // wait for animation + display
         navController.navigate(Screen.Login.route) {
             popUpTo(Screen.Splash.route) { inclusive = true }
         }
@@ -36,11 +32,14 @@ fun SplashScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // Temporary text instead of logo
+            // Logo temporarily removed for safe build
+            // Text placeholder instead
             Text(
                 text = "Tapnex Empire",
                 style = MaterialTheme.typography.headlineMedium
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Loading...", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
