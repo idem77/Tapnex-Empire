@@ -1,4 +1,4 @@
-name: Android Crash Debug
+name: Android CI
 
 on:
   push:
@@ -11,29 +11,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Make Gradle Wrapper Executable
-        run: chmod +x gradlew
-
+      # Setup JDK
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 17
+          java-version: '17'
+          distribution: 'temurin'
 
-      - name: Build Debug APK with Stacktrace
-        run: ./gradlew assembleDebug --stacktrace
+      # Setup Gradle cache
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v4
 
+      # Give permission to gradlew
+      - name: Grant execute permission
+        run: chmod +x ./gradlew
+
+      # Build app with stacktrace (detailed crash logs)
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace --info
+
+      # Run unit tests
+      - name: Run tests
+        run: ./gradlew testDebugUnitTest --stacktrace
+
+      # Upload APK as artifact
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: debug-apk
+          name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Save Gradle Logs
+      # Upload crash/error logs (if any)
+      - name: Upload build logs
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: gradle-logs
-          path: app/build/reports
+          name: crash-logs
+          path: "**/build/reports/**"
