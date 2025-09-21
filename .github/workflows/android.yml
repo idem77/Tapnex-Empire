@@ -24,7 +24,7 @@ jobs:
 
       # Setup Gradle cache
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v4
+        uses: gradle/gradle-build-action@v2
 
       # Give permission to gradlew
       - name: Grant execute permission
