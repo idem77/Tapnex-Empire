@@ -11,44 +11,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup JDK
-      - name: Setup JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 17
 
-      # Setup Gradle cache
-      - name: Setup Gradle
+      - name: Cache Gradle
         uses: gradle/gradle-build-action@v2
 
-      # Give permission to gradlew
-      - name: Grant execute permission
-        run: chmod +x ./gradlew
-
-      # Build app with stacktrace (detailed crash logs)
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --info
+        run: ./gradlew assembleDebug --stacktrace
 
-      # Run unit tests
-      - name: Run tests
+      - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest --stacktrace
 
-      # Upload APK as artifact
-      - name: Upload Debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Run Instrumented Tests
+        run: ./gradlew connectedDebugAndroidTest --stacktrace || true
 
-      # Upload crash/error logs (if any)
-      - name: Upload build logs
-        if: failure()
+      - name: Capture Logcat
+        if: always()
+        run: adb logcat -d > logcat.txt || echo "No logcat available"
+
+      - name: Upload Artifacts (APK + Logs)
         uses: actions/upload-artifact@v4
         with:
-          name: crash-logs
-          path: "**/build/reports/**"
+          name: tapnex-artifacts
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            logcat.txt
