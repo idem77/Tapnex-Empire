@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30   # pura job max 30 min chalega
 
     steps:
       # Checkout repo
@@ -25,47 +26,46 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      # Install required SDK packages (emulator, platform-tools, system image)
+      # Install required SDK packages
       - name: Install emulator system image
         run: |
           sdkmanager --install "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
-          sdkmanager --licenses
+          yes | sdkmanager --licenses
           echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
           echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
-      # ✅ Fix gradlew permission issue
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
       # Build debug APK
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug
 
       # Create AVD
       - name: Create AVD
         run: avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel"
 
-      # Start Emulator with GPU fix + timeout
+      # Start Emulator (with 5 min timeout)
       - name: Start Emulator
         run: |
           emulator -avd test -no-window -no-audio -no-snapshot -gpu swiftshader_indirect &
           adb wait-for-device
-          # Wait max 5 minutes for boot, then fail
-          timeout 300 sh -c "until adb shell getprop sys.boot_completed | grep 1; do sleep 5; done" || exit 1
+          # Wait max 5 min for boot
+          timeout 300 sh -c "until adb shell getprop sys.boot_completed | grep 1; do sleep 5; done" || {
+            echo "❌ Emulator failed to boot in time";
+            exit 1;
+          }
           adb shell input keyevent 82
 
       # Install APK
       - name: Install APK on Emulator
         run: adb install -r app/build/outputs/apk/debug/app-debug.apk
 
-      # Run logcat to capture crash logs
+      # Run app and capture logs
       - name: Run app and capture logs
         run: |
           adb shell am start -n com.tapnexempire/.MainActivity || true
           sleep 20
           adb logcat -d > logcat.txt || echo "No logcat available"
 
-      # Upload logs + APK
+      # Upload logs + APK as artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
