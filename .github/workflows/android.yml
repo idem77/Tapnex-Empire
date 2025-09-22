@@ -45,13 +45,13 @@ jobs:
       - name: Create AVD
         run: avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel"
 
-      # Start Emulator
+      # Start Emulator with GPU fix + timeout
       - name: Start Emulator
         run: |
-          emulator -avd test -no-window -no-audio -no-snapshot &
+          emulator -avd test -no-window -no-audio -no-snapshot -gpu swiftshader_indirect &
           adb wait-for-device
-          # Wait until boot completes
-          timeout 300 sh -c "until adb shell getprop sys.boot_completed | grep 1; do sleep 5; done"
+          # Wait max 5 minutes for boot, then fail
+          timeout 300 sh -c "until adb shell getprop sys.boot_completed | grep 1; do sleep 5; done" || exit 1
           adb shell input keyevent 82
 
       # Install APK
