@@ -1,4 +1,4 @@
-name: Android CI
+name: Build Debug APK
 
 on:
   push:
@@ -9,67 +9,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60   # give enough time for emulator if needed
 
     steps:
-      # 1️⃣ Checkout code
+      # Checkout repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Make gradlew executable
-      - name: Grant execute permission for gradlew
+      # Make gradlew executable
+      - name: Grant execute permission
         run: chmod +x gradlew
 
-      # 3️⃣ Setup JDK 17
-      - name: Set up JDK 17
+      # Setup JDK 17
+      - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      # 4️⃣ Setup Android SDK
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-
-      # 5️⃣ Install required SDK packages
-      - name: Install SDK tools
-        run: |
-          sdkmanager --install "platform-tools" "emulator" "build-tools;33.0.2" "platforms;android-33" "system-images;android-30;google_apis;arm64-v8a"
-          yes | sdkmanager --licenses
-          echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
-
-      # 6️⃣ Build APK
+      # Build debug APK
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      # 7️⃣ Run emulator safely (arm64, no KVM required)
-      - name: Start Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          target: google_apis
-          arch: arm64-v8a
-          emulator-options: -no-window -no-audio
-          script: |
-            echo "Emulator started successfully!"
-            adb shell getprop sys.boot_completed
-
-      # 8️⃣ Install APK on emulator
-      - name: Install APK
-        run: adb install -r app/build/outputs/apk/debug/app-debug.apk
-
-      # 9️⃣ Run app and capture logs
-      - name: Run app and capture logs
-        run: |
-          adb shell am start -n com.tapnexempire/.MainActivity || true
-          sleep 20
-          adb logcat -d > logcat.txt || echo "No logcat available"
-
-      # 🔟 Upload artifacts (APK + log)
-      - name: Upload Artifacts
+      # Upload APK as artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: tapnex-artifacts
-          path: |
-            app/build/outputs/apk/debug/app-debug.apk
-            logcat.txt
+          name: tapnex-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
