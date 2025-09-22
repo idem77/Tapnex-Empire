@@ -15,6 +15,10 @@ jobs:
       # Checkout repo
       - uses: actions/checkout@v3
 
+      # gradlew ko executable banana (fix Permission denied)
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       # Setup JDK
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -42,7 +46,7 @@ jobs:
       - name: Create AVD
         run: avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel"
 
-      # Start Emulator (with 5 min timeout)
+      # Start Emulator (max 5 min wait)
       - name: Start Emulator
         run: |
           emulator -avd test -no-window -no-audio -no-snapshot -gpu swiftshader_indirect &
