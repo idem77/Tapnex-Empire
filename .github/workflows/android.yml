@@ -33,9 +33,13 @@ jobs:
           echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
           echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
+      # ✅ Fix gradlew permission issue
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
       # Build debug APK
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace
 
       # Create AVD
       - name: Create AVD
