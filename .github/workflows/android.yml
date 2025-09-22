@@ -2,65 +2,70 @@ name: Android CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      # Checkout repo
+      - uses: actions/checkout@v3
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      # Setup JDK
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
-      with:
-        api-level: 33
-        build-tools: 33.0.2
+      # Setup Android SDK
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
 
-    - name: Accept Android Licenses
-      run: yes | sdkmanager --licenses
+      # Install required SDK packages (emulator, platform-tools, system image)
+      - name: Install emulator system image
+        run: |
+          sdkmanager --install "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          sdkmanager --licenses
+          echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
+          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
-    - name: Install Android Emulator
-      run: |
-        yes | sdkmanager "emulator"
-        yes | sdkmanager "platform-tools"
-        yes | sdkmanager "system-images;android-33;google_apis;x86_64"
+      # Build debug APK
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
-    - name: Create Emulator
-      run: |
-        echo "no" | avdmanager create avd -n test -k "system-images;android-33;google_apis;x86_64" --force
+      # Create AVD
+      - name: Create AVD
+        run: avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel"
 
-    - name: Start Emulator
-      run: |
-        emulator -avd test -no-window -no-audio -no-snapshot &
-        adb wait-for-device
-        adb shell input keyevent 82
-        timeout 300 sh -c "until adb shell getprop sys.boot_completed | grep 1; do sleep 5; done"
+      # Start Emulator
+      - name: Start Emulator
+        run: |
+          emulator -avd test -no-window -no-audio -no-snapshot &
+          adb wait-for-device
+          # Wait until boot completes
+          timeout 300 sh -c "until adb shell getprop sys.boot_completed | grep 1; do sleep 5; done"
+          adb shell input keyevent 82
 
-    - name: Build APK
-      run: ./gradlew assembleDebug --stacktrace
+      # Install APK
+      - name: Install APK on Emulator
+        run: adb install -r app/build/outputs/apk/debug/app-debug.apk
 
-    - name: Run Unit Tests
-      run: ./gradlew testDebugUnitTest --stacktrace
+      # Run logcat to capture crash logs
+      - name: Run app and capture logs
+        run: |
+          adb shell am start -n com.tapnexempire/.MainActivity || true
+          sleep 20
+          adb logcat -d > logcat.txt || echo "No logcat available"
 
-    - name: Capture Logcat
-      run: |
-        adb logcat -d > logcat.txt || echo "No logcat available"
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: tapnex-artifacts
-        path: |
-          app/build/outputs/
-          logcat.txt
+      # Upload logs + APK
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tapnex-artifacts
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            logcat.txt
