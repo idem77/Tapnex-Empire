@@ -1,55 +1,85 @@
 package com.tapnexempire.ui.wallet
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.tapnexempire.navigation.Screen
+import androidx.compose.ui.unit.sp
+import com.tapnexempire.components.AppButton
+import com.tapnexempire.components.RewardCard
+import com.tapnexempire.ui.theme.CharcoalBlack
+import com.tapnexempire.ui.theme.Gold
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WalletScreen(navController: NavController) {
-    var depositBalance by remember { mutableStateOf(2500) }
-    var winningsBalance by remember { mutableStateOf(1200) }
-    var adCoins by remember { mutableStateOf(300) }
-    val total = depositBalance + winningsBalance + adCoins
+fun WalletScreen(
+    depositBalance: Int,
+    withdrawableBalance: Int,
+    referralRewards: List<Pair<String, Int>>, // title and amount
+    onDepositClick: () -> Unit,
+    onWithdrawClick: () -> Unit,
+    onTransactionHistoryClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Deposit Balance (non-withdrawable)
+        Text(text = "Deposit Balance", fontSize = 16.sp, color = CharcoalBlack)
+        RewardCard(
+            rewardTitle = "Deposit Balance",
+            rewardAmount = depositBalance,
+            onClaim = {} // non-clickable
+        )
 
-    Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text("My Wallet") }) }) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        // Withdrawable Balance
+        Text(text = "Withdrawable Balance", fontSize = 16.sp, color = CharcoalBlack)
+        RewardCard(
+            rewardTitle = "Withdrawable Balance",
+            rewardAmount = withdrawableBalance,
+            onClaim = {} // non-clickable
+        )
+
+        // Quick Actions
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Total: $total Coins")
-                    Text("Deposit: $depositBalance (Recharge Only)")
-                    Text("Winnings: $winningsBalance (Withdraw Allowed)")
-                    Text("Ad Coins: $adCoins (Play Only)")
-                }
-            }
-            Spacer(Modifier.height(16.dp))
-            Button(
-                onClick = { navController.navigate("recharge") },
-                modifier = Modifier.fillMaxWidth()
-            ) { Text("Recharge") }
-
-            Spacer(Modifier.height(8.dp))
-            OutlinedButton(
-                onClick = { navController.navigate("withdraw") },
-                modifier = Modifier.fillMaxWidth()
-            ) { Text("Withdraw") }
-
-            Spacer(Modifier.height(12.dp))
-            TextButton(
-                onClick = { /* navController.navigate("history") */ },
-                modifier = Modifier.fillMaxWidth()
-            ) { Text("Transaction History") }
+            AppButton(
+                text = "Deposit",
+                modifier = Modifier.weight(1f),
+                onClick = onDepositClick
+            )
+            AppButton(
+                text = "Withdraw",
+                modifier = Modifier.weight(1f),
+                onClick = onWithdrawClick
+            )
         }
+
+        // Referral / Task Rewards List
+        Text(text = "Referral / Task Rewards", fontSize = 16.sp, color = CharcoalBlack)
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            items(referralRewards) { reward ->
+                RewardCard(
+                    rewardTitle = reward.first,
+                    rewardAmount = reward.second,
+                    onClaim = {} // non-clickable
+                )
+            }
+        }
+
+        // Transaction History Button
+        AppButton(
+            text = "Transaction History",
+            onClick = onTransactionHistoryClick
+        )
     }
 }
