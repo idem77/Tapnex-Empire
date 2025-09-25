@@ -1,7 +1,7 @@
 package com.tapnexempire.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -16,16 +16,21 @@ import com.tapnexempire.ui.theme.ButtonTextColor
 fun AppButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
-        modifier = modifier.fillMaxWidth(),
-        enabled = enabled
+        colors = ButtonDefaults.buttonColors(
+            containerColor = ButtonColor,
+            contentColor = ButtonTextColor
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Text(text = text, fontSize = 16.sp, color = ButtonTextColor)
+        Text(
+            text = text,
+            fontSize = 16.sp
+        )
     }
 }
