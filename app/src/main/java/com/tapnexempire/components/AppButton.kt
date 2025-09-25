@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme.ButtonColor
+import com.tapnexempire.ui.theme.ButtonBackground
 import com.tapnexempire.ui.theme.ButtonTextColor
 
 @Composable
@@ -21,7 +21,7 @@ fun AppButton(
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = ButtonColor,
+            containerColor = ButtonBackground, // ✅ now using your Color.kt
             contentColor = ButtonTextColor
         ),
         modifier = modifier
