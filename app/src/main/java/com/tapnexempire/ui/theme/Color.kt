@@ -2,17 +2,22 @@ package com.tapnexempire.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Deep Royal Purple (Primary)
-val RoyalPurple = Color(0xFF2B0B5C)
-val RoyalPurpleLight = Color(0xFF3D1376)
+// Primary Colors
+val PinkPeachLight = Color(0xFFFFE0E0)
+val PinkPeachDark = Color(0xFFFFC1C1)
 
-// Premium Gold (Accent)
-val PremiumGold = Color(0xFFFFC857)
-val PremiumGoldDark = Color(0xFFB8872A)
+// Accent Colors
+val Gold = Color(0xFFFFD700)
+val YellowAccent = Color(0xFFFFF176)
 
-// Support Colors
-val MidnightBlack = Color(0xFF0E0B16)
-val SoftGray = Color(0xFFBFC0C2)
-val SurfaceVariant = Color(0xFF1B1530)
-val OnPrimary = Color(0xFFFFFFFF)
-val OnSurface = Color(0xFFECECEC)
+// Background
+val LightCream = Color(0xFFFFFBF5)
+
+// Text Colors
+val CharcoalBlack = Color(0xFF333333)
+val SoftGray = Color(0xFF666666)
+
+// Optional / Cards / Buttons
+val CardBackground = Color(0xFFFFF1F1)
+val ButtonBackground = Gold
+val ButtonTextColor = CharcoalBlack
