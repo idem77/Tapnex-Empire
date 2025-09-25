@@ -4,58 +4,50 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.compose.ui.unit.sp
+import com.tapnexempire.components.AppButton
+import com.tapnexempire.ui.theme.CharcoalBlack
 
 @Composable
 fun OtpVerificationScreen(
-    navController: NavController,
-    phoneNumber: String?
+    phoneNumber: String,
+    onVerifyClick: () -> Unit
 ) {
-    var otpCode by remember { mutableStateOf("") }
+    var otp by remember { mutableStateOf("") }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+            .padding(24.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Verify OTP",
-            style = MaterialTheme.typography.headlineLarge
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "OTP sent to $phoneNumber",
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = otpCode,
-            onValueChange = { otpCode = it },
-            label = { Text("Enter OTP") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                // TODO: Add OTP verification logic here
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Verify")
+            Text(
+                text = "Enter OTP sent to $phoneNumber",
+                fontSize = 20.sp,
+                color = CharcoalBlack
+            )
+
+            OutlinedTextField(
+                value = otp,
+                onValueChange = { otp = it },
+                label = { Text("OTP") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            AppButton(
+                text = "Verify",
+                onClick = onVerifyClick
+            )
         }
     }
 }
