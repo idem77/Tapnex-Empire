@@ -8,5 +8,5 @@ object Constants {
     const val AD_COINS_PER_VIEW = 25
     const val MAX_ADS_PER_DAY = 5
     const val TOURNAMENT_TAX_PERCENT = 20
-    const val WITHDRAW_PROCESS_TIME_HOURS = 48
+    const val WITHDRAW_PROCESS_TIME_HOURS = 12
 }
