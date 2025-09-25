@@ -1,45 +1,52 @@
 package com.tapnexempire.ui.splash
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.tapnexempire.navigation.Screen
-import kotlinx.coroutines.delay
+import com.tapnexempire.R
+import com.tapnexempire.ui.theme.PinkPeachLight
 
 @Composable
-fun SplashScreen(navController: NavController) {
-    val scale = remember { Animatable(0f) }
-
-    LaunchedEffect(Unit) {
-        scale.animateTo(1f, animationSpec = tween(durationMillis = 1100))
-        delay(2000) // wait for animation + display
-        navController.navigate(Screen.Login.route) {
-            popUpTo(Screen.Splash.route) { inclusive = true }
-        }
-    }
+fun SplashScreen(
+    onTimeout: () -> Unit
+) {
+    // Simple fade-in animation
+    val alphaAnim = rememberInfiniteTransition()
+    val alpha by alphaAnim.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .background(PinkPeachLight),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // Logo temporarily removed for safe build
-            // Text placeholder instead
-            Text(
-                text = "Tapnex Empire",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Loading...", style = MaterialTheme.typography.bodyMedium)
-        }
+        Image(
+            painter = painterResource(id = R.drawable.ic_logo), // Your app logo
+            contentDescription = "Tapnex Empire Logo",
+            modifier = Modifier
+                .size(150.dp)
+                .alpha(alpha)
+        )
+    }
+
+    // Optional: Navigate after delay (e.g., 2 sec)
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(2000)
+        onTimeout()
     }
 }
