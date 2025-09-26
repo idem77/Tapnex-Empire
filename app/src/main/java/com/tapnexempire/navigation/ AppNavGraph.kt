@@ -1,46 +1,3 @@
-package com.tapnexempire.navigation
-
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.tapnexempire.ui.auth.LoginScreen
-import com.tapnexempire.ui.auth.OtpVerificationScreen
-import com.tapnexempire.ui.auth.SignupScreen
-import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.profile.ProfileScreen
-import com.tapnexempire.ui.profile.SettingsScreen
-import com.tapnexempire.ui.profile.EditProfileScreen
-import com.tapnexempire.ui.wallet.WalletScreen
-import com.tapnexempire.ui.wallet.DepositScreen
-import com.tapnexempire.ui.wallet.WithdrawScreen
-import com.tapnexempire.ui.wallet.TransactionHistoryScreen
-import com.tapnexempire.ui.tournament.TournamentListScreen
-import com.tapnexempire.ui.tournament.TournamentDetailScreen
-import com.tapnexempire.ui.tournament.MyTournamentsScreen
-import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.Tournament
-import com.tapnexempire.ui.splash.SplashScreen
-
-object Screen {
-    const val Splash = "splash"
-    const val Login = "login"
-    const val Signup = "signup"
-    const val OtpVerification = "otp_verification"
-    const val Home = "home"
-    const val Wallet = "wallet"
-    const val Deposit = "deposit"
-    const val Withdraw = "withdraw"
-    const val TransactionHistory = "transaction_history"
-    const val Profile = "profile"
-    const val Settings = "settings"
-    const val EditProfile = "edit_profile"
-    const val TournamentList = "tournament_list"
-    const val TournamentDetail = "tournament_detail"
-    const val MyTournaments = "my_tournaments"
-    const val Task = "task"
-}
-
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Splash) {
@@ -76,11 +33,15 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Home (dummy data so UI shows)
+        // Home
         composable(Screen.Home) {
             HomeScreen(
                 coins = 120,
-                gameList = listOf("Ludo", "Carrom", "Chess"),
+                gameList = listOf(
+                    Game("Ludo", "ludo_image"),
+                    Game("Carrom", "carrom_image"),
+                    Game("Chess", "chess_image")
+                ),
                 onGameClick = { /* TODO */ }
             )
         }
@@ -90,7 +51,10 @@ fun AppNavGraph(navController: NavHostController) {
             WalletScreen(
                 depositBalance = 500,
                 withdrawableBalance = 200,
-                referralRewards = listOf("Bonus 50 Coins", "Task Reward 20"),
+                referralRewards = listOf(
+                    "Bonus 50 Coins" to 50,
+                    "Task Reward 20" to 20
+                ),
                 onDepositClick = { navController.navigate(Screen.Deposit) },
                 onWithdrawClick = { navController.navigate(Screen.Withdraw) },
                 onTransactionHistoryClick = { navController.navigate(Screen.TransactionHistory) }
@@ -110,7 +74,11 @@ fun AppNavGraph(navController: NavHostController) {
         // Transaction History
         composable(Screen.TransactionHistory) {
             TransactionHistoryScreen(
-                transactions = listOf("Deposit: +500", "Withdraw: -200", "Reward: +50")
+                transactions = listOf(
+                    Transaction("Deposit", 500),
+                    Transaction("Withdraw", -200),
+                    Transaction("Reward", 50)
+                )
             )
         }
 
@@ -168,7 +136,11 @@ fun AppNavGraph(navController: NavHostController) {
         // Task
         composable(Screen.Task) {
             TaskScreen(
-                tasks = listOf("Watch Ad", "Refer Friend", "Daily Login"),
+                tasks = listOf(
+                    Task("Watch Ad", false),
+                    Task("Refer Friend", false),
+                    Task("Daily Login", false)
+                ),
                 onTaskComplete = {}
             )
         }
