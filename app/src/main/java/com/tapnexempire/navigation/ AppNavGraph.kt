@@ -1,12 +1,56 @@
+package com.tapnexempire.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.tapnexempire.ui.auth.LoginScreen
+import com.tapnexempire.ui.auth.OtpVerificationScreen
+import com.tapnexempire.ui.auth.SignupScreen
+import com.tapnexempire.ui.home.HomeScreen
+import com.tapnexempire.ui.profile.ProfileScreen
+import com.tapnexempire.ui.profile.SettingsScreen
+import com.tapnexempire.ui.profile.EditProfileScreen
+import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.wallet.DepositScreen
+import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.ui.wallet.TransactionHistoryScreen
+import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.tournament.TournamentDetailScreen
+import com.tapnexempire.ui.tournament.MyTournamentsScreen
+import com.tapnexempire.ui.task.TaskScreen
+import com.tapnexempire.ui.models.Game
+import com.tapnexempire.ui.models.Transaction
+import com.tapnexempire.ui.models.Task
+import com.tapnexempire.ui.tournament.Tournament
+import com.tapnexempire.ui.splash.SplashScreen
+
+object Screen {
+    const val Splash = "splash"
+    const val Login = "login"
+    const val Signup = "signup"
+    const val OtpVerification = "otp_verification"
+    const val Home = "home"
+    const val Wallet = "wallet"
+    const val Deposit = "deposit"
+    const val Withdraw = "withdraw"
+    const val TransactionHistory = "transaction_history"
+    const val Profile = "profile"
+    const val Settings = "settings"
+    const val EditProfile = "edit_profile"
+    const val TournamentList = "tournament_list"
+    const val TournamentDetail = "tournament_detail"
+    const val MyTournaments = "my_tournaments"
+    const val Task = "task"
+}
+
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Splash) {
 
         // Splash
         composable(Screen.Splash) {
-            SplashScreen(
-                onTimeout = { navController.navigate(Screen.Login) }
-            )
+            SplashScreen(onTimeout = { navController.navigate(Screen.Login) })
         }
 
         // Login
