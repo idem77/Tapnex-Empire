@@ -19,9 +19,6 @@ import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.models.Game
-import com.tapnexempire.ui.models.Transaction
-import com.tapnexempire.ui.models.Task
 import com.tapnexempire.ui.tournament.Tournament
 import com.tapnexempire.ui.splash.SplashScreen
 
@@ -50,7 +47,9 @@ fun AppNavGraph(navController: NavHostController) {
 
         // Splash
         composable(Screen.Splash) {
-            SplashScreen(onTimeout = { navController.navigate(Screen.Login) })
+            SplashScreen(
+                onTimeout = { navController.navigate(Screen.Login) }
+            )
         }
 
         // Login
@@ -77,15 +76,11 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Home
+        // Home (dummy data so UI shows)
         composable(Screen.Home) {
             HomeScreen(
                 coins = 120,
-                gameList = listOf(
-                    Game("Ludo", "ludo_image"),
-                    Game("Carrom", "carrom_image"),
-                    Game("Chess", "chess_image")
-                ),
+                gameList = listOf("Ludo", "Carrom", "Chess"),
                 onGameClick = { /* TODO */ }
             )
         }
@@ -95,10 +90,7 @@ fun AppNavGraph(navController: NavHostController) {
             WalletScreen(
                 depositBalance = 500,
                 withdrawableBalance = 200,
-                referralRewards = listOf(
-                    "Bonus 50 Coins" to 50,
-                    "Task Reward 20" to 20
-                ),
+                referralRewards = listOf("Bonus 50 Coins", "Task Reward 20"),
                 onDepositClick = { navController.navigate(Screen.Deposit) },
                 onWithdrawClick = { navController.navigate(Screen.Withdraw) },
                 onTransactionHistoryClick = { navController.navigate(Screen.TransactionHistory) }
@@ -118,11 +110,7 @@ fun AppNavGraph(navController: NavHostController) {
         // Transaction History
         composable(Screen.TransactionHistory) {
             TransactionHistoryScreen(
-                transactions = listOf(
-                    Transaction("Deposit", 500),
-                    Transaction("Withdraw", -200),
-                    Transaction("Reward", 50)
-                )
+                transactions = listOf("Deposit: +500", "Withdraw: -200", "Reward: +50")
             )
         }
 
@@ -180,11 +168,7 @@ fun AppNavGraph(navController: NavHostController) {
         // Task
         composable(Screen.Task) {
             TaskScreen(
-                tasks = listOf(
-                    Task("Watch Ad", false),
-                    Task("Refer Friend", false),
-                    Task("Daily Login", false)
-                ),
+                tasks = listOf("Watch Ad", "Refer Friend", "Daily Login"),
                 onTaskComplete = {}
             )
         }
