@@ -20,8 +20,10 @@ import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.Tournament
+import com.tapnexempire.ui.splash.SplashScreen
 
 object Screen {
+    const val Splash = "splash"
     const val Login = "login"
     const val Signup = "signup"
     const val OtpVerification = "otp_verification"
@@ -41,8 +43,16 @@ object Screen {
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Login) {
+    NavHost(navController = navController, startDestination = Screen.Splash) {
 
+        // Splash
+        composable(Screen.Splash) {
+            SplashScreen(
+                onTimeout = { navController.navigate(Screen.Login) }
+            )
+        }
+
+        // Login
         composable(Screen.Login) {
             LoginScreen(
                 onLoginClick = { navController.navigate(Screen.OtpVerification) },
@@ -50,6 +60,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // Signup
         composable(Screen.Signup) {
             SignupScreen(
                 onSignupClick = { navController.navigate(Screen.OtpVerification) },
@@ -57,6 +68,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // OTP Verification
         composable(Screen.OtpVerification) {
             OtpVerificationScreen(
                 phoneNumber = "",
@@ -64,37 +76,45 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // Home (dummy data so UI shows)
         composable(Screen.Home) {
             HomeScreen(
-                coins = 0,
-                gameList = emptyList(),
-                onGameClick = {}
+                coins = 120,
+                gameList = listOf("Ludo", "Carrom", "Chess"),
+                onGameClick = { /* TODO */ }
             )
         }
 
+        // Wallet
         composable(Screen.Wallet) {
             WalletScreen(
-                depositBalance = 0,
-                withdrawableBalance = 0,
-                referralRewards = emptyList(),
+                depositBalance = 500,
+                withdrawableBalance = 200,
+                referralRewards = listOf("Bonus 50 Coins", "Task Reward 20"),
                 onDepositClick = { navController.navigate(Screen.Deposit) },
                 onWithdrawClick = { navController.navigate(Screen.Withdraw) },
                 onTransactionHistoryClick = { navController.navigate(Screen.TransactionHistory) }
             )
         }
 
+        // Deposit
         composable(Screen.Deposit) {
-            DepositScreen(onDepositClick = {}, currentDepositBalance = 0)
+            DepositScreen(onDepositClick = {}, currentDepositBalance = 500)
         }
 
+        // Withdraw
         composable(Screen.Withdraw) {
-            WithdrawScreen(onWithdrawClick = {}, currentWithdrawableBalance = 0)
+            WithdrawScreen(onWithdrawClick = {}, currentWithdrawableBalance = 200)
         }
 
+        // Transaction History
         composable(Screen.TransactionHistory) {
-            TransactionHistoryScreen(transactions = emptyList())
+            TransactionHistoryScreen(
+                transactions = listOf("Deposit: +500", "Withdraw: -200", "Reward: +50")
+            )
         }
 
+        // Profile
         composable(Screen.Profile) {
             ProfileScreen(
                 userName = "Queen 👑",
@@ -103,6 +123,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // Settings
         composable(Screen.Settings) {
             SettingsScreen(
                 notificationsEnabled = true,
@@ -111,24 +132,45 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // Edit Profile
         composable(Screen.EditProfile) {
             EditProfileScreen(currentName = "Queen 👑", onSaveClick = {})
         }
 
+        // Tournament List
         composable(Screen.TournamentList) {
-            TournamentListScreen(tournaments = emptyList(), onTournamentClick = { navController.navigate(Screen.TournamentDetail) })
+            TournamentListScreen(
+                tournaments = listOf(
+                    Tournament("Ludo Clash", 50, 1000),
+                    Tournament("Carrom King", 20, 500)
+                ),
+                onTournamentClick = { navController.navigate(Screen.TournamentDetail) }
+            )
         }
 
+        // Tournament Detail
         composable(Screen.TournamentDetail) {
-            TournamentDetailScreen(tournament = Tournament("", 0, 0), onJoinClick = {})
+            TournamentDetailScreen(
+                tournament = Tournament("Ludo Clash", 50, 1000),
+                onJoinClick = {}
+            )
         }
 
+        // My Tournaments
         composable(Screen.MyTournaments) {
-            MyTournamentsScreen(myTournaments = emptyList())
+            MyTournamentsScreen(
+                myTournaments = listOf(
+                    Tournament("Carrom King", 20, 500)
+                )
+            )
         }
 
+        // Task
         composable(Screen.Task) {
-            TaskScreen(tasks = emptyList(), onTaskComplete = {})
+            TaskScreen(
+                tasks = listOf("Watch Ad", "Refer Friend", "Daily Login"),
+                onTaskComplete = {}
+            )
         }
     }
 }
