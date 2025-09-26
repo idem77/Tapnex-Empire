@@ -1,14 +1,15 @@
 package com.tapnexempire.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.tapnexempire.ui.theme.ButtonBackground
 import com.tapnexempire.ui.theme.ButtonTextColor
 
@@ -16,21 +17,24 @@ import com.tapnexempire.ui.theme.ButtonTextColor
 fun AppButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true // ✅ new parameter added
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled, // ✅ used here
         colors = ButtonDefaults.buttonColors(
-            containerColor = ButtonBackground, // ✅ now using your Color.kt
+            containerColor = ButtonBackground,
             contentColor = ButtonTextColor
         ),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .height(50.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Text(
             text = text,
-            fontSize = 16.sp
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
