@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services") // ✅ Firebase plugin added
 }
 
 android {
@@ -38,9 +39,7 @@ android {
     composeOptions { kotlinCompilerExtensionVersion = "1.5.15" }
 
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" }
     }
 }
 
@@ -70,6 +69,11 @@ dependencies {
     // Debug tools
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")       // ✅ Mobile OTP
+    implementation("com.google.firebase:firebase-firestore-ktx")  // ✅ Firestore
 
     // Tests
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.08.00"))
