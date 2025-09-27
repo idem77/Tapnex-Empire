@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services") // ✅ Firebase plugin added
+    id("com.google.gms.google-services") // ✅ Firebase plugin applied
 }
 
 android {
@@ -38,9 +38,7 @@ android {
     buildFeatures { compose = true }
     composeOptions { kotlinCompilerExtensionVersion = "1.5.15" }
 
-    packaging {
-        resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" }
-    }
+    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
 }
 
 dependencies {
@@ -72,8 +70,8 @@ dependencies {
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
-    implementation("com.google.firebase:firebase-auth-ktx")       // ✅ Mobile OTP
-    implementation("com.google.firebase:firebase-firestore-ktx")  // ✅ Firestore
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Tests
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.08.00"))
