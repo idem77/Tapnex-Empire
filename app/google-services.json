@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "891581898507",
+    "project_id": "tapnexempire",
+    "storage_bucket": "tapnexempire.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891581898507:android:5436a9229c376f003ecc0e",
+        "android_client_info": {
+          "package_name": "com.tapnex.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIUUCfHsX7M2DA58QX60pTX2R9XFgZ6bE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
