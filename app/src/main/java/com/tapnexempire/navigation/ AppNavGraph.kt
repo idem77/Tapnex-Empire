@@ -20,10 +20,11 @@ import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.Tournament
-import com.tapnexempire.ui.splash.SplashScreen
+import com.tapnexempire.models.Game
+import com.tapnexempire.models.Task
+import com.tapnexempire.models.Transaction
 
 object Screen {
-    const val Splash = "splash"
     const val Login = "login"
     const val Signup = "signup"
     const val OtpVerification = "otp_verification"
@@ -43,16 +44,8 @@ object Screen {
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Splash) {
+    NavHost(navController = navController, startDestination = Screen.Login) {
 
-        // Splash
-        composable(Screen.Splash) {
-            SplashScreen(
-                onTimeout = { navController.navigate(Screen.Login) }
-            )
-        }
-
-        // Login
         composable(Screen.Login) {
             LoginScreen(
                 onLoginClick = { navController.navigate(Screen.OtpVerification) },
@@ -60,7 +53,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Signup
         composable(Screen.Signup) {
             SignupScreen(
                 onSignupClick = { navController.navigate(Screen.OtpVerification) },
@@ -68,7 +60,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // OTP Verification
         composable(Screen.OtpVerification) {
             OtpVerificationScreen(
                 phoneNumber = "",
@@ -76,45 +67,49 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Home (dummy data so UI shows)
         composable(Screen.Home) {
             HomeScreen(
-                coins = 120,
-                gameList = listOf("Ludo", "Carrom", "Chess"),
-                onGameClick = { /* TODO */ }
+                coins = 500,
+                gameList = listOf(
+                    Game("Ludo", "Classic Ludo game", 0),
+                    Game("Carrom", "Carrom board fun", 0),
+                    Game("Chess", "Mind strategy game", 0)
+                ),
+                onGameClick = {}
             )
         }
 
-        // Wallet
         composable(Screen.Wallet) {
             WalletScreen(
-                depositBalance = 500,
-                withdrawableBalance = 200,
-                referralRewards = listOf("Bonus 50 Coins", "Task Reward 20"),
+                depositBalance = 2000,
+                withdrawableBalance = 1500,
+                referralRewards = listOf(
+                    "Invite Friend +100",
+                    "Daily Bonus +50"
+                ),
                 onDepositClick = { navController.navigate(Screen.Deposit) },
                 onWithdrawClick = { navController.navigate(Screen.Withdraw) },
                 onTransactionHistoryClick = { navController.navigate(Screen.TransactionHistory) }
             )
         }
 
-        // Deposit
         composable(Screen.Deposit) {
-            DepositScreen(onDepositClick = {}, currentDepositBalance = 500)
+            DepositScreen(onDepositClick = {}, currentDepositBalance = 2000)
         }
 
-        // Withdraw
         composable(Screen.Withdraw) {
-            WithdrawScreen(onWithdrawClick = {}, currentWithdrawableBalance = 200)
+            WithdrawScreen(onWithdrawClick = {}, currentWithdrawableBalance = 1500)
         }
 
-        // Transaction History
         composable(Screen.TransactionHistory) {
             TransactionHistoryScreen(
-                transactions = listOf("Deposit: +500", "Withdraw: -200", "Reward: +50")
+                transactions = listOf(
+                    Transaction("Deposit", "+500", "26 Sept 2025"),
+                    Transaction("Withdraw", "-200", "25 Sept 2025")
+                )
             )
         }
 
-        // Profile
         composable(Screen.Profile) {
             ProfileScreen(
                 userName = "Queen 👑",
@@ -123,7 +118,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Settings
         composable(Screen.Settings) {
             SettingsScreen(
                 notificationsEnabled = true,
@@ -132,43 +126,42 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Edit Profile
         composable(Screen.EditProfile) {
             EditProfileScreen(currentName = "Queen 👑", onSaveClick = {})
         }
 
-        // Tournament List
         composable(Screen.TournamentList) {
             TournamentListScreen(
                 tournaments = listOf(
-                    Tournament("Ludo Clash", 50, 1000),
-                    Tournament("Carrom King", 20, 500)
+                    Tournament("Ludo Tournament", 50, 1000),
+                    Tournament("Carrom Tournament", 100, 2000)
                 ),
                 onTournamentClick = { navController.navigate(Screen.TournamentDetail) }
             )
         }
 
-        // Tournament Detail
         composable(Screen.TournamentDetail) {
             TournamentDetailScreen(
-                tournament = Tournament("Ludo Clash", 50, 1000),
+                tournament = Tournament("Ludo Tournament", 50, 1000),
                 onJoinClick = {}
             )
         }
 
-        // My Tournaments
         composable(Screen.MyTournaments) {
             MyTournamentsScreen(
                 myTournaments = listOf(
-                    Tournament("Carrom King", 20, 500)
+                    Tournament("Chess Tournament", 30, 500)
                 )
             )
         }
 
-        // Task
         composable(Screen.Task) {
             TaskScreen(
-                tasks = listOf("Watch Ad", "Refer Friend", "Daily Login"),
+                tasks = listOf(
+                    Task("Complete Profile", false),
+                    Task("Play 1 Game", true),
+                    Task("Invite a Friend", false)
+                ),
                 onTaskComplete = {}
             )
         }
