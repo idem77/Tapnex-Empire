@@ -8,19 +8,25 @@ import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.auth.SignupScreen
 import com.tapnexempire.ui.home.HomeScreen
+import com.tapnexempire.ui.profile.EditProfileScreen
 import com.tapnexempire.ui.profile.ProfileScreen
 import com.tapnexempire.ui.profile.SettingsScreen
-import com.tapnexempire.ui.profile.EditProfileScreen
-import com.tapnexempire.ui.wallet.WalletScreen
-import com.tapnexempire.ui.wallet.DepositScreen
-import com.tapnexempire.ui.wallet.WithdrawScreen
-import com.tapnexempire.ui.wallet.TransactionHistoryScreen
-import com.tapnexempire.ui.tournament.TournamentListScreen
-import com.tapnexempire.ui.tournament.TournamentDetailScreen
-import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.Tournament
-import com.tapnexempire.ui.splash.SplashScreen
+import com.tapnexempire.ui.tournament.MyTournamentsScreen
+import com.tapnexempire.ui.tournament.TournamentDetailScreen
+import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.wallet.DepositScreen
+import com.tapnexempire.ui.wallet.TransactionHistoryScreen
+import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.model.Game
+import com.tapnexempire.model.Transaction
+import com.tapnexempire.model.Task
+import com.tapnexempire.model.Tournament
+import com.tapnexempire.service.AuthService
+import com.tapnexempire.service.WalletService
+import com.tapnexempire.service.TaskService
+import com.tapnexempire.service.TournamentService
 
 object Screen {
     const val Splash = "splash"
@@ -43,29 +49,25 @@ object Screen {
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Splash) {
+    NavHost(navController = navController, startDestination = Screen.Login) {
 
-        // --- Splash Screen ---
-        composable(Screen.Splash) {
-            SplashScreen(
-                onTimeout = {
-                    navController.navigate(Screen.Login) {
-                        popUpTo(Screen.Splash) { inclusive = true } // splash remove from backstack
-                    }
-                }
-            )
-        }
-
+        // --- Auth Screens ---
         composable(Screen.Login) {
             LoginScreen(
-                onLoginClick = { navController.navigate(Screen.OtpVerification) },
+                onLoginClick = { phone ->
+                    AuthService.login(phone) // backend call
+                    navController.navigate(Screen.OtpVerification)
+                },
                 onSignupClick = { navController.navigate(Screen.Signup) }
             )
         }
 
         composable(Screen.Signup) {
             SignupScreen(
-                onSignupClick = { navController.navigate(Screen.OtpVerification) },
+                onSignupClick = { phone ->
+                    AuthService.signup(phone) // backend call
+                    navController.navigate(Screen.OtpVerification)
+                },
                 onLoginClick = { navController.popBackStack() }
             )
         }
@@ -73,23 +75,31 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.OtpVerification) {
             OtpVerificationScreen(
                 phoneNumber = "",
-                onVerifyClick = { navController.navigate(Screen.Home) }
+                onVerifyClick = { otp ->
+                    val success = AuthService.verifyOtp("", otp)
+                    if (success) {
+                        navController.navigate(Screen.Home)
+                    }
+                }
             )
         }
 
+        // --- Home Screen ---
         composable(Screen.Home) {
+            val games: List<Game> = TournamentService.getGames()
             HomeScreen(
-                coins = 0,
-                gameList = emptyList(),
+                coins = WalletService.getCoinBalance(),
+                gameList = games,
                 onGameClick = {}
             )
         }
 
+        // --- Wallet Screens ---
         composable(Screen.Wallet) {
             WalletScreen(
-                depositBalance = 0,
-                withdrawableBalance = 0,
-                referralRewards = emptyList(),
+                depositBalance = WalletService.getDepositBalance(),
+                withdrawableBalance = WalletService.getWithdrawableBalance(),
+                referralRewards = WalletService.getReferralRewards(),
                 onDepositClick = { navController.navigate(Screen.Deposit) },
                 onWithdrawClick = { navController.navigate(Screen.Withdraw) },
                 onTransactionHistoryClick = { navController.navigate(Screen.TransactionHistory) }
@@ -97,20 +107,28 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Deposit) {
-            DepositScreen(onDepositClick = {}, currentDepositBalance = 0)
+            DepositScreen(
+                onDepositClick = { amount -> WalletService.deposit(amount) },
+                currentDepositBalance = WalletService.getDepositBalance()
+            )
         }
 
         composable(Screen.Withdraw) {
-            WithdrawScreen(onWithdrawClick = {}, currentWithdrawableBalance = 0)
+            WithdrawScreen(
+                onWithdrawClick = { amount -> WalletService.withdraw(amount) },
+                currentWithdrawableBalance = WalletService.getWithdrawableBalance()
+            )
         }
 
         composable(Screen.TransactionHistory) {
-            TransactionHistoryScreen(transactions = emptyList())
+            val transactions: List<Transaction> = WalletService.getTransactions()
+            TransactionHistoryScreen(transactions = transactions)
         }
 
+        // --- Profile Screens ---
         composable(Screen.Profile) {
             ProfileScreen(
-                userName = "Queen 👑",
+                userName = AuthService.getCurrentUserName(),
                 onEditProfileClick = { navController.navigate(Screen.EditProfile) },
                 onSettingsClick = { navController.navigate(Screen.Settings) }
             )
@@ -119,29 +137,45 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.Settings) {
             SettingsScreen(
                 notificationsEnabled = true,
-                onNotificationToggle = {},
+                onNotificationToggle = { enabled -> AuthService.setNotifications(enabled) },
                 onHelpClick = {}
             )
         }
 
         composable(Screen.EditProfile) {
-            EditProfileScreen(currentName = "Queen 👑", onSaveClick = {})
+            EditProfileScreen(
+                currentName = AuthService.getCurrentUserName(),
+                onSaveClick = { newName -> AuthService.updateProfile(newName) }
+            )
         }
 
+        // --- Tournament Screens ---
         composable(Screen.TournamentList) {
-            TournamentListScreen(tournaments = emptyList(), onTournamentClick = { navController.navigate(Screen.TournamentDetail) })
+            val tournaments: List<Tournament> = TournamentService.getTournaments()
+            TournamentListScreen(
+                tournaments = tournaments,
+                onTournamentClick = { navController.navigate(Screen.TournamentDetail) }
+            )
         }
 
         composable(Screen.TournamentDetail) {
-            TournamentDetailScreen(tournament = Tournament("", 0, 0), onJoinClick = {})
+            val tournament = TournamentService.getTournamentDetail("1")
+            TournamentDetailScreen(
+                tournament = tournament,
+                onJoinClick = { TournamentService.joinTournament("1") }
+            )
         }
 
         composable(Screen.MyTournaments) {
-            MyTournamentsScreen(myTournaments = emptyList())
+            MyTournamentsScreen(myTournaments = TournamentService.getMyTournaments())
         }
 
+        // --- Task Screen ---
         composable(Screen.Task) {
-            TaskScreen(tasks = emptyList(), onTaskComplete = {})
+            TaskScreen(
+                tasks = TaskService.getTasks(),
+                onTaskComplete = { taskId -> TaskService.completeTask(taskId) }
+            )
         }
     }
 }
