@@ -53,10 +53,13 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.2")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.2")
 
+    // Material3 for themes
+    implementation("androidx.compose.material3:material3:1.2.0-alpha03")
+
     // Firebase BOM (stable)
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
 
-    // Firebase libraries (no -ktx suffix)
+    // Firebase libraries (BOM managed, no -ktx suffix)
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
 }
