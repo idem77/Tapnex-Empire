@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services") // Firebase
+    id("com.google.gms.google-services") // Firebase plugin
 }
 
 android {
@@ -56,7 +56,7 @@ dependencies {
     // Firebase BOM (stable)
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
 
-    // Firebase dependencies managed by BOM
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    // Firebase libraries (no -ktx suffix)
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 }
