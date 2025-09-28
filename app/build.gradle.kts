@@ -1,5 +1,3 @@
-// TapnexEmpire/app/build.gradle.kts
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -55,10 +53,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.2")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.2")
 
-    // Firebase BOM (Stable version)
+    // Firebase BOM (stable)
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
 
-    // Firebase libraries
+    // Firebase dependencies managed by BOM
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
 }
