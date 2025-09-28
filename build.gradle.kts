@@ -1,5 +1,4 @@
 // TapnexEmpire/build.gradle.kts
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
     repositories {
@@ -13,7 +12,5 @@ buildscript {
 }
 
 plugins {
-    // Optional: Kotlin plugin
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
 }
-
