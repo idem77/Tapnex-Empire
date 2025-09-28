@@ -56,7 +56,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.2")
 
     // Firebase BOM (Stable version)
-    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
 
     // Firebase libraries
     implementation("com.google.firebase:firebase-auth-ktx")
