@@ -1,3 +1,5 @@
+// TapnexEmpire/settings.gradle.kts
+
 pluginManagement {
     repositories {
         google()
@@ -14,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Tapnex-Empire"
+rootProject.name = "TapnexEmpire"
 include(":app")
