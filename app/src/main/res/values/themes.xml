@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Light Theme -->
-    <style name="Theme.TapnexEmpire" parent="Theme.Material3.Light.NoActionBar">
+    <!-- Base Theme for Compose -->
+    <style name="Theme.TapnexEmpire" parent="Theme.Material3.Light">
+        <!-- Remove ActionBar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
         <!-- Status & Navigation bar colors -->
         <item name="android:statusBarColor">@color/md_theme_light_primary</item>
         <item name="android:navigationBarColor">@color/md_theme_light_surface</item>
