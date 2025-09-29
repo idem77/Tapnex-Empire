@@ -8,7 +8,7 @@ val PinkPeachDark = Color(0xFFFFC1C1)
 
 // Accent Colors
 val Gold = Color(0xFFFFD700)
-val YellowAccent = Color(0xFFFFF176)
+val SoftSkyBlue = Color(0xFF87CEFA) // updated accent color
 
 // Background
 val LightCream = Color(0xFFFFFBF5)
