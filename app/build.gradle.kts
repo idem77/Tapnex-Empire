@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.android") version "1.9.25"
     id("com.google.gms.google-services") // Firebase plugin
 }
 
@@ -37,7 +37,7 @@ android {
 
     buildFeatures { compose = true }
 
-    composeOptions { kotlinCompilerExtensionVersion = "1.9.25" }
+    composeOptions { kotlinCompilerExtensionVersion = "1.5.16" }
 
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
 }
