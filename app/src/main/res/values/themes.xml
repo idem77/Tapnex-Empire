@@ -1,13 +1,11 @@
 <resources>
+    <!-- Light Theme -->
     <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/pink_peach_light</item>
-        <item name="colorOnPrimary">@color/charcoal_black</item>
+        <!-- No custom colors, Compose handles all colors -->
+    </style>
 
-        <item name="colorSecondary">@color/soft_sky_blue</item>
-        <item name="colorOnSecondary">@color/charcoal_black</item>
-
-        <item name="android:windowBackground">@color/light_cream</item>
-        <item name="colorSurface">@color/card_background</item>
-        <item name="colorOnSurface">@color/charcoal_black</item>
+    <!-- Dark Theme (optional, can remove if not needed) -->
+    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- No custom colors -->
     </style>
 </resources>
