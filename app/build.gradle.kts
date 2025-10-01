@@ -1,7 +1,8 @@
+
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") // Firebase
 }
 
 android {
@@ -14,6 +15,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -31,37 +34,37 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15" // ✅ Works with Kotlin 2.0.20
+        kotlinCompilerExtensionVersion = "1.5.15" // Compose compiler
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
 dependencies {
-    // ✅ Jetpack Compose BOM (brings latest stable versions)
-    implementation(platform("androidx.compose:compose-bom:2024.09.01"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.1.1") 
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // Jetpack Compose
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.compose.ui:ui:1.5.15")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.15")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.5.15")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.navigation:navigation-compose:2.7.3")
 
-    // ✅ AndroidX
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.5")
-    implementation("androidx.activity:activity-compose:1.9.2")
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
-    // ✅ Firebase BOM (syncs all Firebase libs)
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-analytics")
-
-    // ✅ Kotlin coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-
-    // ✅ Optional: Coil for image loading in Compose
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    // Other
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 }
