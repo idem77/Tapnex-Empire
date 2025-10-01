@@ -1,11 +1,7 @@
 <resources>
     <!-- Light Theme -->
-    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light.NoActionBar">
-        <!-- No custom colors, Compose handles all colors -->
-    </style>
+    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light.NoActionBar" />
 
     <!-- Dark Theme (optional, can remove if not needed) -->
-    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar">
-        <!-- No custom colors -->
-    </style>
+    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar" />
 </resources>
