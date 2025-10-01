@@ -6,7 +6,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TapnexEmpire">
+        android:theme="@style/Theme.TapnexEmpire.light">
 
         <activity
             android:name=".MainActivity"
@@ -19,6 +19,7 @@
 
     </application>
 </manifest>
+
 
 
 
