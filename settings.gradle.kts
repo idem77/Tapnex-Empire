@@ -1,8 +1,10 @@
+// TapnexEmpire/settings.gradle.kts
+
 pluginManagement {
     repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
+        google()               // For resolving plugins
+        gradlePluginPortal()   // Default Gradle plugin portal
+        mavenCentral()         // Any extra plugin dependencies
     }
 }
 
