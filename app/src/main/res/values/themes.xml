@@ -1,13 +1,14 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Light Theme -->
-    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light">
-        <!-- Customizations can go here -->
+    <style name="Theme.TapnexEmpire" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/md_theme_light_primary</item>
+        <item name="android:navigationBarColor">@color/md_theme_light_surface</item>
     </style>
 
-    <!-- Dark Theme -->
-    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark">
-        <!-- Customizations can go here -->
+    <!-- Dark Theme (optional, can remove if not needed) -->
+    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Compose handles colors -->
     </style>
 
 </resources>
