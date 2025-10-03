@@ -1,21 +1,9 @@
 <resources>
-    <!-- Primary Colors -->
-    <color name="pink_peach_light">#FFE0E0</color>
-    <color name="pink_peach_dark">#FFC1C1</color>
-
-    <!-- Accent Colors -->
-    <color name="gold">#FFD700</color>
-    <color name="soft_sky_blue">#87CEFA</color>
-
-    <!-- Backgrounds -->
-    <color name="light_cream">#FFFBF5</color>
-
-    <!-- Text Colors -->
-    <color name="charcoal_black">#333333</color>
-    <color name="soft_gray">#666666</color>
-
-    <!-- Optional / Cards / Buttons -->
-    <color name="card_background">#FFF1F1</color>
-    <color name="button_background">#FFD700</color>
-    <color name="button_text_color">#333333</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
 </resources>
