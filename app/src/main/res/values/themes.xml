@@ -2,12 +2,12 @@
 
     <!-- Light Theme -->
     <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light">
-        <!-- All colors handled in Compose / color.kt -->
+        <!-- Colors handled in Compose / color.kt -->
     </style>
 
-    <!-- Dark Theme (optional) -->
+    <!-- Dark Theme -->
     <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark">
-        <!-- All colors handled in Compose / color.kt -->
+        <!-- Colors handled in Compose / color.kt -->
     </style>
 
 </resources>
