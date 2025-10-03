@@ -50,7 +50,7 @@ dependencies {
     // Jetpack Compose
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.compose.ui:ui:1.5.15")
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3:1.3.1")    // lastest stable 
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.15")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.15")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
