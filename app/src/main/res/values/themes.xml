@@ -1,12 +1,12 @@
 <resources>
 
     <!-- Light Theme -->
-    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light">
         <!-- Customizations can go here -->
     </style>
 
     <!-- Dark Theme -->
-    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark">
         <!-- Customizations can go here -->
     </style>
 
