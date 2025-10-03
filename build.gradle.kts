@@ -1,5 +1,23 @@
+buildscript {
+    repositories {
+        google()        // Android & Firebase plugins
+        mavenCentral()  // Required for other dependencies
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.3.0")
+        classpath("com.google.gms:google-services:4.4.0") // Firebase
+    }
+}
+
 plugins {
+    kotlin("android") version "1.9.25" apply false
     id("com.android.application") version "8.3.0" apply false
-    kotlin("android") version "2.0.20" apply false
     id("com.google.gms.google-services") version "4.4.0" apply false
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
