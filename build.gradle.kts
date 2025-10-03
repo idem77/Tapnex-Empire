@@ -1,3 +1,5 @@
+// TapnexEmpire/build.gradle.kts (Project level)
+
 buildscript {
     repositories {
         google()        // Android & Firebase plugins
