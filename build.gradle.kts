@@ -1,11 +1,4 @@
-// TapnexEmpire/build.gradle.kts (Top-level)
-
-buildscript {
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.3.0")
-        classpath("com.google.gms:google-services:4.4.0") // Firebase
-    }
-}
+// TapnexEmpire/build.gradle.kts
 
 plugins {
     kotlin("android") version "1.9.25" apply false
