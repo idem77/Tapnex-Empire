@@ -2,14 +2,14 @@
 
 pluginManagement {
     repositories {
-        google()               // For resolving plugins
-        gradlePluginPortal()   // Default Gradle plugin portal
-        mavenCentral()         // Any extra plugin dependencies
+        gradlePluginPortal()
+        google()
+        mavenCentral()
     }
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
