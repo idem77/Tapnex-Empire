@@ -2,12 +2,12 @@
 
     <!-- Light Theme -->
     <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light">
-        <item name="android:windowBackground">@color/LightCream</item>
+        <!-- All colors handled in Compose / color.kt -->
     </style>
 
     <!-- Dark Theme (optional) -->
     <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark">
-        <item name="android:windowBackground">@color/CharcoalBlack</item>
+        <!-- All colors handled in Compose / color.kt -->
     </style>
 
 </resources>
