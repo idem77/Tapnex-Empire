@@ -1,7 +1,13 @@
 <resources>
-    <!-- Light Theme -->
-    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light.NoActionBar" />
 
-    <!-- Dark Theme (optional, can remove if not needed) -->
-    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar" />
+    <!-- Light Theme -->
+    <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Compose apna color system handle karega -->
+    </style>
+
+    <!-- Dark Theme -->
+    <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Dark mode ke liye bhi same -->
+    </style>
+
 </resources>
