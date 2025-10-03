@@ -1,11 +1,13 @@
 <resources>
+
     <!-- Light Theme -->
     <style name="Theme.TapnexEmpire.Light" parent="Theme.Material3.Light">
-        <!-- Yahan extra colors add kar sakte ho agar chaho -->
+        <item name="android:windowBackground">@color/LightCream</item>
     </style>
 
     <!-- Dark Theme (optional) -->
     <style name="Theme.TapnexEmpire.Dark" parent="Theme.Material3.Dark">
-        <!-- Yahan bhi customizations kar sakte ho -->
+        <item name="android:windowBackground">@color/CharcoalBlack</item>
     </style>
+
 </resources>
