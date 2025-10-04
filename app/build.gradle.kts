@@ -1,13 +1,11 @@
-// TapnexEmpire/app/build.gradle.kts
-
 plugins {
     id("com.android.application")
-    kotlin("android")
-    id("com.google.gms.google-services") // Firebase
+    id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services") // Firebase ke liye
 }
 
 android {
-    namespace = "com.tapnexempire"
+    namespace = "com.tapnex.app"
     compileSdk = 34
 
     defaultConfig {
@@ -18,6 +16,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables { useSupportLibrary = true }
     }
 
     buildTypes {
@@ -30,20 +29,16 @@ android {
         }
     }
 
-    buildFeatures {
-        compose = true
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlinOptions { jvmTarget = "17" }
 
-    composeOptions {
-        // BOM handles version compatibility, so compiler version auto-adjust
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
+    buildFeatures { compose = true }
+    composeOptions { kotlinCompilerExtensionVersion = "1.5.15" }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -51,29 +46,42 @@ android {
 }
 
 dependencies {
-    // Compose BOM - auto-compatible versions
-    implementation(platform("androidx.compose:compose-bom:2025.09.00"))
-
-    // Jetpack Compose
+    // --- Compose BOM ---
+    implementation(platform("androidx.compose:compose-bom:2024.08.00"))
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.activity:activity-compose")
+
+    // Material3
+    implementation("androidx.compose.material3:material3:1.3.0")
+
+    // Icons
+    implementation("androidx.compose.material:material-icons-extended")
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose")
+    implementation("androidx.navigation:navigation-compose:2.8.2")
 
-    // Lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
+    // XML Material (optional, safe)
+    implementation("com.google.android.material:material:1.12.0")
 
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    // Lifecycle & Activity
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+    implementation("androidx.activity:activity-compose:1.9.2")
 
-    // Core Android
-    implementation("androidx.core:core-ktx")
-    implementation("androidx.appcompat:appcompat")
+    // --- Firebase (via BoM) ---
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-analytics")
+
+    // Debug Tools
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Tests
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.08.00"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
