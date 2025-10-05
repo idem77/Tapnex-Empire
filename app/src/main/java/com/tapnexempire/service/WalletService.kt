@@ -3,22 +3,28 @@ package com.tapnexempire.service
 import com.tapnexempire.models.Transaction
 
 object WalletService {
-    private var coins: Int = 500
+    private var depositBalance = 100
+    private var withdrawableBalance = 50
+    private var referralRewards = 10
 
-    fun getCoinBalance(): Int = coins
+    private val transactions = mutableListOf<Transaction>()
 
-    fun getTransactions(): List<Transaction> {
-        return listOf(
-            Transaction("1", 50.0, "credit", "2025-10-01"),
-            Transaction("2", 20.0, "debit", "2025-10-02")
-        )
+    fun getDepositBalance() = depositBalance
+    fun getWithdrawableBalance() = withdrawableBalance
+    fun getReferralRewards() = referralRewards
+
+    fun deposit(amount: Int) {
+        depositBalance += amount
+        transactions.add(Transaction("1", "Today", amount, "Deposit"))
     }
 
-    fun addCoins(amount: Int) {
-        coins += amount
+    fun withdraw(amount: Int) {
+        if (withdrawableBalance >= amount) {
+            withdrawableBalance -= amount
+            transactions.add(Transaction("2", "Today", amount, "Withdraw"))
+        }
     }
 
-    fun deductCoins(amount: Int) {
-        coins -= amount
-    }
+    fun getTransactions() = transactions
+    fun getCoinBalance() = depositBalance + withdrawableBalance + referralRewards
 }
