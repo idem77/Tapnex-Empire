@@ -1,11 +1,35 @@
 package com.tapnexempire.service
 
 import com.tapnexempire.models.Tournament
+import com.tapnexempire.R
 
 object TournamentService {
+
     private val tournaments = listOf(
-        Tournament("1", "Ludo Tournament", "Play and win", 0, 1000),
-        Tournament("2", "Quiz Tournament", "Answer questions", 0, 500)
+        Tournament(
+            id = "1",
+            name = "Ludo Master League",
+            prize = 10000,
+            entryFee = 50,
+            description = "Join the ultimate Ludo challenge and win big!",
+            imageRes = R.drawable.ludo_banner
+        ),
+        Tournament(
+            id = "2",
+            name = "Tapnex Pro Battle",
+            prize = 5000,
+            entryFee = 20,
+            description = "Quick tournament, quick cash rewards.",
+            imageRes = R.drawable.tapnex_banner
+        ),
+        Tournament(
+            id = "3",
+            name = "Weekend Mega Bash",
+            prize = 20000,
+            entryFee = 100,
+            description = "Big weekend tournament with grand prizes!",
+            imageRes = R.drawable.weekend_banner
+        )
     )
 
     fun getTournaments(): List<Tournament> = tournaments
@@ -19,7 +43,7 @@ object TournamentService {
     }
 
     fun getMyTournaments(): List<Tournament> {
-        // later return user joined tournaments
-        return tournaments.take(1)
+        // Later: Return joined tournaments from backend
+        return tournaments.take(2)
     }
 }
