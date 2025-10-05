@@ -1,7 +1,7 @@
 package com.tapnexempire.models
 
 data class Game(
+    val id: String,
     val name: String,
-    val description: String,
     val imageRes: Int
 )
