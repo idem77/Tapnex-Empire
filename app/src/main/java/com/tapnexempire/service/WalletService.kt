@@ -1,29 +1,27 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.models.Transaction
+import com.tapnexempire.model.Transaction
 
 object WalletService {
-    private var depositBalance = 100
-    private var withdrawableBalance = 50
-    private val transactions = mutableListOf<Transaction>()
+    private var coinBalance: Int = 1000
+    private var depositBalance: Int = 500
+    private var withdrawableBalance: Int = 300
+    private var referralRewards: Int = 50
+    private val transactions: MutableList<Transaction> = mutableListOf()
 
-    fun getBalances(): Pair<Int, Int> {
-        return Pair(depositBalance, withdrawableBalance)
-    }
+    fun getCoinBalance(): Int = coinBalance
+    fun getDepositBalance(): Int = depositBalance
+    fun getWithdrawableBalance(): Int = withdrawableBalance
+    fun getReferralRewards(): Int = referralRewards
 
     fun deposit(amount: Int) {
         depositBalance += amount
-        transactions.add(Transaction("Deposit", amount))
+        transactions.add(Transaction("Deposit", amount.toString(), ""))
     }
 
-    fun withdraw(amount: Int): Boolean {
-        return if (withdrawableBalance >= amount) {
-            withdrawableBalance -= amount
-            transactions.add(Transaction("Withdraw", amount))
-            true
-        } else {
-            false
-        }
+    fun withdraw(amount: Int) {
+        withdrawableBalance -= amount
+        transactions.add(Transaction("Withdraw", amount.toString(), ""))
     }
 
     fun getTransactions(): List<Transaction> = transactions
