@@ -1,17 +1,13 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.models.Tournament
+import com.tapnexempire.model.Game
+import com.tapnexempire.model.Tournament
 
 object TournamentService {
-    private val tournaments = listOf(
-        Tournament("1", "Ludo Tournament", 10, 100),
-        Tournament("2", "Quiz Tournament", 5, 50)
+    private val games = listOf(
+        Game("Ludo"),
+        Game("Rummy"),
+        Game("Quiz")
     )
 
-    fun getTournaments(): List<Tournament> = tournaments
-
-    fun joinTournament(id: String): Boolean {
-        // Later: call API
-        return true
-    }
-}
+    private val tournaments = list
