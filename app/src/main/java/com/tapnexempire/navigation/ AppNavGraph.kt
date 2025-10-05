@@ -19,10 +19,10 @@ import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
-import com.tapnexempire.model.Game
-import com.tapnexempire.model.Transaction
-import com.tapnexempire.model.Task
-import com.tapnexempire.model.Tournament
+import com.tapnexempire.models.Game
+import com.tapnexempire.models.Transaction
+import com.tapnexempire.models.Task
+import com.tapnexempire.models.Tournament
 import com.tapnexempire.service.AuthService
 import com.tapnexempire.service.WalletService
 import com.tapnexempire.service.TaskService
