@@ -1,18 +1,33 @@
 package com.tapnexempire.service
 
 object AuthService {
-    fun login(phone: String, password: String): Boolean {
-        // Later: call API
-        return phone == "9999999999" && password == "1234"
+    private var currentUserPhone: String = ""
+    private var currentUserName: String = "User"
+
+    fun login(phone: String) {
+        currentUserPhone = phone
+        // Simulate backend login
     }
 
-    fun signup(phone: String, password: String): Boolean {
-        // Later: call API
-        return true
+    fun signup(phone: String) {
+        currentUserPhone = phone
+        // Simulate backend signup
     }
 
     fun verifyOtp(phone: String, otp: String): Boolean {
-        // Later: call API
-        return otp == "1234"
+        // Always return true for test
+        return true
     }
+
+    fun getCurrentUserName(): String {
+        return currentUserName
+    }
+
+    fun updateProfile(newName: String) {
+        currentUserName = newName
+    }
+
+    private var notificationsEnabled: Boolean = true
+    fun areNotificationsEnabled(): Boolean = notificationsEnabled
+    fun setNotifications(enabled: Boolean) { notificationsEnabled = enabled }
 }
