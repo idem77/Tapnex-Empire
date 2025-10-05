@@ -4,9 +4,10 @@ import com.tapnexempire.models.Task
 
 object TaskService {
     private val tasks = listOf(
-        Task("1", "Complete Profile", "Fill your profile to get coins", 50),
-        Task("2", "Daily Check-in", "Log in daily to earn rewards", 10)
+        Task("1", "Daily Login", "Login to app", 10),
+        Task("2", "Invite Friends", "Invite 3 friends", 30)
     )
 
-    fun getTasks(): List<Task> = tasks
+    fun getTasks() = tasks
+    fun completeTask(taskId: String) { /* just demo */ }
 }
