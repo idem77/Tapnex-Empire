@@ -1,7 +1,8 @@
 package com.tapnexempire.models
 
 data class Transaction(
-    val type: String,       // e.g. "Deposit", "Withdraw"
-    val amount: String,     // e.g. "+500", "-200"
-    val date: String        // e.g. "12 Sept 2025"
+    val id: String,
+    val amount: Double,
+    val type: String, // "credit" or "debit"
+    val date: String
 )
