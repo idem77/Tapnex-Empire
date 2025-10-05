@@ -1,7 +1,7 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.model.Game
-import com.tapnexempire.model.Tournament
+import com.tapnexempire.models.Game
+import com.tapnexempire.models.Tournament
 
 object TournamentService {
     private val games = listOf(
