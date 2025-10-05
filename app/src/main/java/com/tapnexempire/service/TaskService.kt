@@ -1,6 +1,6 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.model.Task
+import com.tapnexempire.models.Task
 
 object TaskService {
     private val tasks = mutableListOf(
