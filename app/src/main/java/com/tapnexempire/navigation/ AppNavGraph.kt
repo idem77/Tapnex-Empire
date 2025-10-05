@@ -19,14 +19,9 @@ import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
-import com.tapnexempire.models.Game
-import com.tapnexempire.models.Transaction
-import com.tapnexempire.models.Task
-import com.tapnexempire.models.Tournament
-import com.tapnexempire.service.AuthService
-import com.tapnexempire.service.WalletService
-import com.tapnexempire.service.TaskService
-import com.tapnexempire.service.TournamentService
+import com.tapnexempire.ui.splash.SplashScreen
+import com.tapnexempire.model.*
+import com.tapnexempire.service.*
 
 object Screen {
     const val Splash = "splash"
@@ -49,13 +44,24 @@ object Screen {
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Login) {
+    NavHost(navController = navController, startDestination = Screen.Splash) {
+
+        // --- Splash Screen ---
+        composable(Screen.Splash) {
+            SplashScreen(
+                onTimeout = {
+                    navController.navigate(Screen.Login) {
+                        popUpTo(Screen.Splash) { inclusive = true }
+                    }
+                }
+            )
+        }
 
         // --- Auth Screens ---
         composable(Screen.Login) {
             LoginScreen(
                 onLoginClick = { phone ->
-                    AuthService.login(phone)
+                    AuthService.login(phone, "1234")
                     navController.navigate(Screen.OtpVerification)
                 },
                 onSignupClick = { navController.navigate(Screen.Signup) }
@@ -65,7 +71,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.Signup) {
             SignupScreen(
                 onSignupClick = { phone ->
-                    AuthService.signup(phone)
+                    AuthService.signup(phone, "1234")
                     navController.navigate(Screen.OtpVerification)
                 },
                 onLoginClick = { navController.popBackStack() }
@@ -76,19 +82,19 @@ fun AppNavGraph(navController: NavHostController) {
             OtpVerificationScreen(
                 phoneNumber = "",
                 onVerifyClick = { otp ->
-                    val success = AuthService.verifyOtp("", otp)
-                    if (success) navController.navigate(Screen.Home)
+                    if (AuthService.verifyOtp("", otp)) {
+                        navController.navigate(Screen.Home)
+                    }
                 }
             )
         }
 
         // --- Home Screen ---
         composable(Screen.Home) {
-            val games: List<Game> = TournamentService.getGames()
             HomeScreen(
                 coins = WalletService.getCoinBalance(),
-                gameList = games,
-                onGameClick = { /* handle click */ }
+                gameList = TournamentService.getGames(),
+                onGameClick = {}
             )
         }
 
@@ -119,8 +125,7 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.TransactionHistory) {
-            val transactions: List<Transaction> = WalletService.getTransactions()
-            TransactionHistoryScreen(transactions = transactions)
+            TransactionHistoryScreen(transactions = WalletService.getTransactions())
         }
 
         // --- Profile Screens ---
@@ -136,7 +141,7 @@ fun AppNavGraph(navController: NavHostController) {
             SettingsScreen(
                 notificationsEnabled = AuthService.areNotificationsEnabled(),
                 onNotificationToggle = { enabled -> AuthService.setNotifications(enabled) },
-                onHelpClick = { /* handle help */ }
+                onHelpClick = {}
             )
         }
 
@@ -149,17 +154,15 @@ fun AppNavGraph(navController: NavHostController) {
 
         // --- Tournament Screens ---
         composable(Screen.TournamentList) {
-            val tournaments: List<Tournament> = TournamentService.getTournaments()
             TournamentListScreen(
-                tournaments = tournaments,
+                tournaments = TournamentService.getTournaments(),
                 onTournamentClick = { navController.navigate(Screen.TournamentDetail) }
             )
         }
 
         composable(Screen.TournamentDetail) {
-            val tournament = TournamentService.getTournamentDetail("1")
             TournamentDetailScreen(
-                tournament = tournament,
+                tournament = TournamentService.getTournamentDetail("1"),
                 onJoinClick = { TournamentService.joinTournament("1") }
             )
         }
