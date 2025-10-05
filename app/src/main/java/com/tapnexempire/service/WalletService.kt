@@ -1,6 +1,6 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.model.Transaction
+import com.tapnexempire.models.Transaction
 
 object WalletService {
     private var coinBalance: Int = 1000
