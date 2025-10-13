@@ -1,72 +1,120 @@
 package com.tapnexempire.ui.tournament
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme.CardBackground
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.Gold
-
-data class Tournament(
-    val name: String,
-    val reward: Int,
-    val participants: Int
-)
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tapnexempire.viewmodel.TournamentViewModel
+import com.tapnexempire.model.TournamentModel
 
 @Composable
 fun TournamentListScreen(
-    tournaments: List<Tournament>,
-    onTournamentClick: (Tournament) -> Unit
+    onTournamentClick: (String) -> Unit,
+    viewModel: TournamentViewModel = viewModel()
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(text = "Tournaments", fontSize = 24.sp, color = CharcoalBlack)
+    val tournaments by viewModel.tournaments.collectAsState()
 
-        Spacer(modifier = Modifier.height(16.dp))
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Tournaments", fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF101820),
+                    titleContentColor = Color.White
+                )
+            )
+        },
+        containerColor = Color(0xFFF8F9FA)
+    ) { padding ->
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(tournaments) { tournament ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clickable { onTournamentClick(tournament) },
-                    shape = CardDefaults.shape,
-                    colors = CardDefaults.cardColors(containerColor = CardBackground),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = tournament.name, fontSize = 18.sp, color = CharcoalBlack)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Reward: ${tournament.reward} Coins", fontSize = 16.sp, color = Gold)
-                            Text(text = "${tournament.participants} Participants", fontSize = 14.sp, color = CharcoalBlack)
-                        }
-                    }
+        if (tournaments.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Loading tournaments...", color = Color.Gray)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+            ) {
+                items(tournaments) { tournament ->
+                    TournamentCard(
+                        tournament = tournament,
+                        onClick = { onTournamentClick(tournament.id) }
+                    )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun TournamentCard(tournament: TournamentModel, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = tournament.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF101820)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Entry Fee: ${tournament.entryFee} coins",
+                color = Color(0xFF5C5C5C),
+                fontSize = 14.sp
+            )
+
+            Text(
+                text = "Players: ${tournament.joinedPlayers}/${tournament.totalPlayers}",
+                color = Color(0xFF5C5C5C),
+                fontSize = 14.sp
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            val joinText = when {
+                tournament.isFull -> "Full"
+                tournament.isJoined -> "Joined"
+                else -> "Join Now"
+            }
+
+            Button(
+                onClick = onClick,
+                enabled = !tournament.isFull && !tournament.isJoined,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (tournament.isJoined) Color.Gray else Color(0xFF007BFF)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(joinText, color = Color.White)
             }
         }
     }
