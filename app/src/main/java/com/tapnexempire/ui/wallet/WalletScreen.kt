@@ -1,85 +1,71 @@
 package com.tapnexempire.ui.wallet
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.tapnexempire.components.AppButton
-import com.tapnexempire.components.RewardCard
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.Gold
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun WalletScreen(
-    depositBalance: Int,
-    withdrawableBalance: Int,
-    referralRewards: List<Pair<String, Int>>, // title and amount
-    onDepositClick: () -> Unit,
-    onWithdrawClick: () -> Unit,
-    onTransactionHistoryClick: () -> Unit
+    viewModel: WalletViewModel = viewModel()
 ) {
+    val state by viewModel.walletState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Deposit Balance (non-withdrawable)
-        Text(text = "Deposit Balance", fontSize = 16.sp, color = CharcoalBlack)
-        RewardCard(
-            rewardTitle = "Deposit Balance",
-            rewardAmount = depositBalance,
-            onClaim = {} // non-clickable
-        )
+        Text("💎 Total Coins: ${state.totalCoins}", style = MaterialTheme.typography.headlineSmall)
 
-        // Withdrawable Balance
-        Text(text = "Withdrawable Balance", fontSize = 16.sp, color = CharcoalBlack)
-        RewardCard(
-            rewardTitle = "Withdrawable Balance",
-            rewardAmount = withdrawableBalance,
-            onClaim = {} // non-clickable
-        )
+        WalletCard(title = "Deposit Coins", coins = state.depositCoins, color = MaterialTheme.colorScheme.primaryContainer)
+        WalletCard(title = "Winning Coins", coins = state.winningCoins, color = MaterialTheme.colorScheme.secondaryContainer)
 
-        // Quick Actions
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            AppButton(
-                text = "Deposit",
-                modifier = Modifier.weight(1f),
-                onClick = onDepositClick
-            )
-            AppButton(
-                text = "Withdraw",
-                modifier = Modifier.weight(1f),
-                onClick = onWithdrawClick
-            )
-        }
+            Button(onClick = { viewModel.addDepositCoins(500) }) {
+                Text("Add / Earn 500")
+            }
 
-        // Referral / Task Rewards List
-        Text(text = "Referral / Task Rewards", fontSize = 16.sp, color = CharcoalBlack)
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxHeight()
-        ) {
-            items(referralRewards) { reward ->
-                RewardCard(
-                    rewardTitle = reward.first,
-                    rewardAmount = reward.second,
-                    onClaim = {} // non-clickable
-                )
+            Button(onClick = { viewModel.addWinningCoins(200) }) {
+                Text("Add Winning 200")
             }
         }
 
-        // Transaction History Button
-        AppButton(
-            text = "Transaction History",
-            onClick = onTransactionHistoryClick
-        )
+        Button(
+            onClick = { viewModel.withdrawCoins(200) },
+            enabled = state.winningCoins >= 200
+        ) {
+            Text("Withdraw 200 Coins")
+        }
+
+        Button(
+            onClick = { viewModel.deductCoins(150) },
+            enabled = state.totalCoins >= 150
+        ) {
+            Text("Join Tournament (150 Coins)")
+        }
+    }
+}
+
+@Composable
+fun WalletCard(title: String, coins: Int, color: androidx.compose.ui.graphics.Color) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = color)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            Text(text = "$coins Coins", style = MaterialTheme.typography.titleLarge)
+        }
     }
 }
