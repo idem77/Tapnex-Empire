@@ -1,30 +1,63 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.models.Transaction
+import com.tapnexempire.models.Wallet
 
 object WalletService {
-    private var depositBalance = 100
-    private var withdrawableBalance = 50
-    private var referralRewards = 10
 
-    private val transactions = mutableListOf<Transaction>()
+    // 🧠 In-memory store (later you can connect to Firebase / Room DB)
+    private val wallets = mutableMapOf<String, Wallet>()
 
-    fun getDepositBalance() = depositBalance
-    fun getWithdrawableBalance() = withdrawableBalance
-    fun getReferralRewards() = referralRewards
-
-    fun deposit(amount: Int) {
-        depositBalance += amount
-        transactions.add(Transaction("1", "Today", amount, "Deposit"))
-    }
-
-    fun withdraw(amount: Int) {
-        if (withdrawableBalance >= amount) {
-            withdrawableBalance -= amount
-            transactions.add(Transaction("2", "Today", amount, "Withdraw"))
+    // 🪙 Initialize wallet for new user
+    fun createWallet(userId: String) {
+        if (wallets[userId] == null) {
+            wallets[userId] = Wallet(
+                userId = userId,
+                depositCoins = 0.0,
+                withdrawableCoins = 0.0
+            )
         }
     }
 
-    fun getTransactions() = transactions
-    fun getCoinBalance() = depositBalance + withdrawableBalance + referralRewards
+    // 💸 Get balances
+    fun getDepositBalance(userId: String): Double = wallets[userId]?.depositCoins ?: 0.0
+    fun getWithdrawableBalance(userId: String): Double = wallets[userId]?.withdrawableCoins ?: 0.0
+    fun getTotalBalance(userId: String): Double = getDepositBalance(userId) + getWithdrawableBalance(userId)
+
+    // ➕ Add coins
+    fun addDeposit(userId: String, amount: Double) {
+        val wallet = wallets[userId] ?: createWalletAndReturn(userId)
+        wallet.depositCoins += amount
+    }
+
+    fun addWithdrawable(userId: String, amount: Double) {
+        val wallet = wallets[userId] ?: createWalletAndReturn(userId)
+        wallet.withdrawableCoins += amount
+    }
+
+    // ➖ Deduct coins
+    fun deductDeposit(userId: String, amount: Double) {
+        val wallet = wallets[userId] ?: createWalletAndReturn(userId)
+        wallet.depositCoins = (wallet.depositCoins - amount).coerceAtLeast(0.0)
+    }
+
+    fun deductWithdrawable(userId: String, amount: Double) {
+        val wallet = wallets[userId] ?: createWalletAndReturn(userId)
+        wallet.withdrawableCoins = (wallet.withdrawableCoins - amount).coerceAtLeast(0.0)
+    }
+
+    // 🧾 Helper to ensure wallet exists
+    private fun createWalletAndReturn(userId: String): Wallet {
+        createWallet(userId)
+        return wallets[userId]!!
+    }
+
+    // 🪄 For testing/debug (you can remove later)
+    fun printWallet(userId: String) {
+        val w = wallets[userId]
+        if (w != null) {
+            println("Wallet of $userId → Deposit: ${w.depositCoins}, Withdrawable: ${w.withdrawableCoins}, Total: ${getTotalBalance(userId)}")
+        } else {
+            println("Wallet not found for user $userId")
+        }
+    }
 }
