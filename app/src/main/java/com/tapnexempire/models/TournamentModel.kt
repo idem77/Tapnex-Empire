@@ -1,6 +1,6 @@
 package com.tapnexempire.models
 
-data class TournamentModels(
+data class TournamentModel(
     val id: String = "",
     val title: String = "",
     val entryFee: Int = 0, // in coins
