@@ -1,6 +1,6 @@
 package com.tapnexempire.repository
 
-import com.tapnexempire.model.TournamentModel
+import com.tapnexempire.models.TournamentModel
 import kotlin.random.Random
 import java.util.UUID
 
