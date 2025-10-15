@@ -1,6 +1,6 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.models.Tournament
+import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.models.User
 import com.tapnexempire.service.WalletService
 import kotlin.random.Random
