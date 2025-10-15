@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.tapnexempire.models.Transaction
+import com.tapnexempire.models.TransactionModel
 
 class WalletViewModel : ViewModel() {
 
