@@ -19,7 +19,7 @@ import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.Tournament
+import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.ui.splash.SplashScreen
 
 object Screen {
@@ -132,7 +132,7 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.TournamentDetail) {
-            TournamentDetailScreen(tournament = Tournament("", 0, 0), onJoinClick = {})
+            TournamentDetailScreen(tournament = TournamentModel("", 0, 0), onJoinClick = {})
         }
 
         composable(Screen.MyTournaments) {
