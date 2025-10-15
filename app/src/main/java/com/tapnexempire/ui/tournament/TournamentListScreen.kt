@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapnexempire.viewmodel.TournamentViewModel
-import com.tapnexempire.model.TournamentModel
+import com.tapnexempire.models.TournamentModel
 
 @Composable
 fun TournamentListScreen(
