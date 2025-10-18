@@ -1,4 +1,4 @@
-package com.tapnexempire.services
+package com.tapnexempire.service
 
 class AuthService {
 
