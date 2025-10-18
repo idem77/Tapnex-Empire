@@ -1,0 +1,39 @@
+package com.tapnexempire.viewmodel
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+
+class AuthViewModel : ViewModel() {
+
+    // States for user input
+    var phoneNumber = mutableStateOf("")
+    var otpCode = mutableStateOf("")
+    var isLoggedIn = mutableStateOf(false)
+
+    // Simulate sending OTP
+    fun sendOtp(number: String) {
+        phoneNumber.value = number
+        // In real app, call backend or Firebase here
+        println("OTP sent to: $number")
+    }
+
+    // Simulate verifying OTP
+    fun verifyOtp(otp: String): Boolean {
+        otpCode.value = otp
+        return if (otp == "1234") { // Dummy OTP for testing
+            isLoggedIn.value = true
+            println("OTP Verified ✅")
+            true
+        } else {
+            println("OTP Invalid ❌")
+            false
+        }
+    }
+
+    // Simulate logout
+    fun logout() {
+        isLoggedIn.value = false
+        phoneNumber.value = ""
+        otpCode.value = ""
+    }
+}
