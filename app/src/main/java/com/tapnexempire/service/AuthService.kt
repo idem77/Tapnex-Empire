@@ -1,16 +1,37 @@
-package com.tapnexempire.service
+package com.tapnexempire.services
 
-object AuthService {
-    private var currentUserName = "Demo User"
-    private var notificationsEnabled = true
+class AuthService {
 
-    fun login(phone: String) = true
-    fun signup(phone: String) = true
-    fun verifyOtp(phone: String, otp: String) = otp == "1234"
+    // Simulated database for demo purpose
+    private val registeredUsers = mutableMapOf<String, String>() // phone -> otp
 
-    fun getCurrentUserName() = currentUserName
-    fun updateProfile(newName: String) { currentUserName = newName }
+    // Send OTP (simulated)
+    fun sendOtp(phone: String): Boolean {
+        val otp = "1234" // Dummy OTP for testing
+        registeredUsers[phone] = otp
+        println("OTP sent to $phone: $otp")
+        return true
+    }
 
-    fun areNotificationsEnabled() = notificationsEnabled
-    fun setNotifications(enabled: Boolean) { notificationsEnabled = enabled }
+    // Verify OTP
+    fun verifyOtp(phone: String, otp: String): Boolean {
+        val correctOtp = registeredUsers[phone]
+        return otp == correctOtp
+    }
+
+    // Register user
+    fun registerUser(phone: String): Boolean {
+        if (!registeredUsers.containsKey(phone)) {
+            registeredUsers[phone] = "1234"
+            println("User registered: $phone")
+            return true
+        }
+        return false
+    }
+
+    // Logout simulation
+    fun logout(phone: String) {
+        registeredUsers.remove(phone)
+        println("User logged out: $phone")
+    }
 }
