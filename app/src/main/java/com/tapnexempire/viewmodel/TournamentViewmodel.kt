@@ -4,19 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.repository.TournamentRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TournamentViewModel : ViewModel() {
-
-    private val repository = TournamentRepository()
+@HiltViewModel
+class TournamentViewModel @Inject constructor(
+    private val repository: TournamentRepository
+) : ViewModel() {
 
     private val _tournaments = MutableStateFlow<List<TournamentModel>>(emptyList())
     val tournaments: StateFlow<List<TournamentModel>> = _tournaments
 
     private val _selectedTournament = MutableStateFlow<TournamentModel?>(null)
     val selectedTournament: StateFlow<TournamentModel?> = _selectedTournament
+
+    private val _myTournaments = MutableStateFlow<List<TournamentModel>>(emptyList())
+    val myTournaments: StateFlow<List<TournamentModel>> = _myTournaments
 
     init {
         loadTournaments()
@@ -29,28 +35,22 @@ class TournamentViewModel : ViewModel() {
         }
     }
 
-    fun joinTournament(id: String, userCoins: Int): Boolean {
+    fun joinTournament(tournament: TournamentModel) {
         val list = _tournaments.value.toMutableList()
-        val index = list.indexOfFirst { it.id == id }
+        val index = list.indexOfFirst { it.id == tournament.id }
 
-        if (index == -1) return false
+        if (index == -1 || tournament.isFull) return
 
-        val tournament = list[index]
-        if (tournament.isFull) return false
-        if (userCoins < tournament.entryFee) return false
-
-        // update player count
         val updatedTournament = tournament.copy(
             joinedPlayers = tournament.joinedPlayers + 1,
             isFull = tournament.joinedPlayers + 1 >= tournament.totalPlayers,
             isJoined = true
         )
-        list[index] = updatedTournament
 
+        list[index] = updatedTournament
         _tournaments.value = list
         _selectedTournament.value = updatedTournament
-
-        return true
+        _myTournaments.value = _myTournaments.value + updatedTournament
     }
 
     fun getTournamentDetails(id: String): TournamentModel? {
@@ -60,4 +60,4 @@ class TournamentViewModel : ViewModel() {
     fun refresh() {
         loadTournaments()
     }
-          }
+}
