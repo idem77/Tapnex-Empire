@@ -1,39 +1,56 @@
 package com.tapnexempire.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val firebaseAuth: FirebaseAuth
+) : ViewModel() {
 
-    // States for user input
-    var phoneNumber = mutableStateOf("")
-    var otpCode = mutableStateOf("")
-    var isLoggedIn = mutableStateOf(false)
+    private val _isLoggedIn = MutableStateFlow(firebaseAuth.currentUser != null)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
-    // Simulate sending OTP
-    fun sendOtp(number: String) {
-        phoneNumber.value = number
-        // In real app, call backend or Firebase here
-        println("OTP sent to: $number")
-    }
+    private val _authMessage = MutableStateFlow<String?>(null)
+    val authMessage: StateFlow<String?> = _authMessage
 
-    // Simulate verifying OTP
-    fun verifyOtp(otp: String): Boolean {
-        otpCode.value = otp
-        return if (otp == "1234") { // Dummy OTP for testing
-            isLoggedIn.value = true
-            println("OTP Verified ✅")
-            true
-        } else {
-            println("OTP Invalid ❌")
-            false
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    _isLoggedIn.value = task.isSuccessful && firebaseAuth.currentUser != null
+                    _authMessage.value = if (task.isSuccessful) {
+                        "Login successful 🎉"
+                    } else {
+                        task.exception?.message ?: "Login failed 😞"
+                    }
+                }
         }
     }
 
-    // Simulate logout
+    fun signup(email: String, password: String) {
+        viewModelScope.launch {
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    _isLoggedIn.value = task.isSuccessful && firebaseAuth.currentUser != null
+                    _authMessage.value = if (task.isSuccessful) {
+                        "Account created successfully 🥳"
+                    } else {
+                        task.exception?.message ?: "Signup failed 😢"
+                    }
+                }
+        }
+    }
+
     fun logout() {
-        isLoggedIn.value = false
-        phoneNumber.value = ""
-        otpCode.value = ""
+        firebaseAuth.signOut()
+        _isLoggedIn.value = false
+        _authMessage.value = "Logged out successfully 👋"
     }
 }
