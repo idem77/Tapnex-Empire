@@ -1,10 +1,11 @@
 package com.tapnexempire.repository
 
 import com.tapnexempire.models.TournamentModel
+import javax.inject.Inject
 import kotlin.random.Random
 import java.util.UUID
 
-class TournamentRepository {
+class TournamentRepository @Inject constructor() {
 
     fun getTournaments(): List<TournamentModel> {
         val tournaments = mutableListOf<TournamentModel>()
@@ -16,7 +17,7 @@ class TournamentRepository {
             val count = categoryDistribution[entry] ?: 0
             repeat(count) {
                 val totalPlayers = 100
-                val joinedPlayers = Random.nextInt(40, totalPlayers) // random to simulate live users
+                val joinedPlayers = Random.nextInt(40, totalPlayers)
                 val prizePool = entry * totalPlayers
                 val startTime = System.currentTimeMillis()
                 val endTime = startTime + (7 * 60 * 60 * 1000) // 7 hours later
