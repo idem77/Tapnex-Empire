@@ -1,11 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services") // Firebase ke liye
-    id("com.google.dagger.hilt.android") version "2.51.1" apply false // Hilt plugin
-    kotlin("kapt") // Hilt ke liye
+    id("com.google.gms.google-services") // Firebase
+    id("com.google.dagger.hilt.android") // ✅ apply Hilt here
+    kotlin("kapt") // for Hilt
 }
-
 android {
     namespace = "com.tapnex.app"
     compileSdk = 34
