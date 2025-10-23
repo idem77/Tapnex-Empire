@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services") // Firebase ke liye
-    id("com.google.dagger.hilt.android") version "2.47" apply false // Hilt plugin
+    id("com.google.dagger.hilt.android") version "2.51.1" apply false // Hilt plugin
     kotlin("kapt") // Hilt ke liye
 }
 
@@ -77,8 +77,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     // --- Hilt ---
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-compiler:2.47")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
 
     // Debug Tools
     debugImplementation("androidx.compose.ui:ui-tooling")
