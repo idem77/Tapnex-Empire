@@ -4,7 +4,12 @@ import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.models.User
 import com.tapnexempire.service.WalletService
 import kotlin.random.Random
+package com.tapnexempire.repository
+import javax.inject.Inject
 
+class TournamentRepository @Inject constructor() {
+    // existing code...
+}
 object TournamentLogic {
 
     /**
