@@ -1,6 +1,6 @@
 package com.tapnexempire.models
 
-data class Task(
+data class TaskModel(
     val id: String,
     val title: String,
     val description: String,
