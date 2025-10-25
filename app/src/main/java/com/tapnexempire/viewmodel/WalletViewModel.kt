@@ -29,7 +29,7 @@ class WalletViewModel @Inject constructor(
     val totalCoins: StateFlow<Int> = _totalCoins
 
     private val _transactions = MutableStateFlow<List<String>>(emptyList())
-    val transactions: StateFlow<List<String>> = _transactions
+    val transactions: StateFlow<List<Transaction>>(emptyList())
 
     private val _dailyTasks = MutableStateFlow<List<TaskModel>>(emptyList())
     val dailyTasks: StateFlow<List<TaskModel>> = _dailyTasks
