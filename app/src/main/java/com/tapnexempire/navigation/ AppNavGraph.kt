@@ -26,6 +26,7 @@ import com.tapnexempire.viewmodel.AuthViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 
+// ✅ Navigation Routes
 object Screen {
     const val Splash = "splash"
     const val Login = "login"
@@ -40,7 +41,7 @@ object Screen {
     const val Settings = "settings"
     const val EditProfile = "edit_profile"
     const val TournamentList = "tournament_list"
-    const val TournamentDetail = "tournament_detail"
+    const val TournamentDetail = "tournament_detail/{tournamentId}"
     const val MyTournaments = "my_tournaments"
     const val Task = "task"
 }
@@ -48,7 +49,7 @@ object Screen {
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    // Inject ViewModels
+    // ✅ Inject ViewModels via Hilt
     val authViewModel: AuthViewModel = hiltViewModel()
     val walletViewModel: WalletViewModel = hiltViewModel()
     val tournamentViewModel: TournamentViewModel = hiltViewModel()
@@ -94,7 +95,7 @@ fun AppNavGraph(navController: NavHostController) {
                 coins = walletViewModel.totalCoins.value,
                 gameList = tournamentViewModel.games.value,
                 onGameClick = { gameId ->
-                    navController.navigate(Screen.TournamentDetail + "/$gameId")
+                    navController.navigate("tournament_detail/$gameId")
                 }
             )
         }
@@ -162,13 +163,17 @@ fun AppNavGraph(navController: NavHostController) {
             TournamentListScreen(
                 tournaments = tournamentViewModel.tournaments.value,
                 onTournamentClick = { tournamentId ->
-                    navController.navigate(Screen.TournamentDetail + "/$tournamentId")
+                    navController.navigate("tournament_detail/$tournamentId")
                 }
             )
         }
 
-        composable(Screen.TournamentDetail) {
-            val selectedTournament = tournamentViewModel.selectedTournament.value ?: TournamentModel("", 0, 0)
+        // ✅ Corrected route and parameter passing
+        composable("tournament_detail/{tournamentId}") { backStackEntry ->
+            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
+            val selectedTournament = tournamentViewModel.tournaments.value
+                .find { it.id == tournamentId } ?: TournamentModel("", 0, 0)
+
             TournamentDetailScreen(
                 tournament = selectedTournament,
                 onJoinClick = {
