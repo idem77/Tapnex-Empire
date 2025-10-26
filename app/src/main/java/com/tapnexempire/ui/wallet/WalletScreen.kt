@@ -6,13 +6,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun WalletScreen(
-    viewModel: WalletViewModel = viewModel()
+    viewModel: WalletViewModel = hiltViewModel() // ✅ connect with ViewModel via Hilt
 ) {
-    val state by viewModel.walletState.collectAsState()
+    val state by viewModel.walletState.collectAsState() // collect state from ViewModel
 
     Column(
         modifier = Modifier
@@ -23,8 +24,16 @@ fun WalletScreen(
     ) {
         Text("💎 Total Coins: ${state.totalCoins}", style = MaterialTheme.typography.headlineSmall)
 
-        WalletCard(title = "Deposit Coins", coins = state.depositCoins, color = MaterialTheme.colorScheme.primaryContainer)
-        WalletCard(title = "Winning Coins", coins = state.winningCoins, color = MaterialTheme.colorScheme.secondaryContainer)
+        WalletCard(
+            title = "Deposit Coins",
+            coins = state.depositCoins,
+            color = MaterialTheme.colorScheme.primaryContainer
+        )
+        WalletCard(
+            title = "Winning Coins",
+            coins = state.winningCoins,
+            color = MaterialTheme.colorScheme.secondaryContainer
+        )
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
