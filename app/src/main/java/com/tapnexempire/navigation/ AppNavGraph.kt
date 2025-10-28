@@ -21,12 +21,22 @@ import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.splash.SplashScreen
+
+// ✅ Models
+import com.tapnexempire.models.Game
+import com.tapnexempire.models.User
+import com.tapnexempire.models.TaskModel
+import com.tapnexempire.models.TransactionModel
+import com.tapnexempire.models.Reward
 import com.tapnexempire.models.TournamentModel
+import com.tapnexempire.models.Wallet
+
+// ✅ ViewModels
 import com.tapnexempire.viewmodel.AuthViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 
-// ✅ Navigation Routes
+// ✅ Routes
 object Screen {
     const val Splash = "splash"
     const val Login = "login"
@@ -49,13 +59,14 @@ object Screen {
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    // ✅ Inject ViewModels via Hilt
+    // ✅ Inject ViewModels using Hilt
     val authViewModel: AuthViewModel = hiltViewModel()
     val walletViewModel: WalletViewModel = hiltViewModel()
     val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = Screen.Splash) {
 
+        // 🟢 Splash
         composable(Screen.Splash) {
             SplashScreen(
                 onTimeout = {
@@ -66,6 +77,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Login
         composable(Screen.Login) {
             LoginScreen(
                 onLoginClick = { navController.navigate(Screen.OtpVerification) },
@@ -74,6 +86,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Signup
         composable(Screen.Signup) {
             SignupScreen(
                 onSignupClick = { navController.navigate(Screen.OtpVerification) },
@@ -82,6 +95,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 OTP
         composable(Screen.OtpVerification) {
             OtpVerificationScreen(
                 phoneNumber = authViewModel.phoneNumber.value,
@@ -90,6 +104,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Home
         composable(Screen.Home) {
             HomeScreen(
                 coins = walletViewModel.totalCoins.value,
@@ -100,6 +115,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Wallet
         composable(Screen.Wallet) {
             WalletScreen(
                 depositBalance = walletViewModel.depositBalance.value,
@@ -111,6 +127,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Deposit
         composable(Screen.Deposit) {
             DepositScreen(
                 onDepositClick = { amount ->
@@ -120,6 +137,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Withdraw
         composable(Screen.Withdraw) {
             WithdrawScreen(
                 onWithdrawClick = { amount ->
@@ -129,10 +147,12 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Transaction History
         composable(Screen.TransactionHistory) {
             TransactionHistoryScreen(transactions = walletViewModel.transactions.value)
         }
 
+        // 🟢 Profile
         composable(Screen.Profile) {
             ProfileScreen(
                 userName = authViewModel.userName.value,
@@ -141,6 +161,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Settings
         composable(Screen.Settings) {
             SettingsScreen(
                 notificationsEnabled = true,
@@ -149,6 +170,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Edit Profile
         composable(Screen.EditProfile) {
             EditProfileScreen(
                 currentName = authViewModel.userName.value,
@@ -159,6 +181,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 Tournament List
         composable(Screen.TournamentList) {
             TournamentListScreen(
                 tournaments = tournamentViewModel.tournaments.value,
@@ -168,7 +191,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ✅ Corrected route and parameter passing
+        // 🟢 Tournament Detail
         composable("tournament_detail/{tournamentId}") { backStackEntry ->
             val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
             val selectedTournament = tournamentViewModel.tournaments.value
@@ -182,10 +205,12 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 🟢 My Tournaments
         composable(Screen.MyTournaments) {
             MyTournamentsScreen(myTournaments = tournamentViewModel.myTournaments.value)
         }
 
+        // 🟢 Tasks
         composable(Screen.Task) {
             TaskScreen(
                 tasks = walletViewModel.dailyTasks.value,
