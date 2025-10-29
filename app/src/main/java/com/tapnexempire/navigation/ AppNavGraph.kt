@@ -27,7 +27,7 @@ import com.tapnexempire.models.Game
 import com.tapnexempire.models.User
 import com.tapnexempire.models.TaskModel
 import com.tapnexempire.models.TransactionModel
-import com.tapnexempire.models.Reward
+import com.tapnexempire.models.RewardType
 import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.models.Wallet
 
