@@ -1,10 +1,10 @@
-// TapnexEmpire/app/src/main/java/com/tapnexempire/viewmodel/WalletViewModel.kt
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapnexempire.repository.WalletRepository
 import com.tapnexempire.models.TaskModel
+import com.tapnexempire.models.TransactionModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,8 +28,8 @@ class WalletViewModel @Inject constructor(
     private val _totalCoins = MutableStateFlow(0)
     val totalCoins: StateFlow<Int> = _totalCoins
 
-    private val _transactions = MutableStateFlow<List<String>>(emptyList())
-    val transactions: StateFlow<List<Transaction>> =_transactions
+    private val _transactions = MutableStateFlow<List<TransactionModel>>(emptyList())
+    val transactions: StateFlow<List<TransactionModel>> = _transactions
 
     private val _dailyTasks = MutableStateFlow<List<TaskModel>>(emptyList())
     val dailyTasks: StateFlow<List<TaskModel>> = _dailyTasks
@@ -74,6 +74,7 @@ class WalletViewModel @Inject constructor(
         viewModelScope.launch {
             repository.completeTask(taskId)
             loadTasks()
+            refreshWallet()
         }
     }
 }
