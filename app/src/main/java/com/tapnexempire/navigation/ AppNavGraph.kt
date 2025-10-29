@@ -21,22 +21,17 @@ import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.splash.SplashScreen
-
-// ✅ Models
+import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.models.Game
 import com.tapnexempire.models.User
 import com.tapnexempire.models.TaskModel
 import com.tapnexempire.models.TransactionModel
 import com.tapnexempire.models.RewardType
-import com.tapnexempire.models.TournamentModel
-import com.tapnexempire.models.Wallet
-
-// ✅ ViewModels
 import com.tapnexempire.viewmodel.AuthViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 
-// ✅ Routes
+// ✅ All navigation routes in one place
 object Screen {
     const val Splash = "splash"
     const val Login = "login"
@@ -59,14 +54,14 @@ object Screen {
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    // ✅ Inject ViewModels using Hilt
+    // ✅ Inject all ViewModels via Hilt
     val authViewModel: AuthViewModel = hiltViewModel()
     val walletViewModel: WalletViewModel = hiltViewModel()
     val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = Screen.Splash) {
 
-        // 🟢 Splash
+        // Splash
         composable(Screen.Splash) {
             SplashScreen(
                 onTimeout = {
@@ -77,7 +72,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Login
+        // Authentication Screens
         composable(Screen.Login) {
             LoginScreen(
                 onLoginClick = { navController.navigate(Screen.OtpVerification) },
@@ -86,7 +81,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Signup
         composable(Screen.Signup) {
             SignupScreen(
                 onSignupClick = { navController.navigate(Screen.OtpVerification) },
@@ -95,7 +89,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 OTP
         composable(Screen.OtpVerification) {
             OtpVerificationScreen(
                 phoneNumber = authViewModel.phoneNumber.value,
@@ -104,7 +97,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Home
+        // Home
         composable(Screen.Home) {
             HomeScreen(
                 coins = walletViewModel.totalCoins.value,
@@ -115,44 +108,34 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Wallet
+        // Wallet
         composable(Screen.Wallet) {
             WalletScreen(
-                depositBalance = walletViewModel.depositBalance.value,
-                withdrawableBalance = walletViewModel.withdrawableBalance.value,
-                referralRewards = walletViewModel.referralRewards.value,
-                onDepositClick = { navController.navigate(Screen.Deposit) },
-                onWithdrawClick = { navController.navigate(Screen.Withdraw) },
-                onTransactionHistoryClick = { navController.navigate(Screen.TransactionHistory) }
+                viewModel = walletViewModel
             )
         }
 
-        // 🟢 Deposit
         composable(Screen.Deposit) {
             DepositScreen(
-                onDepositClick = { amount ->
-                    walletViewModel.deposit(amount)
-                },
+                onDepositClick = { amount -> walletViewModel.deposit(amount) },
                 currentDepositBalance = walletViewModel.depositBalance.value
             )
         }
 
-        // 🟢 Withdraw
         composable(Screen.Withdraw) {
             WithdrawScreen(
-                onWithdrawClick = { amount ->
-                    walletViewModel.withdraw(amount)
-                },
+                onWithdrawClick = { amount -> walletViewModel.withdraw(amount) },
                 currentWithdrawableBalance = walletViewModel.withdrawableBalance.value
             )
         }
 
-        // 🟢 Transaction History
         composable(Screen.TransactionHistory) {
-            TransactionHistoryScreen(transactions = walletViewModel.transactions.value)
+            TransactionHistoryScreen(
+                transactions = walletViewModel.transactions.value
+            )
         }
 
-        // 🟢 Profile
+        // Profile
         composable(Screen.Profile) {
             ProfileScreen(
                 userName = authViewModel.userName.value,
@@ -161,7 +144,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Settings
         composable(Screen.Settings) {
             SettingsScreen(
                 notificationsEnabled = true,
@@ -170,7 +152,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Edit Profile
         composable(Screen.EditProfile) {
             EditProfileScreen(
                 currentName = authViewModel.userName.value,
@@ -181,7 +162,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Tournament List
+        // Tournament
         composable(Screen.TournamentList) {
             TournamentListScreen(
                 tournaments = tournamentViewModel.tournaments.value,
@@ -191,7 +172,6 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🟢 Tournament Detail
         composable("tournament_detail/{tournamentId}") { backStackEntry ->
             val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
             val selectedTournament = tournamentViewModel.tournaments.value
@@ -199,18 +179,17 @@ fun AppNavGraph(navController: NavHostController) {
 
             TournamentDetailScreen(
                 tournament = selectedTournament,
-                onJoinClick = {
-                    tournamentViewModel.joinTournament(selectedTournament)
-                }
+                onJoinClick = { tournamentViewModel.joinTournament(selectedTournament) }
             )
         }
 
-        // 🟢 My Tournaments
         composable(Screen.MyTournaments) {
-            MyTournamentsScreen(myTournaments = tournamentViewModel.myTournaments.value)
+            MyTournamentsScreen(
+                myTournaments = tournamentViewModel.myTournaments.value
+            )
         }
 
-        // 🟢 Tasks
+        // Tasks
         composable(Screen.Task) {
             TaskScreen(
                 tasks = walletViewModel.dailyTasks.value,
