@@ -1,80 +1,34 @@
 package com.tapnexempire.ui.wallet
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun WalletScreen(
-    viewModel: WalletViewModel = hiltViewModel() // ✅ connect with ViewModel via Hilt
+    viewModel: WalletViewModel = hiltViewModel(),
+    onDepositClick: () -> Unit,
+    onWithdrawClick: () -> Unit,
+    onTransactionHistoryClick: () -> Unit
 ) {
-    val state by viewModel.walletState.collectAsState() // collect state from ViewModel
+    val depositBalance = viewModel.depositBalance.collectAsState().value
+    val withdrawableBalance = viewModel.withdrawableBalance.collectAsState().value
+    val referralRewards = viewModel.referralRewards.collectAsState().value
+    val totalCoins = viewModel.totalCoins.collectAsState().value
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("💎 Total Coins: ${state.totalCoins}", style = MaterialTheme.typography.headlineSmall)
-
-        WalletCard(
-            title = "Deposit Coins",
-            coins = state.depositCoins,
-            color = MaterialTheme.colorScheme.primaryContainer
-        )
-        WalletCard(
-            title = "Winning Coins",
-            coins = state.winningCoins,
-            color = MaterialTheme.colorScheme.secondaryContainer
-        )
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Button(onClick = { viewModel.addDepositCoins(500) }) {
-                Text("Add / Earn 500")
-            }
-
-            Button(onClick = { viewModel.addWinningCoins(200) }) {
-                Text("Add Winning 200")
-            }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("My Wallet 💰", fontWeight = FontWeight.Bold) }
+            )
         }
-
-        Button(
-            onClick = { viewModel.withdrawCoins(200) },
-            enabled = state.winningCoins >= 200
-        ) {
-            Text("Withdraw 200 Coins")
-        }
-
-        Button(
-            onClick = { viewModel.deductCoins(150) },
-            enabled = state.totalCoins >= 150
-        ) {
-            Text("Join Tournament (150 Coins)")
-        }
-    }
-}
-
-@Composable
-fun WalletCard(title: String, coins: Int, color: androidx.compose.ui.graphics.Color) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = color)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
-            Text(text = "$coins Coins", style = MaterialTheme.typography.titleLarge)
-        }
-    }
-}
+    ) { innerPadding ->
