@@ -1,5 +1,3 @@
-// TapnexEmpire/app/src/main/java/com/tapnexempire/TapnexEmpireApp.kt
-
 package com.tapnexempire
 
 import android.app.Application
