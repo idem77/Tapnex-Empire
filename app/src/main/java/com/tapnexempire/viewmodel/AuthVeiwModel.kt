@@ -1,48 +1,91 @@
 package com.tapnexempire.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
-) : ViewModel() {
+class AuthViewModel @Inject constructor() : ViewModel() {
 
-    private val _isLoggedIn = MutableStateFlow(firebaseAuth.currentUser != null)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
-    private val _authMessage = MutableStateFlow<String?>(null)
-    val authMessage: StateFlow<String?> = _authMessage
+    val phoneNumber = mutableStateOf("")
+    val otp = mutableStateOf("")
+    val verificationId = mutableStateOf<String?>(null)
 
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    _isLoggedIn.value = task.isSuccessful && firebaseAuth.currentUser != null
-                    _authMessage.value = if (task.isSuccessful) {
-                        "Login successful 🎉"
-                    } else {
-                        task.exception?.message ?: "Login failed 😞"
-                    }
-                }
+    val isOtpSent = mutableStateOf(false)
+    val isVerifying = mutableStateOf(false)
+    val isLoggedIn = mutableStateOf(firebaseAuth.currentUser != null)
+    val errorMessage = mutableStateOf<String?>(null)
+
+    // 🔹 Step 1: Send OTP
+    fun sendOtp(activity: android.app.Activity) {
+        val number = phoneNumber.value.trim()
+        if (number.isEmpty() || number.length < 10) {
+            errorMessage.value = "Enter valid phone number"
+            return
         }
+
+        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+            .setPhoneNumber("+91$number") // 🇮🇳 change prefix if needed
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity)
+            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    // Auto verification
+                    signInWithCredential(credential)
+                }
+
+                override fun onVerificationFailed(e: Exception) {
+                    errorMessage.value = e.message
+                    isOtpSent.value = false
+                }
+
+                override fun onCodeSent(
+                    verificationIdParam: String,
+                    token: PhoneAuthProvider.ForceResendingToken
+                ) {
+                    verificationId.value = verificationIdParam
+                    isOtpSent.value = true
+                }
+            })
+            .build()
+
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    fun signup(email: String, password: String) {
+    // 🔹 Step 2: Verify OTP
+    fun verifyOtp() {
+        val id = verificationId.value
+        val code = otp.value.trim()
+        if (id.isNullOrEmpty() || code.isEmpty()) {
+            errorMessage.value = "Invalid OTP or Verification ID"
+            return
+        }
+
+        isVerifying.value = true
+        val credential = PhoneAuthProvider.getCredential(id, code)
+        signInWithCredential(credential)
+    }
+
+    private fun signInWithCredential(credential: PhoneAuthCredential) {
         viewModelScope.launch {
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
+            firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
-                    _isLoggedIn.value = task.isSuccessful && firebaseAuth.currentUser != null
-                    _authMessage.value = if (task.isSuccessful) {
-                        "Account created successfully 🥳"
+                    isVerifying.value = false
+                    if (task.isSuccessful) {
+                        isLoggedIn.value = true
                     } else {
-                        task.exception?.message ?: "Signup failed 😢"
+                        errorMessage.value = task.exception?.message
                     }
                 }
         }
@@ -50,7 +93,6 @@ class AuthViewModel @Inject constructor(
 
     fun logout() {
         firebaseAuth.signOut()
-        _isLoggedIn.value = false
-        _authMessage.value = "Logged out successfully 👋"
+        isLoggedIn.value = false
     }
 }
