@@ -1,61 +1,63 @@
 package com.tapnexempire.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.google.firebase.FirebaseException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-@HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class AuthViewModel : ViewModel() {
 
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    val phoneNumber = mutableStateOf("")
-    val otp = mutableStateOf("")
-    val verificationId = mutableStateOf<String?>(null)
+    private val _verificationId = MutableStateFlow<String?>(null)
+    val verificationId: StateFlow<String?> = _verificationId
 
-    val isOtpSent = mutableStateOf(false)
-    val isVerifying = mutableStateOf(false)
-    val isLoggedIn = mutableStateOf(firebaseAuth.currentUser != null)
-    val errorMessage = mutableStateOf<String?>(null)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    // 🔹 Step 1: Send OTP
-    fun sendOtp(activity: android.app.Activity) {
-        val number = phoneNumber.value.trim()
-        if (number.isEmpty() || number.length < 10) {
-            errorMessage.value = "Enter valid phone number"
-            return
-        }
+    private val _otpSent = MutableStateFlow(false)
+    val otpSent: StateFlow<Boolean> = _otpSent
+
+    private val _loginSuccess = MutableStateFlow(false)
+    val loginSuccess: StateFlow<Boolean> = _loginSuccess
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
+    /**
+     * 🔹 Send OTP to user’s phone number
+     */
+    fun sendOtp(phoneNumber: String, activity: android.app.Activity) {
+        _isLoading.value = true
+        _errorMessage.value = null
 
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber("+91$number") // 🇮🇳 change prefix if needed
+            .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(activity)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    // Auto verification
+                    _isLoading.value = false
                     signInWithCredential(credential)
                 }
 
-                override fun onVerificationFailed(e: Exception) {
-                    errorMessage.value = e.message
-                    isOtpSent.value = false
+                override fun onVerificationFailed(e: FirebaseException) {
+                    _isLoading.value = false
+                    _errorMessage.value = e.localizedMessage ?: "Verification failed"
                 }
 
-                override fun onCodeSent(
-                    verificationIdParam: String,
-                    token: PhoneAuthProvider.ForceResendingToken
-                ) {
-                    verificationId.value = verificationIdParam
-                    isOtpSent.value = true
+                override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
+                    _isLoading.value = false
+                    _otpSent.value = true
+                    _verificationId.value = verificationId
                 }
             })
             .build()
@@ -63,29 +65,29 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    // 🔹 Step 2: Verify OTP
-    fun verifyOtp() {
-        val id = verificationId.value
-        val code = otp.value.trim()
-        if (id.isNullOrEmpty() || code.isEmpty()) {
-            errorMessage.value = "Invalid OTP or Verification ID"
-            return
-        }
+    /**
+     * 🔹 Verify OTP and login
+     */
+    fun verifyOtp(otpCode: String) {
+        val verificationId = _verificationId.value ?: return
+        _isLoading.value = true
 
-        isVerifying.value = true
-        val credential = PhoneAuthProvider.getCredential(id, code)
+        val credential = PhoneAuthProvider.getCredential(verificationId, otpCode)
         signInWithCredential(credential)
     }
 
+    /**
+     * 🔹 Sign in with credential
+     */
     private fun signInWithCredential(credential: PhoneAuthCredential) {
         viewModelScope.launch {
             firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
-                    isVerifying.value = false
+                    _isLoading.value = false
                     if (task.isSuccessful) {
-                        isLoggedIn.value = true
+                        _loginSuccess.value = true
                     } else {
-                        errorMessage.value = task.exception?.message
+                        _errorMessage.value = task.exception?.localizedMessage ?: "Login failed"
                     }
                 }
         }
@@ -93,6 +95,6 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     fun logout() {
         firebaseAuth.signOut()
-        isLoggedIn.value = false
+        _loginSuccess.value = false
     }
 }
