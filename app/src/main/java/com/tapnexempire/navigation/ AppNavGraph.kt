@@ -5,7 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.tapnexempire.ui.auth.LoginScreen
+import com.tapnexempire.ui.auth.OtpLoginScreen
+import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.profile.ProfileScreen
 import com.tapnexempire.ui.splash.SplashScreen
@@ -35,20 +36,30 @@ fun AppNavGraph(navController: NavHostController) {
                             popUpTo("splash") { inclusive = true }
                         }
                     else
-                        navController.navigate("login") {
+                        navController.navigate("otpLogin") {
                             popUpTo("splash") { inclusive = true }
                         }
                 }
             )
         }
 
-        // 🔐 Login Screen
-        composable("login") {
-            LoginScreen(
-                authViewModel = authViewModel,
-                onLoginSuccess = {
+        // 📱 OTP Login Screen
+        composable("otpLogin") {
+            OtpLoginScreen(
+                viewModel = authViewModel,
+                onOtpSent = {
+                    navController.navigate("otpVerification")
+                }
+            )
+        }
+
+        // 🔢 OTP Verification Screen
+        composable("otpVerification") {
+            OtpVerificationScreen(
+                viewModel = authViewModel,
+                onSuccess = {
                     navController.navigate("home") {
-                        popUpTo("login") { inclusive = true }
+                        popUpTo("otpLogin") { inclusive = true }
                     }
                 }
             )
@@ -76,12 +87,9 @@ fun AppNavGraph(navController: NavHostController) {
         // 👤 Profile Screen
         composable("profile") {
             ProfileScreen(
-                onLogout = {
-                    authViewModel.logout()
-                    navController.navigate("login") {
-                        popUpTo("home") { inclusive = true }
-                    }
-                }
+                userName = "Lazy King 👑",
+                onEditProfileClick = { /* edit screen later */ },
+                onSettingsClick = { /* settings later */ }
             )
         }
     }
