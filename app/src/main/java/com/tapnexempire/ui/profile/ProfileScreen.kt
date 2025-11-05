@@ -7,18 +7,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import com.tapnexempire.components.AppButton
 import com.tapnexempire.components.ProfileItem
 import com.tapnexempire.ui.theme.CharcoalBlack
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Person
 
 @Composable
 fun ProfileScreen(
-    userName: String,
-    onEditProfileClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    userName: String = "Tapnex Player",
+    onEditProfileClick: (() -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null,
+    onLogout: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -27,21 +28,33 @@ fun ProfileScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // User Info
-        Text(text = "Hello, $userName", fontSize = 24.sp, color = CharcoalBlack)
-
-        AppButton(
-            text = "Edit Profile",
-            onClick = onEditProfileClick
+        // 👤 User Info
+        Text(
+            text = "Hello, $userName",
+            fontSize = 24.sp,
+            color = CharcoalBlack
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // ✏️ Edit Profile (Optional)
+        onEditProfileClick?.let {
+            AppButton(text = "Edit Profile", onClick = it)
+        }
 
-        // Settings Item
-        ProfileItem(
-            icon = Icons.Default.Settings,
-            label = "Settings",
-            onClick = onSettingsClick
+        // ⚙️ Settings (Optional)
+        onSettingsClick?.let {
+            ProfileItem(
+                icon = Icons.Default.Settings,
+                label = "Settings",
+                onClick = it
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 🚪 Logout Button
+        AppButton(
+            text = "Logout",
+            onClick = onLogout
         )
     }
 }
