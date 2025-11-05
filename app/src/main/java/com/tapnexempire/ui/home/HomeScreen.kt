@@ -1,46 +1,39 @@
 package com.tapnexempire.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.components.CoinCard
-import com.tapnexempire.components.GameTile
-
-data class Game(
-    val name: String,
-    val reward: Int
-)
 
 @Composable
 fun HomeScreen(
     coins: Int,
-    gameList: List<Game>,
-    onGameClick: (Game) -> Unit
+    onWalletClick: () -> Unit,
+    onTournamentClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Coin Card at the top
-        CoinCard(coins = coins)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // List of Games
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Tapnex Empire") })
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(gameList) { game ->
-                GameTile(
-                    gameName = game.name,
-                    reward = game.reward,
-                    onClick = { onGameClick(game) }
-                )
+            Text(text = "Coins: $coins", style = MaterialTheme.typography.titleLarge)
+            Button(onClick = onWalletClick, modifier = Modifier.fillMaxWidth()) {
+                Text("Go to Wallet")
+            }
+            Button(onClick = onTournamentClick, modifier = Modifier.fillMaxWidth()) {
+                Text("Play Tournaments")
+            }
+            Button(onClick = onProfileClick, modifier = Modifier.fillMaxWidth()) {
+                Text("View Profile")
             }
         }
     }
