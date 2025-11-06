@@ -7,28 +7,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tapnexempire.viewmodel.AuthViewModel
-import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OtpLoginScreen(
+fun OtpVerificationScreen(
     viewModel: AuthViewModel,
-    onOtpSent: () -> Unit
+    onSuccess: () -> Unit
 ) {
     val context = LocalContext.current as Activity
 
-    var phoneNumber by remember { mutableStateOf("") }
+    var otpCode by remember { mutableStateOf("") }
     val isLoading by viewModel.isLoading.collectAsState()
-    val otpSent by viewModel.otpSent.collectAsState()
+    val isVerified by viewModel.isVerified.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    LaunchedEffect(otpSent) {
-        if (otpSent) onOtpSent()
+    LaunchedEffect(isVerified) {
+        if (isVerified) {
+            onSuccess()
+        }
     }
 
     Column(
@@ -38,16 +39,16 @@ fun OtpLoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Login with Phone", fontSize = 26.sp, color = MaterialTheme.colorScheme.primary)
+        Text("Verify OTP", fontSize = 26.sp, color = MaterialTheme.colorScheme.primary)
 
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = phoneNumber,
-            onValueChange = { phoneNumber = it },
-            label = { Text("Enter Phone Number") },
+            value = otpCode,
+            onValueChange = { otpCode = it },
+            label = { Text("Enter 6-digit OTP") },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -55,8 +56,8 @@ fun OtpLoginScreen(
 
         Button(
             onClick = {
-                if (phoneNumber.isNotEmpty()) {
-                    viewModel.sendOtp("+91$phoneNumber", context)
+                if (otpCode.isNotEmpty()) {
+                    viewModel.verifyOtp(otpCode, context)
                 }
             },
             enabled = !isLoading,
@@ -65,7 +66,7 @@ fun OtpLoginScreen(
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary)
             } else {
-                Text("Send OTP")
+                Text("Verify OTP")
             }
         }
 
