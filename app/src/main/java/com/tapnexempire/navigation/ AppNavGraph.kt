@@ -1,95 +1,87 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.tapnexempire.ui.auth.OtpLoginScreen
-import com.tapnexempire.ui.auth.OtpVerificationScreen
+import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.profile.ProfileScreen
-import com.tapnexempire.ui.splash.SplashScreen
-import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.profile.ProfileScreen
+import com.tapnexempire.ui.tournament.TournamentScreen
+import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.viewmodel.AuthViewModel
-import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
-
-    val authViewModel: AuthViewModel = hiltViewModel()
-    val walletViewModel: WalletViewModel = hiltViewModel()
-    val tournamentViewModel: TournamentViewModel = hiltViewModel()
-
+fun AppNavGraph(
+    navController: NavHostController,
+    authViewModel: AuthViewModel,
+    walletViewModel: WalletViewModel,
+    tournamentViewModel: TournamentViewModel
+) {
     NavHost(
         navController = navController,
         startDestination = "splash"
     ) {
-        // 🟢 Splash Screen
+
+        // Splash
         composable("splash") {
             SplashScreen(
-                onTimeout = {
-                    if (authViewModel.isLoggedIn.value)
-                        navController.navigate("home") {
-                            popUpTo("splash") { inclusive = true }
-                        }
-                    else
-                        navController.navigate("otpLogin") {
-                            popUpTo("splash") { inclusive = true }
-                        }
-                }
+                onNavigateToLogin = { navController.navigate("login") },
+                onNavigateToHome = { navController.navigate("home") }
             )
         }
 
-        // 📱 OTP Login Screen
-        composable("otpLogin") {
-            OtpLoginScreen(
-                viewModel = authViewModel,
-                onOtpSent = {
-                    navController.navigate("otpVerification")
-                }
-            )
-        }
-
-        // 🔢 OTP Verification Screen
-        composable("otpVerification") {
-            OtpVerificationScreen(
-                viewModel = authViewModel,
-                onSuccess = {
+        // Login
+        composable("login") {
+            LoginScreen(
+                authViewModel = authViewModel,
+                onLoginSuccess = {
                     navController.navigate("home") {
-                        popUpTo("otpLogin") { inclusive = true }
+                        popUpTo("login") { inclusive = true }
                     }
                 }
             )
         }
 
-        // 🏠 Home Screen
+        // Home
         composable("home") {
             HomeScreen(
+                coins = walletViewModel.coins,
+                gameList = tournamentViewModel.tournamentList,
                 onWalletClick = { navController.navigate("wallet") },
-                onTournamentClick = { navController.navigate("tournamentList") },
-                onProfileClick = { navController.navigate("profile") }
+                onTournamentClick = { navController.navigate("tournament") },
+                onProfileClick = { navController.navigate("profile") },
+                onGameClick = { /* TODO: Add game detail */ }
             )
         }
 
-        // 💰 Wallet Screen
+        // Wallet
         composable("wallet") {
-            WalletScreen(walletViewModel = walletViewModel)
+            WalletScreen(
+                walletViewModel = walletViewModel,
+                onDepositClick = { /* Deposit flow */ },
+                onWithdrawClick = { /* Withdraw flow */ },
+                onTransactionHistoryClick = { /* History flow */ }
+            )
         }
 
-        // 🏆 Tournament List
-        composable("tournamentList") {
-            TournamentListScreen(tournamentViewModel = tournamentViewModel)
+        // Tournament
+        composable("tournament") {
+            TournamentScreen(
+                tournamentViewModel = tournamentViewModel,
+                onTournamentClick = { /* Join tournament */ }
+            )
         }
 
-        // 👤 Profile Screen
+        // Profile
         composable("profile") {
             ProfileScreen(
-                userName = "Lazy King 👑",
-                onEditProfileClick = { /* edit screen later */ },
-                onSettingsClick = { /* settings later */ }
+                userName = "Tapnex Player",
+                onEditProfileClick = { /* TODO */ },
+                onSettingsClick = { /* TODO */ }
             )
         }
     }
