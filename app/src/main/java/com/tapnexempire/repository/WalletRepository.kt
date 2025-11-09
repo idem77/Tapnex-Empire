@@ -1,113 +1,50 @@
 package com.tapnexempire.repository
 
-import com.tapnexempire.models.TaskModel
 import com.tapnexempire.models.TransactionModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
-data class WalletData(
-    val deposit: Int,
-    val withdrawable: Int,
-    val referralRewards: Int,
-    val totalCoins: Int,
-    val transactions: List<TransactionModel>
-)
-
+@Singleton
 class WalletRepository @Inject constructor() {
 
-    private var depositCoins = 5000   // Coins user added or got via bonuses
-    private var withdrawableCoins = 0 // User cannot withdraw these in Tapnex
-    private var referralRewards = 250
-    private var transactions = mutableListOf<TransactionModel>()
+    private val _transactions = MutableStateFlow<List<TransactionModel>>(emptyList())
+    val transactions = _transactions.asStateFlow()
 
-    suspend fun getWalletData(): WalletData {
-        delay(300) // simulate API delay
-        val total = depositCoins + withdrawableCoins + referralRewards
-        return WalletData(
-            deposit = depositCoins,
-            withdrawable = withdrawableCoins,
-            referralRewards = referralRewards,
-            totalCoins = total,
-            transactions = transactions.toList()
-        )
-    }
+    private var totalCoins = 0
 
-    suspend fun depositCoins(amount: Int) {
-        delay(200)
-        depositCoins += amount
-        transactions.add(
+    // ✅ Add coins (rewards, tasks, etc.)
+    fun addCoins(amount: Int, type: String = "Reward", isDepositCoin: Boolean = false) {
+        totalCoins += amount
+        addTransaction(
             TransactionModel(
-                type = "Deposit",
+                id = System.currentTimeMillis().toString(),
+                type = type,
                 amount = amount,
-                isDepositCoin = true
+                isDepositCoin = isDepositCoin
             )
         )
     }
 
-    suspend fun withdrawCoins(amount: Int) {
-        delay(200)
-        if (withdrawableCoins >= amount) {
-            withdrawableCoins -= amount
-            transactions.add(
+    // ✅ Deduct coins for joins, etc.
+    fun deductCoins(amount: Int, type: String = "Tournament Join") {
+        if (totalCoins >= amount) {
+            totalCoins -= amount
+            addTransaction(
                 TransactionModel(
-                    type = "Withdraw",
-                    amount = amount,
-                    isDepositCoin = false
-                )
-            )
-        } else {
-            transactions.add(
-                TransactionModel(
-                    type = "Withdraw Failed",
-                    amount = amount,
+                    id = System.currentTimeMillis().toString(),
+                    type = type,
+                    amount = -amount,
                     isDepositCoin = false
                 )
             )
         }
     }
 
-    suspend fun getDailyTasks(): List<TaskModel> {
-        delay(200)
-        return listOf(
-            TaskModel("1", "Play 3 tournaments", 300, false),
-            TaskModel("2", "Refer a friend", 200, false),
-            TaskModel("3", "Login daily", 100, true)
-        )
+    private fun addTransaction(transaction: TransactionModel) {
+        _transactions.value = _transactions.value + transaction
     }
 
-    suspend fun completeTask(taskId: String) {
-        delay(200)
-        when (taskId) {
-            "1" -> {
-                depositCoins += 300
-                transactions.add(
-                    TransactionModel(
-                        type = "Task Reward",
-                        amount = 300,
-                        isDepositCoin = true
-                    )
-                )
-            }
-            "2" -> {
-                referralRewards += 200
-                transactions.add(
-                    TransactionModel(
-                        type = "Referral Reward",
-                        amount = 200,
-                        isDepositCoin = true
-                    )
-                )
-            }
-            "3" -> {
-                depositCoins += 100
-                transactions.add(
-                    TransactionModel(
-                        type = "Daily Login Reward",
-                        amount = 100,
-                        isDepositCoin = true
-                    )
-                )
-            }
-        }
-    }
+    fun getBalance(): Int = totalCoins
 }
