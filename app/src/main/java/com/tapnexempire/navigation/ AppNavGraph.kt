@@ -27,23 +27,25 @@ fun AppNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = "splash"
     ) {
-        // ðŸŸ¢ Splash Screen
+        // 🚀 Splash Screen
         composable("splash") {
             SplashScreen(
                 onTimeout = {
-                    if (authViewModel.isLoggedIn.value)
+                    val isUserLoggedIn = authViewModel.isUserLoggedIn.value
+                    if (isUserLoggedIn) {
                         navController.navigate("home") {
                             popUpTo("splash") { inclusive = true }
                         }
-                    else
+                    } else {
                         navController.navigate("otpLogin") {
                             popUpTo("splash") { inclusive = true }
                         }
+                    }
                 }
             )
         }
 
-        // ðŸ“± OTP Login Screen
+        // 📱 OTP Login Screen
         composable("otpLogin") {
             OtpLoginScreen(
                 viewModel = authViewModel,
@@ -53,7 +55,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ðŸ”¢ OTP Verification Screen
+        // 🔐 OTP Verification Screen
         composable("otpVerification") {
             OtpVerificationScreen(
                 viewModel = authViewModel,
@@ -65,7 +67,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ðŸ  Home Screen
+        // 🏠 Home Screen
         composable("home") {
             HomeScreen(
                 onWalletClick = { navController.navigate("wallet") },
@@ -74,22 +76,36 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ðŸ’° Wallet Screen
+        // 💰 Wallet Screen
         composable("wallet") {
-            WalletScreen(walletViewModel = walletViewModel)
+            WalletScreen(
+                walletViewModel = walletViewModel,
+                onDepositClick = { /* later */ },
+                onWithdrawClick = { /* later */ },
+                onTransactionHistoryClick = { /* later */ }
+            )
         }
 
-        // ðŸ† Tournament List
+        // 🏆 Tournament List
         composable("tournamentList") {
-            TournamentListScreen(tournamentViewModel = tournamentViewModel)
+            TournamentListScreen(
+                tournamentViewModel = tournamentViewModel,
+                onTournamentClick = { /* later */ }
+            )
         }
 
-        // ðŸ‘¤ Profile Screen
+        // 👤 Profile Screen
         composable("profile") {
             ProfileScreen(
-                userName = "Lazy King ðŸ‘‘",
-                onEditProfileClick = { /* edit screen later */ },
-                onSettingsClick = { /* settings later */ }
+                userName = "Lazy King 👑",
+                onEditProfileClick = { /* edit later */ },
+                onSettingsClick = { /* settings later */ },
+                onLogout = {
+                    authViewModel.logout()
+                    navController.navigate("otpLogin") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
             )
         }
     }
