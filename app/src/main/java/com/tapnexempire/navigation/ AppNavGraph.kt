@@ -31,8 +31,8 @@ fun AppNavGraph(navController: NavHostController) {
         composable("splash") {
             SplashScreen(
                 onTimeout = {
-                    val isUserLoggedIn = authViewModel.isUserLoggedIn.value
-                    if (isUserLoggedIn) {
+                    val loggedIn = authViewModel.isUserLoggedIn?.value ?: false
+                    if (loggedIn) {
                         navController.navigate("home") {
                             popUpTo("splash") { inclusive = true }
                         }
@@ -49,9 +49,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable("otpLogin") {
             OtpLoginScreen(
                 viewModel = authViewModel,
-                onOtpSent = {
-                    navController.navigate("otpVerification")
-                }
+                onOtpSent = { navController.navigate("otpVerification") }
             )
         }
 
@@ -79,18 +77,14 @@ fun AppNavGraph(navController: NavHostController) {
         // 💰 Wallet Screen
         composable("wallet") {
             WalletScreen(
-                walletViewModel = walletViewModel,
-                onDepositClick = { /* later */ },
-                onWithdrawClick = { /* later */ },
-                onTransactionHistoryClick = { /* later */ }
+                viewModel = walletViewModel
             )
         }
 
-        // 🏆 Tournament List
+        // 🏆 Tournament List Screen
         composable("tournamentList") {
             TournamentListScreen(
-                tournamentViewModel = tournamentViewModel,
-                onTournamentClick = { /* later */ }
+                viewModel = tournamentViewModel
             )
         }
 
@@ -98,8 +92,8 @@ fun AppNavGraph(navController: NavHostController) {
         composable("profile") {
             ProfileScreen(
                 userName = "Lazy King 👑",
-                onEditProfileClick = { /* edit later */ },
-                onSettingsClick = { /* settings later */ },
+                onEditProfileClick = { /* TODO */ },
+                onSettingsClick = { /* TODO */ },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate("otpLogin") {
