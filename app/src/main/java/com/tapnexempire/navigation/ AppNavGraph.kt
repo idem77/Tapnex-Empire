@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.auth.OtpLoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.home.HomeScreen
@@ -27,18 +28,16 @@ fun AppNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = "splash"
     ) {
-
         // 🚀 Splash Screen
         composable("splash") {
             SplashScreen(
                 onTimeout = {
-                    val isUserLoggedIn = authViewModel.isLoggedIn()
-                    if (isUserLoggedIn) {
+                    if (authViewModel.loginSuccess.value) {
                         navController.navigate("home") {
                             popUpTo("splash") { inclusive = true }
                         }
                     } else {
-                        navController.navigate("otpLogin") {
+                        navController.navigate("login") {
                             popUpTo("splash") { inclusive = true }
                         }
                     }
@@ -46,20 +45,25 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        // 📱 Login Screen
+        composable("login") {
+            LoginScreen(
+                onLoginClick = { navController.navigate("otpLogin") }
+            )
+        }
+
         // 📱 OTP Login Screen
         composable("otpLogin") {
             OtpLoginScreen(
-                authViewModel = authViewModel,
-                onOtpSent = {
-                    navController.navigate("otpVerification")
-                }
+                onOtpSent = { navController.navigate("otpVerification") },
+                viewModel = authViewModel
             )
         }
 
         // 🔐 OTP Verification Screen
         composable("otpVerification") {
             OtpVerificationScreen(
-                authViewModel = authViewModel,
+                viewModel = authViewModel,
                 onSuccess = {
                     navController.navigate("home") {
                         popUpTo("otpLogin") { inclusive = true }
@@ -71,7 +75,6 @@ fun AppNavGraph(navController: NavHostController) {
         // 🏠 Home Screen
         composable("home") {
             HomeScreen(
-                coins = walletViewModel.coins.value,
                 onWalletClick = { navController.navigate("wallet") },
                 onTournamentClick = { navController.navigate("tournamentList") },
                 onProfileClick = { navController.navigate("profile") }
@@ -81,19 +84,14 @@ fun AppNavGraph(navController: NavHostController) {
         // 💰 Wallet Screen
         composable("wallet") {
             WalletScreen(
-                walletViewModel = walletViewModel,
-                coins = walletViewModel.coins.value,
-                onDepositClick = { /* later */ },
-                onWithdrawClick = { /* later */ },
-                onTransactionHistoryClick = { /* later */ }
+                viewModel = walletViewModel
             )
         }
 
-        // 🏆 Tournament List
+        // 🏆 Tournament List Screen
         composable("tournamentList") {
             TournamentListScreen(
-                tournamentViewModel = tournamentViewModel,
-                onTournamentClick = { /* later */ }
+                viewModel = tournamentViewModel
             )
         }
 
@@ -105,7 +103,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onSettingsClick = { /* settings later */ },
                 onLogout = {
                     authViewModel.logout()
-                    navController.navigate("otpLogin") {
+                    navController.navigate("login") {
                         popUpTo("home") { inclusive = true }
                     }
                 }
