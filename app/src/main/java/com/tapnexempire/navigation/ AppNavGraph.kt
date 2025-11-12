@@ -27,12 +27,13 @@ fun AppNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = "splash"
     ) {
+
         // 🚀 Splash Screen
         composable("splash") {
             SplashScreen(
                 onTimeout = {
-                    val loggedIn = authViewModel.isUserLoggedIn?.value ?: false
-                    if (loggedIn) {
+                    val isUserLoggedIn = authViewModel.isLoggedIn()
+                    if (isUserLoggedIn) {
                         navController.navigate("home") {
                             popUpTo("splash") { inclusive = true }
                         }
@@ -48,15 +49,17 @@ fun AppNavGraph(navController: NavHostController) {
         // 📱 OTP Login Screen
         composable("otpLogin") {
             OtpLoginScreen(
-                viewModel = authViewModel,
-                onOtpSent = { navController.navigate("otpVerification") }
+                authViewModel = authViewModel,
+                onOtpSent = {
+                    navController.navigate("otpVerification")
+                }
             )
         }
 
         // 🔐 OTP Verification Screen
         composable("otpVerification") {
             OtpVerificationScreen(
-                viewModel = authViewModel,
+                authViewModel = authViewModel,
                 onSuccess = {
                     navController.navigate("home") {
                         popUpTo("otpLogin") { inclusive = true }
@@ -68,6 +71,7 @@ fun AppNavGraph(navController: NavHostController) {
         // 🏠 Home Screen
         composable("home") {
             HomeScreen(
+                coins = walletViewModel.coins.value,
                 onWalletClick = { navController.navigate("wallet") },
                 onTournamentClick = { navController.navigate("tournamentList") },
                 onProfileClick = { navController.navigate("profile") }
@@ -77,14 +81,19 @@ fun AppNavGraph(navController: NavHostController) {
         // 💰 Wallet Screen
         composable("wallet") {
             WalletScreen(
-                viewModel = walletViewModel
+                walletViewModel = walletViewModel,
+                coins = walletViewModel.coins.value,
+                onDepositClick = { /* later */ },
+                onWithdrawClick = { /* later */ },
+                onTransactionHistoryClick = { /* later */ }
             )
         }
 
-        // 🏆 Tournament List Screen
+        // 🏆 Tournament List
         composable("tournamentList") {
             TournamentListScreen(
-                viewModel = tournamentViewModel
+                tournamentViewModel = tournamentViewModel,
+                onTournamentClick = { /* later */ }
             )
         }
 
@@ -92,8 +101,8 @@ fun AppNavGraph(navController: NavHostController) {
         composable("profile") {
             ProfileScreen(
                 userName = "Lazy King 👑",
-                onEditProfileClick = { /* TODO */ },
-                onSettingsClick = { /* TODO */ },
+                onEditProfileClick = { /* edit later */ },
+                onSettingsClick = { /* settings later */ },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate("otpLogin") {
