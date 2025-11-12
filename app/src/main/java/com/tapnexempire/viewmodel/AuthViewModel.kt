@@ -1,100 +1,49 @@
 package com.tapnexempire.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.FirebaseException
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 class AuthViewModel : ViewModel() {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    // ✅ App login state
+    val isLoggedIn = mutableStateOf(false)
 
-    private val _verificationId = MutableStateFlow<String?>(null)
-    val verificationId: StateFlow<String?> = _verificationId
+    // ✅ OTP-related states
+    val isOtpSent = mutableStateOf(false)
+    val isVerified = mutableStateOf(false)
+    val phoneNumber = mutableStateOf("")
+    val otpCode = mutableStateOf("")
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
-    private val _otpSent = MutableStateFlow(false)
-    val otpSent: StateFlow<Boolean> = _otpSent
-
-    private val _loginSuccess = MutableStateFlow(false)
-    val loginSuccess: StateFlow<Boolean> = _loginSuccess
-
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
-
-    /**
-     * ðŸ”¹ Send OTP to userâ€™s phone number
-     */
-    fun sendOtp(phoneNumber: String, activity: android.app.Activity) {
-        _isLoading.value = true
-        _errorMessage.value = null
-
-        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    _isLoading.value = false
-                    signInWithCredential(credential)
-                }
-
-                override fun onVerificationFailed(e: FirebaseException) {
-                    _isLoading.value = false
-                    _errorMessage.value = e.localizedMessage ?: "Verification failed"
-                }
-
-                override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                    _isLoading.value = false
-                    _otpSent.value = true
-                    _verificationId.value = verificationId
-                }
-            })
-            .build()
-
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    /**
-     * ðŸ”¹ Verify OTP and login
-     */
-    fun verifyOtp(otpCode: String) {
-        val verificationId = _verificationId.value ?: return
-        _isLoading.value = true
-
-        val credential = PhoneAuthProvider.getCredential(verificationId, otpCode)
-        signInWithCredential(credential)
-    }
-
-    /**
-     * ðŸ”¹ Sign in with credential
-     */
-    private fun signInWithCredential(credential: PhoneAuthCredential) {
+    // 🚀 Send OTP simulation
+    fun sendOtp(phone: String) {
         viewModelScope.launch {
-            firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener { task ->
-                    _isLoading.value = false
-                    if (task.isSuccessful) {
-                        _loginSuccess.value = true
-                    } else {
-                        _errorMessage.value = task.exception?.localizedMessage ?: "Login failed"
-                    }
-                }
+            phoneNumber.value = phone
+            isOtpSent.value = true
+            delay(1000) // simulate API delay
+        }
+    }
+
+    // 🚀 Verify OTP simulation
+    fun verifyOtp(otp: String) {
+        viewModelScope.launch {
+            delay(1000) // simulate verification delay
+            if (otp == "1234") { // Mock OTP for now
+                isVerified.value = true
+                isLoggedIn.value = true
+            } else {
+                isVerified.value = false
+            }
         }
     }
 
     fun logout() {
-        firebaseAuth.signOut()
-        _loginSuccess.value = false
+        isLoggedIn.value = false
+        isOtpSent.value = false
+        isVerified.value = false
+        phoneNumber.value = ""
+        otpCode.value = ""
     }
 }
