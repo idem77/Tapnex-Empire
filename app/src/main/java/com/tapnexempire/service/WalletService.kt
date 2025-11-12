@@ -1,7 +1,7 @@
 package com.tapnexempire.service
 
-import com.tapnexempire.model.Wallet
-import com.tapnexempire.model.Task
+import com.tapnexempire.models.Wallet
+import com.tapnexempire.models.TaskModel
 
 object WalletService {
 
