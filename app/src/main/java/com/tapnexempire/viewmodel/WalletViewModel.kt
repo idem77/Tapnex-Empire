@@ -2,8 +2,8 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.models.TaskModel
 import com.tapnexempire.models.WalletModel
+import com.tapnexempire.models.TaskModel
 import com.tapnexempire.service.WalletService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,55 +11,92 @@ import kotlinx.coroutines.launch
 
 class WalletViewModel : ViewModel() {
 
-    private val service = WalletService()
+    private val walletService = WalletService()
 
-    private val _wallet = MutableStateFlow(Wallet())
-    val wallet: StateFlow<Wallet> = _wallet
+    private val _walletState = MutableStateFlow(WalletModel())
+    val walletState: StateFlow<WalletModel> = _walletState
 
-    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
-    val tasks: StateFlow<List<Task>> = _tasks
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading
+    private val userId = "testUser123" // TODO: Replace with FirebaseAuth user ID
 
-    // 🪙 Load wallet
-    fun loadWallet(userId: String) {
+    init {
+        loadWalletData()
+    }
+
+    // 🔹 Fetch wallet data from Firebase
+    fun loadWalletData() {
         viewModelScope.launch {
-            _loading.value = true
-            _wallet.value = service.getWalletData(userId)
-            _loading.value = false
+            _isLoading.value = true
+            try {
+                val wallet = walletService.getWalletData(userId)
+                _walletState.value = wallet
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    // 💰 Deposit coins
-    fun deposit(userId: String, amount: Int) {
+    // 💰 Add deposit coins (bonus, referral, task)
+    fun addDeposit(amount: Int) {
         viewModelScope.launch {
-            _loading.value = true
-            _wallet.value = service.depositCoins(userId, amount)
-            _loading.value = false
+            _isLoading.value = true
+            try {
+                val wallet = walletService.addDepositCoins(userId, amount)
+                _walletState.value = wallet
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    // ❌ Withdraw coins
-    fun withdraw(userId: String, amount: Int) {
+    // 🏆 Add winning coins
+    fun addWinning(amount: Int) {
         viewModelScope.launch {
-            _loading.value = true
-            _wallet.value = service.withdrawCoins(userId, amount)
-            _loading.value = false
+            _isLoading.value = true
+            try {
+                val wallet = walletService.addWinningCoins(userId, amount)
+                _walletState.value = wallet
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    // 🏆 Load tasks
-    fun loadTasks() {
+    // ❌ Withdraw from withdrawable balance only
+    fun withdraw(amount: Int) {
         viewModelScope.launch {
-            _tasks.value = service.getDailyTasks()
+            _isLoading.value = true
+            try {
+                val wallet = walletService.withdrawCoins(userId, amount)
+                _walletState.value = wallet
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    // ✅ Complete a task
-    fun completeTask(userId: String, task: Task) {
+    // ✅ Complete a task and reward deposit balance
+    fun completeTask(task: TaskModel) {
         viewModelScope.launch {
-            _wallet.value = service.completeTask(userId, task)
+            _isLoading.value = true
+            try {
+                val wallet = walletService.completeTask(userId, task)
+                _walletState.value = wallet
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }
