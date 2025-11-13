@@ -1,7 +1,15 @@
-package com.tapnexempire.model
+package com.tapnexempire.models
 
-data class WalletModel(
-    val userId: String = "",
-    val coins: Int = 0,
-    val lastUpdated: Long = System.currentTimeMillis()
+data class Wallet(
+    val depositBalance: Int = 0,
+    val withdrawableBalance: Int = 0,
+    val referralRewards: Int = 0,
+    val totalCoins: Int = 0
+)
+
+data class Task(
+    val id: String,
+    val title: String,
+    val rewardCoins: Int,
+    val isCompleted: Boolean = false
 )
