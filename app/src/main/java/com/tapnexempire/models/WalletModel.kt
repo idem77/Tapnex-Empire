@@ -1,8 +1,9 @@
 package com.tapnexempire.models
 
 data class WalletModel(
-    val depositBalance: Int = 0,          // Coins from tasks, bonuses, referrals, deposits
-    val withdrawableBalance: Int = 0,     // Only from winnings
+    val userId: String = "",
+    val depositBalance: Int = 0,
+    val withdrawableBalance: Int = 0
 ) {
     val totalBalance: Int
         get() = depositBalance + withdrawableBalance
