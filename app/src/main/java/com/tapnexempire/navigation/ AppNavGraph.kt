@@ -1,7 +1,7 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,9 +19,9 @@ import com.tapnexempire.viewmodel.WalletViewModel
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    val authViewModel: AuthViewModel = viewModel()
-    val walletViewModel: WalletViewModel = viewModel()
-    val tournamentViewModel: TournamentViewModel = viewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val walletViewModel: WalletViewModel = hiltViewModel()
+    val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -77,20 +77,35 @@ fun AppNavGraph(navController: NavHostController) {
 
         // 💰 Wallet Screen
         composable("wallet") {
-            WalletScreen(walletViewModel = walletViewModel)
+            WalletScreen(
+                viewModel = walletViewModel,
+                onDepositClick = { /* open deposit screen later */ },
+                onWithdrawClick = { /* open withdraw screen later */ },
+                onTransactionHistoryClick = { /* open history later */ }
+            )
         }
 
         // 🏆 Tournament List
         composable("tournamentList") {
-            TournamentListScreen(tournamentViewModel = tournamentViewModel)
+            TournamentListScreen(
+                onTournamentClick = { tournamentId ->
+                    // TODO: navigate to TournamentDetailScreen(tournamentId)
+                }
+            )
         }
 
         // 👤 Profile Screen
         composable("profile") {
             ProfileScreen(
                 userName = "Lazy King 👑",
-                onEditProfileClick = { /* edit screen later */ },
-                onSettingsClick = { /* settings later */ }
+                onEditProfileClick = { /* edit profile later */ },
+                onSettingsClick = { /* settings later */ },
+                onLogout = {
+                    authViewModel.logout()
+                    navController.navigate("otpLogin") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
             )
         }
     }
