@@ -2,79 +2,64 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.repository.WalletRepository
 import com.tapnexempire.models.TaskModel
-import com.tapnexempire.models.TransactionModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.tapnexempire.models.WalletModel
+import com.tapnexempire.service.WalletService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class WalletViewModel @Inject constructor(
-    private val repository: WalletRepository
-) : ViewModel() {
+class WalletViewModel : ViewModel() {
 
-    private val _depositBalance = MutableStateFlow(0)
-    val depositBalance: StateFlow<Int> = _depositBalance
+    private val service = WalletService()
 
-    private val _withdrawableBalance = MutableStateFlow(0)
-    val withdrawableBalance: StateFlow<Int> = _withdrawableBalance
+    private val _wallet = MutableStateFlow(Wallet())
+    val wallet: StateFlow<Wallet> = _wallet
 
-    private val _referralRewards = MutableStateFlow(0)
-    val referralRewards: StateFlow<Int> = _referralRewards
+    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
+    val tasks: StateFlow<List<Task>> = _tasks
 
-    private val _totalCoins = MutableStateFlow(0)
-    val totalCoins: StateFlow<Int> = _totalCoins
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading
 
-    private val _transactions = MutableStateFlow<List<TransactionModel>>(emptyList())
-    val transactions: StateFlow<List<TransactionModel>> = _transactions
-
-    private val _dailyTasks = MutableStateFlow<List<TaskModel>>(emptyList())
-    val dailyTasks: StateFlow<List<TaskModel>> = _dailyTasks
-
-    init {
-        refreshWallet()
-        loadTasks()
-    }
-
-    fun refreshWallet() {
+    // 🪙 Load wallet
+    fun loadWallet(userId: String) {
         viewModelScope.launch {
-            val walletData = repository.getWalletData()
-            _depositBalance.value = walletData.deposit
-            _withdrawableBalance.value = walletData.withdrawable
-            _referralRewards.value = walletData.referralRewards
-            _totalCoins.value = walletData.totalCoins
-            _transactions.value = walletData.transactions
+            _loading.value = true
+            _wallet.value = service.getWalletData(userId)
+            _loading.value = false
         }
     }
 
-    fun deposit(amount: Int) {
+    // 💰 Deposit coins
+    fun deposit(userId: String, amount: Int) {
         viewModelScope.launch {
-            repository.depositCoins(amount)
-            refreshWallet()
+            _loading.value = true
+            _wallet.value = service.depositCoins(userId, amount)
+            _loading.value = false
         }
     }
 
-    fun withdraw(amount: Int) {
+    // ❌ Withdraw coins
+    fun withdraw(userId: String, amount: Int) {
         viewModelScope.launch {
-            repository.withdrawCoins(amount)
-            refreshWallet()
+            _loading.value = true
+            _wallet.value = service.withdrawCoins(userId, amount)
+            _loading.value = false
         }
     }
 
+    // 🏆 Load tasks
     fun loadTasks() {
         viewModelScope.launch {
-            _dailyTasks.value = repository.getDailyTasks()
+            _tasks.value = service.getDailyTasks()
         }
     }
 
-    fun completeTask(taskId: String) {
+    // ✅ Complete a task
+    fun completeTask(userId: String, task: Task) {
         viewModelScope.launch {
-            repository.completeTask(taskId)
-            loadTasks()
-            refreshWallet()
+            _wallet.value = service.completeTask(userId, task)
         }
     }
 }
