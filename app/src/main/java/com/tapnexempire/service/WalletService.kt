@@ -1,8 +1,8 @@
 package com.tapnexempire.service
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tapnexempire.model.Wallet
-import com.tapnexempire.model.Task
+import com.tapnexempire.models.WalletModel
+import com.tapnexempire.models.TaskModel
 import kotlinx.coroutines.tasks.await
 
 class WalletService {
