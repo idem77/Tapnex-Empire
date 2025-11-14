@@ -31,7 +31,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable("splash") {
             SplashScreen(
                 onTimeout = {
-                    if (authViewModel.loginSuccess.value) {
+                    if (authViewModel.isLoggedIn.value) {
                         navController.navigate("home") {
                             popUpTo("splash") { inclusive = true }
                         }
@@ -79,9 +79,9 @@ fun AppNavGraph(navController: NavHostController) {
         composable("wallet") {
             WalletScreen(
                 viewModel = walletViewModel,
-                onDepositClick = { /* open deposit screen later */ },
-                onWithdrawClick = { /* open withdraw screen later */ },
-                onTransactionHistoryClick = { /* open history later */ }
+                onDepositClick = { /* TODO deposit */ },
+                onWithdrawClick = { /* TODO withdraw */ },
+                onTransactionHistoryClick = { /* TODO history */ }
             )
         }
 
@@ -89,7 +89,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable("tournamentList") {
             TournamentListScreen(
                 onTournamentClick = { tournamentId ->
-                    // TODO: navigate to TournamentDetailScreen(tournamentId)
+                    // TODO: tournament detail
                 }
             )
         }
@@ -97,9 +97,9 @@ fun AppNavGraph(navController: NavHostController) {
         // 👤 Profile Screen
         composable("profile") {
             ProfileScreen(
-                userName = "Lazy King 👑",
-                onEditProfileClick = { /* edit profile later */ },
-                onSettingsClick = { /* settings later */ },
+                userName = "Tapnex Player",
+                onEditProfileClick = { /* TODO */ },
+                onSettingsClick = { /* TODO */ },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate("otpLogin") {
