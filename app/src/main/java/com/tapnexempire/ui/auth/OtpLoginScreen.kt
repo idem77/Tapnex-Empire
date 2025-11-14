@@ -16,6 +16,7 @@ fun OtpLoginScreen(
     onOtpSent: () -> Unit
 ) {
     var phone by remember { mutableStateOf("") }
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -30,18 +31,26 @@ fun OtpLoginScreen(
 
         TextField(
             value = phone,
-            onValueChange = { phone = it },
+            onValueChange = {
+                if (it.length <= 10) phone = it.filter { ch -> ch.isDigit() }
+            },
             label = { Text("Phone Number") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = {
-            viewModel.sendOtp(phone)
-            onOtpSent()
-        }) {
-            Text("Send OTP")
+        Button(
+            onClick = {
+                if (phone.length == 10) {
+                    viewModel.sendOtp(phone.trim())
+                    onOtpSent()
+                }
+            },
+            enabled = phone.length == 10 && !isLoading
+        ) {
+            Text(if (isLoading) "Sending..." else "Send OTP")
         }
     }
 }
