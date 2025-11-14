@@ -1,6 +1,7 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,11 +24,15 @@ fun AppNavGraph(navController: NavHostController) {
     val walletViewModel: WalletViewModel = hiltViewModel()
     val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
+    // ⭐ Collect wallet state
+    val wallet = walletViewModel.walletState.collectAsState().value
+
     NavHost(
         navController = navController,
         startDestination = "splash"
     ) {
-        // ðŸŒ€ Splash Screen
+
+        // 🌟 Splash Screen
         composable("splash") {
             SplashScreen(
                 onTimeout = {
@@ -44,7 +49,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ðŸ“± OTP Login Screen
+        // 📱 OTP Login Screen
         composable("otpLogin") {
             OtpLoginScreen(
                 viewModel = authViewModel,
@@ -54,7 +59,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ðŸ” OTP Verification Screen
+        // 🔐 OTP Verification Screen
         composable("otpVerification") {
             OtpVerificationScreen(
                 viewModel = authViewModel,
@@ -66,40 +71,41 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // ðŸ  Home Screen
+        // 🏠 Home Screen
         composable("home") {
             HomeScreen(
+                depositBalance = wallet.depositBalance,
+                withdrawableBalance = wallet.withdrawableBalance,
+                totalCoins = wallet.totalCoins,
                 onWalletClick = { navController.navigate("wallet") },
                 onTournamentClick = { navController.navigate("tournamentList") },
                 onProfileClick = { navController.navigate("profile") }
             )
         }
 
-        // ðŸ’° Wallet Screen
+        // 💰 Wallet Screen
         composable("wallet") {
             WalletScreen(
                 viewModel = walletViewModel,
-                onDepositClick = { /* TODO deposit */ },
-                onWithdrawClick = { /* TODO withdraw */ },
-                onTransactionHistoryClick = { /* TODO history */ }
+                onDepositClick = { /* add deposit coins */ },
+                onWithdrawClick = { /* withdraw coins */ },
+                onTransactionHistoryClick = { /* go to history */ }
             )
         }
 
-        // ðŸ† Tournament List
+        // 🏆 Tournament List
         composable("tournamentList") {
             TournamentListScreen(
-                onTournamentClick = { tournamentId ->
-                    // TODO: tournament detail
-                }
+                onTournamentClick = { /* tournament detail */ }
             )
         }
 
-        // ðŸ‘¤ Profile Screen
+        // 👤 Profile Screen
         composable("profile") {
             ProfileScreen(
                 userName = "Tapnex Player",
-                onEditProfileClick = { /* TODO */ },
-                onSettingsClick = { /* TODO */ },
+                onEditProfileClick = { },
+                onSettingsClick = { },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate("otpLogin") {
