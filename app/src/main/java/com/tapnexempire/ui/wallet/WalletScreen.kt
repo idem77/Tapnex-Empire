@@ -21,10 +21,7 @@ fun WalletScreen(
     onWithdrawClick: () -> Unit,
     onTransactionHistoryClick: () -> Unit
 ) {
-    val depositBalance = viewModel.depositBalance.collectAsState().value
-    val withdrawableBalance = viewModel.withdrawableBalance.collectAsState().value
-    val referralRewards = viewModel.referralRewards.collectAsState().value
-    val totalCoins = viewModel.totalCoins.collectAsState().value
+    val uiState = viewModel.walletState.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -47,9 +44,11 @@ fun WalletScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            // 🔥 Total Coins
             item {
                 Text(
-                    text = "Total Coins: $totalCoins",
+                    text = "Total Coins: ${uiState.totalCoins}",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(10.dp)
@@ -58,15 +57,21 @@ fun WalletScreen(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
+            // 🔥 Deposit Coin (Bonus + Referral + Tasks)
             item {
-                WalletBalanceCard("Deposit Balance", depositBalance)
+                WalletBalanceCard("Deposit Coins", uiState.depositCoins)
                 Spacer(modifier = Modifier.height(10.dp))
-                WalletBalanceCard("Withdrawable Balance", withdrawableBalance)
+
+                // 🔥 Withdrawable Coins (Only Winnings)
+                WalletBalanceCard("Withdrawable Coins", uiState.withdrawableCoins)
                 Spacer(modifier = Modifier.height(10.dp))
-                WalletBalanceCard("Referral Rewards", referralRewards)
+
+                // 🔥 Referral Rewards Separate
+                WalletBalanceCard("Referral Rewards", uiState.referralRewards)
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
+            // 🔘 Deposit Button
             item {
                 Button(
                     onClick = onDepositClick,
@@ -78,6 +83,7 @@ fun WalletScreen(
                 }
             }
 
+            // 🔘 Withdraw Button
             item {
                 Button(
                     onClick = onWithdrawClick,
@@ -89,6 +95,7 @@ fun WalletScreen(
                 }
             }
 
+            // 🔘 Transaction History
             item {
                 OutlinedButton(
                     onClick = onTransactionHistoryClick,
