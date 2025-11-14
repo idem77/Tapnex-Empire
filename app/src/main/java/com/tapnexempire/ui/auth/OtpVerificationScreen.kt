@@ -43,8 +43,8 @@ fun OtpVerificationScreen(
             Text("Verify OTP")
         }
 
-        if (isVerified) {
-            LaunchedEffect(Unit) {
+        LaunchedEffect(isVerified) {
+            if (isVerified) {
                 onSuccess()
             }
         }
