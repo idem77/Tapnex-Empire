@@ -27,7 +27,7 @@ fun AppNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = "splash"
     ) {
-        // 🌀 Splash Screen
+        // ðŸŒ€ Splash Screen
         composable("splash") {
             SplashScreen(
                 onTimeout = {
@@ -44,7 +44,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 📱 OTP Login Screen
+        // ðŸ“± OTP Login Screen
         composable("otpLogin") {
             OtpLoginScreen(
                 viewModel = authViewModel,
@@ -54,7 +54,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🔐 OTP Verification Screen
+        // ðŸ” OTP Verification Screen
         composable("otpVerification") {
             OtpVerificationScreen(
                 viewModel = authViewModel,
@@ -66,16 +66,16 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🏠 Home Screen
-            composable("home") {
-    HomeScreen(
-        coins = walletViewModel.coins.collectAsState().value,
-        onWalletClick = { navController.navigate("wallet") },
-        onTournamentClick = { navController.navigate("tournamentList") },
-        onProfileClick = { navController.navigate("profile") }
-    )
-            }
-        // 💰 Wallet Screen
+        // ðŸ  Home Screen
+        composable("home") {
+            HomeScreen(
+                onWalletClick = { navController.navigate("wallet") },
+                onTournamentClick = { navController.navigate("tournamentList") },
+                onProfileClick = { navController.navigate("profile") }
+            )
+        }
+
+        // ðŸ’° Wallet Screen
         composable("wallet") {
             WalletScreen(
                 viewModel = walletViewModel,
@@ -85,7 +85,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 🏆 Tournament List
+        // ðŸ† Tournament List
         composable("tournamentList") {
             TournamentListScreen(
                 onTournamentClick = { tournamentId ->
@@ -94,7 +94,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // 👤 Profile Screen
+        // ðŸ‘¤ Profile Screen
         composable("profile") {
             ProfileScreen(
                 userName = "Tapnex Player",
