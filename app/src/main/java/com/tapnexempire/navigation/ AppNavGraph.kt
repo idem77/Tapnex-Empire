@@ -72,16 +72,14 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         // 🏠 Home Screen
-        composable("home") {
-            HomeScreen(
-                depositBalance = wallet.depositBalance,
-                withdrawableBalance = wallet.withdrawableBalance,
-                totalCoins = wallet.totalCoins,
-                onWalletClick = { navController.navigate("wallet") },
-                onTournamentClick = { navController.navigate("tournamentList") },
-                onProfileClick = { navController.navigate("profile") }
-            )
-        }
+composable("home") {
+    HomeScreen(
+        coins = wallet.totalCoins,
+        onWalletClick = { navController.navigate("wallet") },
+        onTournamentClick = { navController.navigate("tournamentList") },
+        onProfileClick = { navController.navigate("profile") }
+    )
+}
 
         // 💰 Wallet Screen
         composable("wallet") {
