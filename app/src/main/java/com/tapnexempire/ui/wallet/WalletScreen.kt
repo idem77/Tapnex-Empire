@@ -58,14 +58,12 @@ fun WalletScreen(
             }
 
             // 🔥 Deposit Coin (Bonus + Referral + Tasks)
-            item {
-                WalletBalanceCard("Deposit Coins", uiState.depositCoins)
-                Spacer(modifier = Modifier.height(10.dp))
+WalletBalanceCard("Deposit Coins", uiState.depositBalance)
 
-                // 🔥 Withdrawable Coins (Only Winnings)
-                WalletBalanceCard("Withdrawable Coins", uiState.withdrawableCoins)
-                Spacer(modifier = Modifier.height(10.dp))
+Spacer(modifier = Modifier.height(10.dp))
 
+// 🔥 Withdrawable Coins (Only Winnings)
+WalletBalanceCard("Withdrawable Coins", uiState.withdrawableBalance)
                 // 🔥 Referral Rewards Separate
                 WalletBalanceCard("Referral Rewards", uiState.referralRewards)
                 Spacer(modifier = Modifier.height(20.dp))
