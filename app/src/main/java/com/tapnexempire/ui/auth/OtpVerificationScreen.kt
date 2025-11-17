@@ -11,11 +11,13 @@ import androidx.compose.ui.unit.dp
 import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
-fun OtpLoginScreen(
+fun OtpVerificationScreen(
     viewModel: AuthViewModel,
-    onOtpSent: () -> Unit
+    onSuccess: () -> Unit
 ) {
-    var phone by remember { mutableStateOf("") }
+    var otp by remember { mutableStateOf("") }
+
+    val isVerified = viewModel.isVerified.value
 
     Column(
         modifier = Modifier
@@ -24,24 +26,27 @@ fun OtpLoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Enter your phone number", style = MaterialTheme.typography.titleMedium)
+        Text("Enter the OTP sent to your phone", style = MaterialTheme.typography.titleMedium)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = phone,
-            onValueChange = { phone = it },
-            label = { Text("Phone Number") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            value = otp,
+            onValueChange = { otp = it },
+            label = { Text("Enter OTP") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = {
-            viewModel.sendOtp(phone)
-            onOtpSent()
-        }) {
-            Text("Send OTP")
+        Button(onClick = { viewModel.verifyOtp(otp) }) {
+            Text("Verify OTP")
+        }
+
+        LaunchedEffect(isVerified) {
+            if (isVerified) {
+                onSuccess()
+            }
         }
     }
 }
