@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
-import com.tapnexempire.navigation.AppNavGraph
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,8 +19,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             TapnexEmpireTheme {
                 Surface(color = Color.White) {
-                    val navController = rememberNavController()
-                    AppNavGraph(navController = navController)
+                    // ⬇️ TEMPORARY TEST SCREEN QUEEN KA ORDER
+                    TestIconsScreen()
+                    // ⬆️ Yahi run karega, nav graph abhi off
                 }
             }
         }
