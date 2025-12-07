@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.compose.rememberNavController
+import com.tapnexempire.ui.screens.test.TestIconsScreen
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,9 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TapnexEmpireTheme {
                 Surface(color = Color.White) {
-                    // ⬇️ TEMPORARY TEST SCREEN QUEEN KA ORDER
                     TestIconsScreen()
-                    // ⬆️ Yahi run karega, nav graph abhi off
                 }
             }
         }
