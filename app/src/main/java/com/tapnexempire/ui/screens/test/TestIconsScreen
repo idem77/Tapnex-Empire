@@ -2,9 +2,7 @@ package com.tapnexempire.ui.screens.test
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -13,49 +11,47 @@ import com.tapnexempire.R
 @Composable
 fun TestIconsScreen() {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize().padding(24.dp)
     ) {
-
-        Text("Testing All PNG Icons")
-
         Image(
-            painter = painterResource(id = R.drawable.ic_coin),
-            contentDescription = "Coin Icon",
-            modifier = Modifier.size(60.dp)
+            painter = painterResource(R.drawable.ic_coin),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_wallet),
-            contentDescription = "Wallet Icon",
-            modifier = Modifier.size(60.dp)
+            painter = painterResource(R.drawable.ic_wallet),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_gift),
-            contentDescription = "Gift Icon",
-            modifier = Modifier.size(60.dp)
+            painter = painterResource(R.drawable.ic_gift),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_shop),
-            contentDescription = "Shop Icon",
-            modifier = Modifier.size(60.dp)
+            painter = painterResource(R.drawable.ic_shop),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_deposit),
-            contentDescription = "Deposit Icon",
-            modifier = Modifier.size(60.dp)
+            painter = painterResource(R.drawable.ic_deposit),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_crown),
-            contentDescription = "Crown Icon",
-            modifier = Modifier.size(60.dp)
+            painter = painterResource(R.drawable.ic_crown),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
     }
 }
