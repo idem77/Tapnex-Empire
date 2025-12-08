@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.tapnexempire.ui.home
 
 import androidx.compose.foundation.layout.*
