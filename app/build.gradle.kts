@@ -6,7 +6,7 @@ plugins {
     kotlin("kapt") // for Hilt
 }
 android {
-    namespace = "com.tapnex.app"
+    namespace = "com.tapnexempire"
     compileSdk = 34
 
     defaultConfig {
