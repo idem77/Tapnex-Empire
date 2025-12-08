@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tapnexempire">
 
     <application
         android:name=".TapnexEmpireApp"
@@ -20,7 +20,4 @@
         </activity>
 
     </application>
-
 </manifest>
-
-
