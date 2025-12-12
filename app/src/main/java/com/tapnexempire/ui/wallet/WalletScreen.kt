@@ -1,142 +1,170 @@
 package com.tapnexempire.ui.wallet
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.tapnexempire.viewmodel.WalletViewModel
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.tapnexempire.R
+import com.tapnexempire.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+data class CoinTransaction(
+    val id: Int,
+    val description: String,
+    val amount: Int
+)
+
 @Composable
 fun WalletScreen(
-    viewModel: WalletViewModel = hiltViewModel(),
+    totalCoins: Int,
+    transactions: List<CoinTransaction>,
     onDepositClick: () -> Unit,
-    onWithdrawClick: () -> Unit,
-    onTransactionHistoryClick: () -> Unit
+    onDailyBonusClick: () -> Unit
 ) {
-    val uiState = viewModel.walletState.collectAsState().value
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(LightCream)
+            .padding(16.dp)
+    ) {
+        // Total Coins Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .shadow(4.dp, RoundedCornerShape(16.dp)),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Gold.copy(alpha = 0.85f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_coin),
+                        contentDescription = "Coins",
+                        modifier = Modifier.size(36.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = "Total Coins",
+                            color = SoftGray,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = "$totalCoins",
+                            color = CharcoalBlack,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Daily Bonus Button
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .clickable { onDailyBonusClick() }
+                .shadow(4.dp, RoundedCornerShape(16.dp)),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Box(
+                modifier = Modifier.background(PinkPeachDark),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_gift),
+                        contentDescription = "Daily Bonus",
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "My Wallet 💰",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        text = "Claim Daily Bonus",
+                        color = CharcoalBlack,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
-            )
+            }
         }
-    ) { innerPadding ->
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Transaction History
+        Text(
+            text = "Transaction History",
+            color = CharcoalBlack,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
-            // 🔥 Total Coins
-            item {
-                Text(
-                    text = "Total Coins: ${uiState.totalCoins}",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(10.dp)
-                )
-                Divider()
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-            // 🔥 Deposit Coin (Bonus + Referral + Tasks)
-            item {
-                WalletBalanceCard("Deposit Coins", uiState.depositBalance)
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-            // 🔥 Withdrawable Coins (Only Winnings)
-            item {
-                WalletBalanceCard("Withdrawable Coins", uiState.withdrawableBalance)
-            }
-
-            // 🔥 Referral Rewards Separate
-            item {
-                WalletBalanceCard("Referral Rewards", uiState.referralRewards)
-                Spacer(modifier = Modifier.height(20.dp))
-            }
-
-            // 🔘 Deposit Button
-            item {
-                Button(
-                    onClick = onDepositClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 5.dp)
-                ) {
-                    Text("Deposit Coins")
-                }
-            }
-
-            // 🔘 Withdraw Button
-            item {
-                Button(
-                    onClick = onWithdrawClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 5.dp)
-                ) {
-                    Text("Withdraw Coins")
-                }
-            }
-
-            // 🔘 Transaction History
-            item {
-                OutlinedButton(
-                    onClick = onTransactionHistoryClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 5.dp)
-                ) {
-                    Text("View Transaction History")
-                }
+            items(transactions) { tx ->
+                TransactionItem(tx)
             }
         }
     }
 }
 
 @Composable
-fun WalletBalanceCard(title: String, amount: Int) {
+fun TransactionItem(tx: CoinTransaction) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .height(60.dp)
+            .shadow(2.dp, RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Box(
+            modifier = Modifier.background(CardBackground),
+            contentAlignment = Alignment.CenterStart
         ) {
-            Text(
-                text = title,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(
-                text = "$amount Coins",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_coin),
+                    contentDescription = "Transaction",
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = tx.description,
+                        color = CharcoalBlack,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "+${tx.amount} coins",
+                        color = Gold,
+                        fontSize = 12.sp
+                    )
+                }
+            }
         }
     }
-}   
+}
