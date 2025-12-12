@@ -2,8 +2,8 @@ package com.tapnexempire.ui.splash
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,60 +11,51 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import com.tapnexempire.R
 
 @Composable
-fun SplashScreen(onTimeout: () -> Unit) {
+fun SplashScreen(
+    navController: NavController,
+    isLoggedIn: Boolean = false // Replace with actual auth check if needed
+) {
+    // Animation states
+    val scale = remember { Animatable(0.8f) }
 
-    // ⭐ Animation Setup
-    val scale = remember { Animatable(0.6f) }
-
+    // Launch animation
     LaunchedEffect(true) {
         scale.animateTo(
             targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 1200,
-                easing = { OvershootEasing(it) }
-            )
+            animationSpec = tween(durationMillis = 2500, easing = FastOutSlowInEasing)
         )
+        delay(500) // Extra pause after animation
 
-        delay(2500)
-        onTimeout()
+        // Navigate to next screen
+        if (isLoggedIn) {
+            navController.navigate("home") {
+                popUpTo("splash") { inclusive = true }
+            }
+        } else {
+            navController.navigate("otpLogin") {
+                popUpTo("splash") { inclusive = true }
+            }
+        }
     }
 
-    // ⭐ UI
+    // UI
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFE0E0)),   // Pink Peach Light
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            // Logo / Icon
-            Image(
-                painter = painterResource(id = R.drawable.tapnex_logo), // Replace with your logo
-                contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(180.dp)
-                    .scale(scale.value)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // App Name
-            androidx.compose.material3.Text(
-                text = "Tapnex Empire",
-                color = Color(0xFF333333),
-                style = androidx.compose.material3.MaterialTheme.typography.headlineMedium
-            )
-        }
+        Image(
+            painter = painterResource(id = R.drawable.ic_logo), // Replace with your logo PNG
+            contentDescription = "Tapnex Empire Logo",
+            modifier = Modifier
+                .scale(scale.value)
+                .size(180.dp)
+        )
     }
-}
-
-// Overshoot increase
-fun OvershootEasing(t: Float): Float {
-    val tension = 2.3f
-    return (t - 1) * (t - 1) * ((tension + 1) * (t - 1) + tension) + 1
 }
