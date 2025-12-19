@@ -1,7 +1,10 @@
 package com.tapnexempire.ui.splash
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -18,21 +21,17 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(
     navController: NavController,
-    isLoggedIn: Boolean = false // Replace with actual auth check if needed
+    isLoggedIn: Boolean = false // Replace with actual auth state
 ) {
-    // Animation state
-    val scale = remember { Animatable(0.8f) }
+    // Scale animation
+    val scale = remember { Animatable(0.5f) }
 
-    // Launch animation
     LaunchedEffect(true) {
         scale.animateTo(
             targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 2500,
-                easing = FastOutSlowInEasing
-            )
+            animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
         )
-        delay(500) // Extra pause
+        delay(500) // Pause before navigation
 
         // Navigate to next screen
         if (isLoggedIn) {
@@ -50,15 +49,27 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFFFFFBF5)) // Light cream background
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_logo),
-            contentDescription = "Tapnex Empire Logo",
-            modifier = Modifier
-                .scale(scale.value)
-                .size(180.dp)
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_logo),
+                contentDescription = "Tapnex Empire Logo",
+                modifier = Modifier
+                    .scale(scale.value)
+                    .size(200.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Optional tagline or small animation effect
+            androidx.compose.material3.Text(
+                text = "Empire of Games",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color(0xFFFFC1C1) // Pink peach dark
+            )
+        }
     }
 }
