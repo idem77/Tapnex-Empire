@@ -1,23 +1,20 @@
 package com.tapnexempire.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import com.tapnexempire.R
-import com.tapnexempire.ui.theme.*
 
 @Composable
 fun HomeScreen(
@@ -29,76 +26,70 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(Color(0xFFFFFBF5))
+            .padding(16.dp)
     ) {
-        // Coins Card
+        // 👑 Top coin card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
-                .shadow(4.dp, RoundedCornerShape(16.dp)),
-            shape = RoundedCornerShape(16.dp),
+                .height(100.dp),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .background(
-                        Brush.horizontalGradient(
-                            colors = listOf(Gold.copy(alpha = 0.8f), Gold)
-                        )
-                    ),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_coin),
-                        contentDescription = "Coins",
-                        modifier = Modifier.size(40.dp)
+                Column {
+                    Text(
+                        text = "Coins",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF333333)
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(
-                            text = "Total Coins",
-                            color = SoftGray,
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = "$coins",
-                            color = CharcoalBlack,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "$coins",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFFFC1C1)
+                    )
                 }
+                Image(
+                    painter = painterResource(id = R.drawable.ic_coin),
+                    contentDescription = "Coins Icon",
+                    modifier = Modifier.size(50.dp)
+                )
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Tiles Row
-        Row(
+        // 🏆 Tiles: Wallet, Tournament, Profile
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Tournament Tile
-            TileCard(
-                title = "Tournament",
-                iconRes = R.drawable.ic_crown,
-                onClick = onTournamentClick
-            )
-
-            // Wallet Tile
-            TileCard(
+            Tile(
+                icon = R.drawable.ic_wallet,
                 title = "Wallet",
-                iconRes = R.drawable.ic_wallet,
+                subtitle = "Check balance & deposit",
                 onClick = onWalletClick
             )
-
-            // Profile Tile
-            TileCard(
+            Tile(
+                icon = R.drawable.ic_crown,
+                title = "Tournament",
+                subtitle = "Join & compete",
+                onClick = onTournamentClick
+            )
+            Tile(
+                icon = R.drawable.ic_gift,
                 title = "Profile",
-                iconRes = R.drawable.ic_logo,
+                subtitle = "Edit info & settings",
                 onClick = onProfileClick
             )
         }
@@ -106,34 +97,38 @@ fun HomeScreen(
 }
 
 @Composable
-fun TileCard(
-    title: String,
-    iconRes: Int,
-    onClick: () -> Unit
-) {
+fun Tile(icon: Int, title: String, subtitle: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .size(100.dp)
-            .clickable { onClick() }
-            .shadow(4.dp, RoundedCornerShape(16.dp)),
-        shape = RoundedCornerShape(16.dp),
+            .fillMaxWidth()
+            .height(80.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(15.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1F1))
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .background(PinkPeachLight),
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = title,
-                    modifier = Modifier.size(36.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = "$title Icon",
+                modifier = Modifier.size(50.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
                 Text(
                     text = title,
-                    color = CharcoalBlack,
-                    fontSize = 14.sp
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
+                )
+                Text(
+                    text = subtitle,
+                    fontSize = 14.sp,
+                    color = Color(0xFF666666)
                 )
             }
         }
