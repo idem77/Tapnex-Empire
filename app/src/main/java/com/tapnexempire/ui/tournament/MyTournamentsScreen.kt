@@ -11,16 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tapnexempire.ui.theme.CardBackground
+import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.ui.theme.CharcoalBlack
 
-// Sample data model
 data class MyTournament(
     val id: Int,
     val name: String,
-    val prize: String,
-    val status: String = "Joined"
+    val prize: String
 )
 
 @Composable
@@ -36,50 +36,42 @@ fun MyTournamentScreen(
     ) {
         Text(
             text = "My Tournaments",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333)
+            fontSize = 22.sp,
+            color = CharcoalBlack,
+            style = MaterialTheme.typography.titleLarge
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        LazyColumn {
             items(myTournaments) { tournament ->
                 Card(
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(vertical = 6.dp)
                         .clickable { onTournamentClick(tournament) },
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
+                    colors = CardDefaults.cardColors(containerColor = CardBackground)
                 ) {
                     Row(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = tournament.name,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF333333)
+                                color = CharcoalBlack,
+                                style = MaterialTheme.typography.titleMedium
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "Prize: ${tournament.prize}",
-                                fontSize = 14.sp,
-                                color = Color(0xFF666666)
+                                fontSize = 16.sp,
+                                color = Gold
                             )
                         }
-                        Text(
-                            text = tournament.status,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFFD700)
-                        )
                     }
                 }
             }
