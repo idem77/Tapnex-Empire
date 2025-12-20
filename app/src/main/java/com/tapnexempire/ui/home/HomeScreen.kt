@@ -1,20 +1,28 @@
 package com.tapnexempire.ui.home
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.R
+import com.tapnexempire.components.CoinCard
+import com.tapnexempire.components.GameTile
+import com.tapnexempire.components.RewardCard
+import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.ui.theme.LightCream
+import com.tapnexempire.ui.theme.CharcoalBlack
 
 @Composable
 fun HomeScreen(
@@ -23,114 +31,95 @@ fun HomeScreen(
     onTournamentClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
+    var animateScale by remember { mutableStateOf(false) }
+    val scaleAnim = remember { Animatable(0.8f) }
+
+    LaunchedEffect(animateScale) {
+        scaleAnim.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFBF5))
+            .background(LightCream)
             .padding(16.dp)
     ) {
-        // 👑 Top coin card
-        Card(
+        // Coins Card
+        CoinCard(
+            coins = coins,
+            onClick = onWalletClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
+                .scale(scaleAnim.value)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Games Section
+        Text(
+            text = "Games",
+            fontSize = 20.sp,
+            color = CharcoalBlack,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        val games = listOf("Ludo", "Quiz", "Spin & Win", "Puzzle")
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = "Coins",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF333333)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "$coins",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFFC1C1)
-                    )
-                }
-                Image(
-                    painter = painterResource(id = R.drawable.ic_coin),
-                    contentDescription = "Coins Icon",
-                    modifier = Modifier.size(50.dp)
+            items(games) { game ->
+                GameTile(
+                    title = game,
+                    onClick = { /* navigate to game */ }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 🏆 Tiles: Wallet, Tournament, Profile
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Tile(
-                icon = R.drawable.ic_wallet,
-                title = "Wallet",
-                subtitle = "Check balance & deposit",
-                onClick = onWalletClick
-            )
-            Tile(
-                icon = R.drawable.ic_crown,
-                title = "Tournament",
-                subtitle = "Join & compete",
-                onClick = onTournamentClick
-            )
-            Tile(
-                icon = R.drawable.ic_gift,
-                title = "Profile",
-                subtitle = "Edit info & settings",
-                onClick = onProfileClick
-            )
-        }
-    }
-}
+        // Daily Tasks / Rewards Section
+        Text(
+            text = "Daily Rewards & Tasks",
+            fontSize = 20.sp,
+            color = CharcoalBlack,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
 
-@Composable
-fun Tile(icon: Int, title: String, subtitle: String, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1F1))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        val tasks = listOf(
+            "Daily Login" to 500,
+            "Complete 3 Games" to 300,
+            "Refer a Friend" to 700
+        )
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Image(
-                painter = painterResource(id = icon),
-                contentDescription = "$title Icon",
-                modifier = Modifier.size(50.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
-                )
-                Text(
-                    text = subtitle,
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666)
+            tasks.forEach { task ->
+                RewardCard(
+                    title = task.first,
+                    coins = task.second,
+                    onClick = { /* claim or navigate */ }
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Bottom Navigation Placeholder
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Home", color = CharcoalBlack, modifier = Modifier.clickable { })
+            Text("Wallet", color = CharcoalBlack, modifier = Modifier.clickable { onWalletClick() })
+            Text("Tournaments", color = CharcoalBlack, modifier = Modifier.clickable { onTournamentClick() })
+            Text("Profile", color = CharcoalBlack, modifier = Modifier.clickable { onProfileClick() })
         }
     }
 }
