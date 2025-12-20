@@ -1,37 +1,29 @@
 package com.tapnexempire.service
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
 class AuthService {
 
-    // Simulated database for demo purpose
-    private val registeredUsers = mutableMapOf<String, String>() // phone -> otp
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
-    // Send OTP (simulated)
-    fun sendOtp(phone: String): Boolean {
-        val otp = "1234" // Dummy OTP for testing
-        registeredUsers[phone] = otp
-        println("OTP sent to $phone: $otp")
+    private val _phoneNumber = MutableStateFlow("")
+    val phoneNumber: StateFlow<String> = _phoneNumber
+
+    fun sendOtp(phone: String) {
+        // 🔐 Future: Firebase OTP
+        _phoneNumber.value = phone
+    }
+
+    fun verifyOtp(otp: String): Boolean {
+        // 🔐 Future: Firebase verification
+        _isLoggedIn.value = true
         return true
     }
 
-    // Verify OTP
-    fun verifyOtp(phone: String, otp: String): Boolean {
-        val correctOtp = registeredUsers[phone]
-        return otp == correctOtp
-    }
-
-    // Register user
-    fun registerUser(phone: String): Boolean {
-        if (!registeredUsers.containsKey(phone)) {
-            registeredUsers[phone] = "1234"
-            println("User registered: $phone")
-            return true
-        }
-        return false
-    }
-
-    // Logout simulation
-    fun logout(phone: String) {
-        registeredUsers.remove(phone)
-        println("User logged out: $phone")
+    fun logout() {
+        _isLoggedIn.value = false
+        _phoneNumber.value = ""
     }
 }
