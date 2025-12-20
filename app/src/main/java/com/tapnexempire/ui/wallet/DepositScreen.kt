@@ -3,80 +3,76 @@ package com.tapnexempire.ui.wallet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.ui.theme.LightCream
 import com.tapnexempire.ui.theme.CharcoalBlack
 
 @Composable
 fun DepositScreen(
-    totalCoins: Int,
-    onDeposit: (amount: Int) -> Unit
+    navController: NavController,
+    onDeposit: (Int) -> Unit
 ) {
-    var amount by remember { mutableStateOf("") }
+    var depositAmount by remember { mutableStateOf("") }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(LightCream)
+            .padding(16.dp)
     ) {
-        Text(
-            text = "Deposit Coins",
-            fontSize = 28.sp,
-            color = CharcoalBlack,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-
-        Text(
-            text = "Total Coins: $totalCoins",
-            fontSize = 18.sp,
-            color = CharcoalBlack,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-
-        OutlinedTextField(
-            value = amount,
-            onValueChange = { value ->
-                if (value.all { it.isDigit() }) amount = value
-            },
-            label = { Text("Enter coins to deposit") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            singleLine = true,
-        )
-
-        Button(
-            onClick = {
-                if (amount.isNotEmpty()) onDeposit(amount.toInt())
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Gold),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "Deposit",
+                text = "Deposit Coins",
+                fontSize = 24.sp,
                 color = CharcoalBlack,
-                fontSize = 16.sp
+                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
             )
+
+            OutlinedTextField(
+                value = depositAmount,
+                onValueChange = { depositAmount = it },
+                label = { Text("Enter amount") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    val amount = depositAmount.toIntOrNull() ?: 0
+                    if (amount > 0) {
+                        onDeposit(amount)
+                        navController.popBackStack()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Gold),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(50.dp)
+            ) {
+                Text(
+                    text = "Deposit",
+                    color = CharcoalBlack,
+                    fontSize = 18.sp
+                )
+            }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Note: Deposited coins cannot be withdrawn. They are only usable for tasks, tournaments, and rewards.",
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
     }
 }
