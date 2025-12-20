@@ -1,22 +1,19 @@
 package com.tapnexempire.ui.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.R
+import com.tapnexempire.ui.theme.CardBackground
+import com.tapnexempire.ui.theme.CharcoalBlack
+import com.tapnexempire.ui.theme.Gold
 
 @Composable
 fun ProfileScreen(
@@ -29,82 +26,96 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFFFFBF5))
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // User Avatar
-        Image(
-            painter = painterResource(id = R.drawable.ic_crown), // Replace with avatar if needed
-            contentDescription = "User Avatar",
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // User Name
         Text(
-            text = userName,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333)
+            text = "Profile",
+            fontSize = 22.sp,
+            color = CharcoalBlack,
+            style = MaterialTheme.typography.titleLarge
         )
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Buttons Section
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth()
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = CardBackground)
         ) {
-            Card(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onEditProfileClick() },
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = userName,
+                        fontSize = 18.sp,
+                        color = CharcoalBlack,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "View and edit your profile",
+                        fontSize = 14.sp,
+                        color = Gold
+                    )
+                }
                 Text(
-                    text = "Edit Profile",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF333333),
-                    modifier = Modifier.padding(16.dp)
+                    text = "Edit",
+                    fontSize = 16.sp,
+                    color = Gold,
+                    modifier = Modifier.clickable { onEditProfileClick() }
                 )
             }
+        }
 
-            Card(
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Settings Card
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onSettingsClick() },
+            colors = CardDefaults.cardColors(containerColor = CardBackground)
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onSettingsClick() },
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Settings",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF333333),
-                    modifier = Modifier.padding(16.dp)
+                    color = CharcoalBlack
                 )
             }
+        }
 
-            Card(
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Logout Card
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onLogout() },
+            colors = CardDefaults.cardColors(containerColor = CardBackground)
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onLogout() },
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC1C1))
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Logout",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF333333),
-                    modifier = Modifier.padding(16.dp)
+                    color = Color.Red
                 )
             }
         }
