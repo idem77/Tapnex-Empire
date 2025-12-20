@@ -1,28 +1,38 @@
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.lifecycle.viewModelScope
+import com.tapnexempire.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel() {
 
-    private val _isLoggedIn = MutableStateFlow(false)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
-
-    private val _phoneNumber = MutableStateFlow("")
-    val phoneNumber: StateFlow<String> = _phoneNumber
+    val isLoggedIn: StateFlow<Boolean> = repository.isLoggedIn
+    val phoneNumber: StateFlow<String> = repository.phoneNumber
 
     fun sendOtp(phone: String) {
-        _phoneNumber.value = phone
-        // Firebase OTP later
+        viewModelScope.launch {
+            repository.sendOtp(phone)
+        }
     }
 
-    fun verifyOtp(otp: String) {
-        // Verify OTP (future)
-        _isLoggedIn.value = true
+    fun verifyOtp(otp: String): Boolean {
+        var result = false
+        viewModelScope.launch {
+            result = repository.verifyOtp(otp)
+        }
+        return result
     }
 
     fun logout() {
-        _isLoggedIn.value = false
+        viewModelScope.launch {
+            repository.logout()
+        }
     }
 }
