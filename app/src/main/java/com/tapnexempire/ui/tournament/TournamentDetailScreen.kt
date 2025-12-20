@@ -7,15 +7,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import com.tapnexempire.R
-import com.tapnexempire.ui.theme.*
 
+// Sample data model
 data class TournamentDetail(
     val name: String,
     val prize: String,
@@ -31,72 +29,59 @@ fun TournamentDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightCream)
+            .background(Color(0xFFFFFBF5))
             .padding(16.dp)
     ) {
         Text(
             text = detail.name,
-            fontSize = 20.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = CharcoalBlack
+            color = Color(0xFF333333)
         )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Prize
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .shadow(4.dp, RoundedCornerShape(16.dp)),
-            shape = RoundedCornerShape(16.dp)
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
         ) {
-            Box(
-                modifier = Modifier.background(PinkPeachLight),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_crown),
-                        contentDescription = "Prize",
-                        modifier = Modifier.size(36.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = "Prize: ${detail.prize}",
-                        fontSize = 16.sp,
-                        color = CharcoalBlack
-                    )
-                }
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Prize: ${detail.prize}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Entry Fee: ${detail.entryFee} coins",
+                    fontSize = 16.sp,
+                    color = Color(0xFF666666)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Participants: ${detail.participants}",
+                    fontSize = 16.sp,
+                    color = Color(0xFF666666)
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Entry Fee & Participants
-        Text(
-            text = "Entry Fee: ${detail.entryFee} coins",
-            fontSize = 16.sp,
-            color = CharcoalBlack
-        )
-        Text(
-            text = "Participants: ${detail.participants}",
-            fontSize = 16.sp,
-            color = CharcoalBlack
-        )
-
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Join Button
         Button(
             onClick = onJoinClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Gold),
-            modifier = Modifier.fillMaxWidth().height(50.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD700)),
+            shape = RoundedCornerShape(16.dp)
         ) {
             Text(
                 text = "Join Tournament",
-                fontSize = 16.sp,
-                color = CharcoalBlack
+                color = Color(0xFF333333),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
             )
         }
     }
