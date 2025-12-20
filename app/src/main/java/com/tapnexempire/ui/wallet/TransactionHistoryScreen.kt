@@ -9,70 +9,62 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tapnexempire.models.TransactionModel
+import com.tapnexempire.ui.theme.LightCream
 import com.tapnexempire.ui.theme.CharcoalBlack
 import com.tapnexempire.ui.theme.Gold
 
-data class Transaction(
-    val id: Int,
-    val type: String,  // "Deposit", "Withdrawal", "Reward", "Tournament"
-    val amount: Int,
-    val status: String, // "Pending", "Completed"
-    val date: String
-)
-
 @Composable
 fun TransactionHistoryScreen(
-    transactions: List<Transaction>
+    transactions: List<TransactionModel>
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(LightCream)
             .padding(16.dp)
     ) {
-        Text(
-            text = "Transaction History",
-            fontSize = 28.sp,
-            color = CharcoalBlack,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(transactions) { tx ->
-                Card(
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F9F9))
+            Text(
+                text = "Transaction History",
+                fontSize = 24.sp,
+                color = CharcoalBlack,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            if (transactions.isEmpty()) {
+                Text(
+                    text = "No transactions yet",
+                    color = CharcoalBlack,
+                    fontSize = 16.sp
+                )
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(text = "ID: ${tx.id}", fontSize = 14.sp, color = CharcoalBlack)
-                            Text(text = tx.type, fontSize = 16.sp, color = Gold)
-                            Text(text = tx.date, fontSize = 12.sp, color = Color.Gray)
-                        }
-                        Column(horizontalAlignment = Alignment.End) {
-                            Text(
-                                text = "${tx.amount} coins",
-                                fontSize = 16.sp,
-                                color = if (tx.amount >= 0) Color.Green else Color.Red
-                            )
-                            Text(
-                                text = tx.status,
-                                fontSize = 14.sp,
-                                color = if (tx.status == "Completed") Color.Green else Color.Red
-                            )
+                    items(transactions) { tx ->
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.15f))
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(text = tx.type, color = CharcoalBlack, fontSize = 16.sp)
+                                    Text(text = tx.date, color = CharcoalBlack.copy(alpha = 0.7f), fontSize = 12.sp)
+                                }
+                                Text(text = "${tx.amount} coins", color = CharcoalBlack, fontSize = 16.sp)
+                            }
                         }
                     }
                 }
