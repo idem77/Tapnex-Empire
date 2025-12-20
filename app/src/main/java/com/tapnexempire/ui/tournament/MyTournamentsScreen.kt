@@ -6,24 +6,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
-import com.tapnexempire.R
-import com.tapnexempire.ui.theme.*
 
+// Sample data model
 data class MyTournament(
     val id: Int,
     val name: String,
-    val prize: String
+    val prize: String,
+    val status: String = "Joined"
 )
 
 @Composable
@@ -34,64 +31,56 @@ fun MyTournamentScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightCream)
+            .background(Color(0xFFFFFBF5))
             .padding(16.dp)
     ) {
         Text(
             text = "My Tournaments",
-            fontSize = 20.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = CharcoalBlack
+            color = Color(0xFF333333)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(myTournaments) { tournament ->
-                MyTournamentItem(tournament, onTournamentClick)
-            }
-        }
-    }
-}
-
-@Composable
-fun MyTournamentItem(tournament: MyTournament, onClick: (MyTournament) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .clickable { onClick(tournament) }
-            .shadow(4.dp, RoundedCornerShape(16.dp)),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Box(
-            modifier = Modifier.background(PinkPeachLight),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_crown),
-                    contentDescription = "Tournament",
-                    modifier = Modifier.size(36.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(
-                        text = tournament.name,
-                        color = CharcoalBlack,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "Prize: ${tournament.prize}",
-                        color = SoftGray,
-                        fontSize = 14.sp
-                    )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onTournamentClick(tournament) },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = tournament.name,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF333333)
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Prize: ${tournament.prize}",
+                                fontSize = 14.sp,
+                                color = Color(0xFF666666)
+                            )
+                        }
+                        Text(
+                            text = tournament.status,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFFFD700)
+                        )
+                    }
                 }
             }
         }
