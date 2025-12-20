@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.R
+import com.tapnexempire.ui.theme.CardBackground
+import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.ui.theme.CharcoalBlack
 
-// Sample data model
 data class TournamentDetail(
     val name: String,
     val prize: String,
@@ -32,57 +32,46 @@ fun TournamentDetailScreen(
             .background(Color(0xFFFFFBF5))
             .padding(16.dp)
     ) {
-        Text(
-            text = detail.name,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
         Card(
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
+            colors = CardDefaults.cardColors(containerColor = CardBackground)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                Text(
+                    text = detail.name,
+                    fontSize = 22.sp,
+                    color = CharcoalBlack,
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Prize: ${detail.prize}",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
+                    color = Gold,
+                    style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Entry Fee: ${detail.entryFee} coins",
                     fontSize = 16.sp,
-                    color = Color(0xFF666666)
+                    color = CharcoalBlack
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Participants: ${detail.participants}",
                     fontSize = 16.sp,
-                    color = Color(0xFF666666)
+                    color = CharcoalBlack
                 )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { onJoinClick() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Gold),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Join Tournament", color = CharcoalBlack)
+                }
             }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onJoinClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD700)),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Text(
-                text = "Join Tournament",
-                color = Color(0xFF333333),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }
