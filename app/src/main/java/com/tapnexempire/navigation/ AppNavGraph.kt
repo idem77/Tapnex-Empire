@@ -9,10 +9,11 @@ import com.tapnexempire.ui.auth.OtpLoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.profile.ProfileScreen
-import com.tapnexempire.ui.tournament.TournamentListScreen
-import com.tapnexempire.ui.tournament.MyTournamentScreen
-import com.tapnexempire.ui.tournament.TournamentDetailScreen
-import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.settings.SettingsScreen
+import com.tapnexempire.ui.splash.SplashScreen
+import com.tapnexempire.ui.tasks.TaskScreen
+import com.tapnexempire.ui.tournament.*
+import com.tapnexempire.ui.wallet.*
 import com.tapnexempire.viewmodel.AuthViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 
@@ -24,10 +25,27 @@ fun AppNavGraph(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = "otpLogin"
+        startDestination = "splash"
     ) {
 
-        // OTP Login Screen
+        // 🔹 Splash
+        composable("splash") {
+            SplashScreen(
+                onNavigate = { isLoggedIn ->
+                    if (isLoggedIn) {
+                        navController.navigate("home") {
+                            popUpTo("splash") { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate("otpLogin") {
+                            popUpTo("splash") { inclusive = true }
+                        }
+                    }
+                }
+            )
+        }
+
+        // 🔐 Auth
         composable("otpLogin") {
             OtpLoginScreen(
                 onOtpSent = {
@@ -36,10 +54,9 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // OTP Verification Screen
         composable("otpVerification") {
             OtpVerificationScreen(
-                phoneNumber = "", // pass actual number if needed
+                phoneNumber = "",
                 onVerified = {
                     navController.navigate("home") {
                         popUpTo("otpLogin") { inclusive = true }
@@ -48,7 +65,7 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Home Screen
+        // 🏠 Home
         composable("home") {
             HomeScreen(
                 coins = walletViewModel.walletState.value.totalCoins,
@@ -58,60 +75,61 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        // Wallet Screen
+        // 💰 Wallet
         composable("wallet") {
             WalletScreen(
                 totalCoins = walletViewModel.walletState.value.totalCoins,
                 transactions = walletViewModel.walletState.value.transactions,
-                onDepositClick = { /* handle deposit */ },
-                onDailyBonusClick = { /* handle daily bonus */ }
+                onDepositClick = { navController.navigate("deposit") },
+                onWithdrawClick = { navController.navigate("withdraw") },
+                onHistoryClick = { navController.navigate("transactions") }
             )
         }
 
-        // Tournament List Screen
+        composable("deposit") { DepositScreen() }
+        composable("withdraw") { WithdrawScreen() }
+        composable("transactions") { TransactionHistoryScreen() }
+
+        // 🏆 Tournament
         composable("tournamentList") {
             TournamentListScreen(
-                tournaments = listOf(
-                    // sample data, replace with real
-                    com.tapnexempire.ui.tournament.Tournament(1, "Daily Battle", "500 coins"),
-                    com.tapnexempire.ui.tournament.Tournament(2, "Weekly Clash", "2000 coins")
-                ),
-                onTournamentClick = { tournament ->
-                    navController.navigate("tournamentDetail/${tournament.id}")
+                tournaments = emptyList(),
+                onTournamentClick = {
+                    navController.navigate("tournamentDetail/${it.id}")
                 }
             )
         }
 
-        // Tournament Detail Screen (example navigation with arg)
-        composable("tournamentDetail/{tournamentId}") { backStackEntry ->
-            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: "0"
+        composable("tournamentDetail/{id}") {
             TournamentDetailScreen(
-                detail = com.tapnexempire.ui.tournament.TournamentDetail(
-                    name = "Tournament $tournamentId",
-                    prize = "1000 coins",
+                detail = TournamentDetail(
+                    name = "Tapnex Battle",
+                    prize = "Winning Coins",
                     entryFee = 100,
-                    participants = 10
+                    participants = 100
                 ),
-                onJoinClick = { /* handle join */ }
+                onJoinClick = {}
             )
         }
 
-        // My Tournament Screen
         composable("myTournaments") {
             MyTournamentScreen(
-                myTournaments = listOf(
-                    com.tapnexempire.ui.tournament.MyTournament(1, "Daily Battle", "500 coins")
-                ),
-                onTournamentClick = { /* handle click */ }
+                myTournaments = emptyList(),
+                onTournamentClick = {}
             )
         }
 
-        // Profile Screen
+        // 📋 Tasks
+        composable("tasks") {
+            TaskScreen()
+        }
+
+        // 👤 Profile
         composable("profile") {
             ProfileScreen(
                 userName = "Tapnex Player",
-                onEditProfileClick = { /* edit profile */ },
-                onSettingsClick = { /* open settings */ },
+                onEditProfileClick = {},
+                onSettingsClick = { navController.navigate("settings") },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate("otpLogin") {
@@ -119,6 +137,11 @@ fun AppNavGraph(navController: NavHostController) {
                     }
                 }
             )
+        }
+
+        // ⚙️ Settings
+        composable("settings") {
+            SettingsScreen()
         }
     }
 }
