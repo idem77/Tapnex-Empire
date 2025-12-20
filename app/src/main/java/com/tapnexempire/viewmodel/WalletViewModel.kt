@@ -1,46 +1,44 @@
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.tapnexempire.models.TransactionModel
-import com.tapnexempire.models.WalletModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.lifecycle.viewModelScope
+import com.tapnexempire.repository.WalletRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WalletViewModel : ViewModel() {
+@HiltViewModel
+class WalletViewModel @Inject constructor(
+    private val repository: WalletRepository
+) : ViewModel() {
 
-    private val _walletState = MutableStateFlow(
-        WalletModel(
-            totalCoins = 500,
-            withdrawableCoins = 0,
-            depositCoins = 500,
-            transactions = emptyList()
-        )
-    )
+    val walletState: StateFlow<com.tapnexempire.models.WalletModel> =
+        repository.walletState
 
-    val walletState: StateFlow<WalletModel> = _walletState
-
-    fun addDepositCoins(coins: Int) {
-        updateWallet(coins, isWithdrawable = false, "Deposit")
+    fun deposit(amount: Int) {
+        viewModelScope.launch {
+            repository.depositCoins(amount)
+        }
     }
 
-    fun addWinningCoins(coins: Int) {
-        updateWallet(coins, isWithdrawable = true, "Winning")
+    fun claimDailyBonus(amount: Int = 500) {
+        viewModelScope.launch {
+            repository.claimDailyBonus(amount)
+        }
     }
 
-    private fun updateWallet(coins: Int, isWithdrawable: Boolean, type: String) {
-        val current = _walletState.value
-        val updatedTransaction = TransactionModel(
-            type = type,
-            amount = coins
-        )
+    fun addWinning(amount: Int) {
+        viewModelScope.launch {
+            repository.addWinningCoins(amount)
+        }
+    }
 
-        _walletState.value = current.copy(
-            totalCoins = current.totalCoins + coins,
-            withdrawableCoins = if (isWithdrawable)
-                current.withdrawableCoins + coins else current.withdrawableCoins,
-            depositCoins = if (!isWithdrawable)
-                current.depositCoins + coins else current.depositCoins,
-            transactions = listOf(updatedTransaction) + current.transactions
-        )
+    fun withdraw(amount: Int): Boolean {
+        var result = false
+        viewModelScope.launch {
+            result = repository.withdrawCoins(amount)
+        }
+        return result
     }
 }
