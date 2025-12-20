@@ -1,52 +1,41 @@
 package com.tapnexempire.service
 
 import com.tapnexempire.models.TournamentModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-object TournamentService {
-    private val tournaments = mutableListOf(
-        TournamentModel(
-            id = "1",
-            title = "Ludo Battle 100",
-            entryFee = 100,
-            totalPlayers = 100,
-            joinedPlayers = 60,
-            durationHours = 7,
-            prizePool = 5000,
-            category = "100"
-        ),
-        TournamentModel(
-            id = "2",
-            title = "Quiz War 250",
-            entryFee = 250,
-            totalPlayers = 80,
-            joinedPlayers = 45,
-            durationHours = 5,
-            prizePool = 10000,
-            category = "250"
-        ),
-        TournamentModel(
-            id = "3",
-            title = "Tapnex Master 500",
-            entryFee = 500,
-            totalPlayers = 50,
-            joinedPlayers = 30,
-            durationHours = 3,
-            prizePool = 20000,
-            category = "500"
+class TournamentService {
+
+    private val _tournaments = MutableStateFlow(
+        listOf(
+            TournamentModel(
+                id = "T1",
+                name = "Daily Battle",
+                entryFee = 250,
+                prizePool = 2500,
+                isJoined = false
+            ),
+            TournamentModel(
+                id = "T2",
+                name = "Pro Clash",
+                entryFee = 500,
+                prizePool = 5000,
+                isJoined = false
+            )
         )
     )
 
-    fun getTournaments(): List<TournamentModel> = tournaments
+    val tournaments: StateFlow<List<TournamentModel>> = _tournaments
 
-    fun getTournamentById(id: String): TournamentModel? {
-        return tournaments.find { it.id == id }
+    fun joinTournament(tournamentId: String): TournamentModel? {
+        val updated = _tournaments.value.map {
+            if (it.id == tournamentId) it.copy(isJoined = true) else it
+        }
+        _tournaments.value = updated
+        return updated.find { it.id == tournamentId }
     }
 
-    fun joinTournament(id: String) {
-        tournaments.find { it.id == id }?.let {
-            val updated = it.copy(isJoined = true, joinedPlayers = it.joinedPlayers + 1)
-            val index = tournaments.indexOf(it)
-            tournaments[index] = updated
-        }
+    fun getMyTournaments(): List<TournamentModel> {
+        return _tournaments.value.filter { it.isJoined }
     }
 }
