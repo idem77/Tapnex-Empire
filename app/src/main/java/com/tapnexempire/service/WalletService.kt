@@ -1,69 +1,83 @@
 package com.tapnexempire.service
 
-import com.google.firebase.firestore.FirebaseFirestore
+import com.tapnexempire.models.TransactionModel
 import com.tapnexempire.models.WalletModel
-import com.tapnexempire.models.TaskModel
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class WalletService {
 
-    private val db = FirebaseFirestore.getInstance()
-
-    // 🪙 Get user wallet from Firestore
-    suspend fun getWalletData(userId: String): WalletModel {
-        val doc = db.collection("wallets").document(userId).get().await()
-        return doc.toObject(WalletModel::class.java) ?: WalletModel(userId = userId)
-    }
-
-    // 💰 Add coins to deposit balance (from bonuses, referrals, tasks)
-    suspend fun addDepositCoins(userId: String, amount: Int): WalletModel {
-        val wallet = getWalletData(userId)
-        val updatedWallet = wallet.copy(
-            depositBalance = wallet.depositBalance + amount,
-            totalCoins = wallet.totalCoins + amount
+    private val _walletState = MutableStateFlow(
+        WalletModel(
+            totalCoins = 0,
+            depositCoins = 0,
+            withdrawableCoins = 0,
+            transactions = emptyList()
         )
-        db.collection("wallets").document(userId).set(updatedWallet).await()
-        return updatedWallet
-    }
+    )
 
-    // 🏆 Add winning coins (goes to withdrawable balance)
-    suspend fun addWinningCoins(userId: String, amount: Int): WalletModel {
-        val wallet = getWalletData(userId)
-        val updatedWallet = wallet.copy(
-            withdrawableBalance = wallet.withdrawableBalance + amount,
-            totalCoins = wallet.totalCoins + amount
-        )
-        db.collection("wallets").document(userId).set(updatedWallet).await()
-        return updatedWallet
-    }
+    val walletState: StateFlow<WalletModel> = _walletState
 
-    // ❌ Withdraw coins only from withdrawable balance
-    suspend fun withdrawCoins(userId: String, amount: Int): WalletModel {
-        val wallet = getWalletData(userId)
-        val newWithdrawable = (wallet.withdrawableBalance - amount).coerceAtLeast(0)
-        val difference = wallet.withdrawableBalance - newWithdrawable
-        val newTotal = (wallet.totalCoins - difference).coerceAtLeast(0)
-
-        val updatedWallet = wallet.copy(
-            withdrawableBalance = newWithdrawable,
-            totalCoins = newTotal
+    fun addDepositCoins(amount: Int) {
+        val current = _walletState.value
+        val transaction = TransactionModel(
+            title = "Deposit",
+            coins = amount,
+            isWithdrawable = false
         )
 
-        db.collection("wallets").document(userId).set(updatedWallet).await()
-        return updatedWallet
-    }
-
-    // 🧩 Get mock daily tasks
-    suspend fun getDailyTasks(): List<TaskModel> {
-        return listOf(
-            TaskModel(id = "1", title = "Play 1 Match", reward = 100),
-            TaskModel(id = "2", title = "Login Today", reward = 50),
-            TaskModel(id = "3", title = "Refer a Friend", reward = 200)
+        _walletState.value = current.copy(
+            totalCoins = current.totalCoins + amount,
+            depositCoins = current.depositCoins + amount,
+            transactions = current.transactions + transaction
         )
     }
 
-    // ✅ Complete a task (adds deposit balance)
-    suspend fun completeTask(userId: String, task: TaskModel): WalletModel {
-        return addDepositCoins(userId, task.reward)
+    fun addWinningCoins(amount: Int) {
+        val current = _walletState.value
+        val transaction = TransactionModel(
+            title = "Tournament Win",
+            coins = amount,
+            isWithdrawable = true
+        )
+
+        _walletState.value = current.copy(
+            totalCoins = current.totalCoins + amount,
+            withdrawableCoins = current.withdrawableCoins + amount,
+            transactions = current.transactions + transaction
+        )
+    }
+
+    fun claimDailyBonus(amount: Int) {
+        val current = _walletState.value
+        val transaction = TransactionModel(
+            title = "Daily Bonus",
+            coins = amount,
+            isWithdrawable = false
+        )
+
+        _walletState.value = current.copy(
+            totalCoins = current.totalCoins + amount,
+            depositCoins = current.depositCoins + amount,
+            transactions = current.transactions + transaction
+        )
+    }
+
+    fun withdrawCoins(amount: Int): Boolean {
+        val current = _walletState.value
+        if (current.withdrawableCoins < amount) return false
+
+        val transaction = TransactionModel(
+            title = "Withdrawal",
+            coins = -amount,
+            isWithdrawable = true
+        )
+
+        _walletState.value = current.copy(
+            totalCoins = current.totalCoins - amount,
+            withdrawableCoins = current.withdrawableCoins - amount,
+            transactions = current.transactions + transaction
+        )
+        return true
     }
 }
