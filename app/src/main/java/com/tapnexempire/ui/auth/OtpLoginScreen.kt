@@ -15,10 +15,16 @@ import androidx.compose.ui.graphics.Color
 import com.tapnexempire.ui.theme.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.viewmodel.AuthViewModel
+
 @Composable
-fun OtpLoginScreen(
-    onOtpSent: (String) -> Unit
-) {
+fun OtpLoginScreen() {
+    val authViewModel: AuthViewModel = hiltViewModel()
+    
+    val loginState = authViewModel.loginState.collectAsState().value
+
+    // UI yaha
+    // onOtpSent -> authViewModel.sendOtp(phoneNumber)
+}
     var phoneNumber by remember { mutableStateOf("") }
 
     Column(
