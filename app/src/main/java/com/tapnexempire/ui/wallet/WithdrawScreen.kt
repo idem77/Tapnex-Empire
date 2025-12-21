@@ -8,21 +8,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.tapnexempire.ui.theme.CharcoalBlack
 import com.tapnexempire.ui.theme.Gold
 import com.tapnexempire.ui.theme.LightCream
-import com.tapnexempire.ui.theme.CharcoalBlack
+import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun WithdrawScreen(
     navController: NavController,
-    totalCoins: Int,
-    onWithdraw: (Int) -> Unit
+    viewModel: WalletViewModel = hiltViewModel()
 ) {
+    val walletState = viewModel.walletState.collectAsState().value
+    val totalCoins = walletState.totalCoins
+
     var withdrawAmount by remember { mutableStateOf("") }
 
     Box(
@@ -65,7 +68,7 @@ fun WithdrawScreen(
                 onClick = {
                     val amount = withdrawAmount.toIntOrNull() ?: 0
                     if (amount in 1..totalCoins) {
-                        onWithdraw(amount)
+                        viewModel.withdrawCoins(amount)
                         navController.popBackStack()
                     }
                 },
