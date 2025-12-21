@@ -5,34 +5,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.components.CoinCard
+import com.tapnexempire.ui.theme.CharcoalBlack
 import com.tapnexempire.ui.theme.Gold
 import com.tapnexempire.ui.theme.LightCream
-import com.tapnexempire.ui.theme.CharcoalBlack
-
-data class Transaction(
-    val id: Int,
-    val title: String,
-    val amount: Int,
-    val type: String // "credit" or "debit"
-)
+import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun WalletScreen(
-    totalCoins: Int,
-    transactions: List<Transaction>,
     onDepositClick: () -> Unit,
     onWithdrawClick: () -> Unit,
-    onDailyBonusClick: () -> Unit
+    onDailyBonusClick: () -> Unit,
+    viewModel: WalletViewModel = hiltViewModel()
 ) {
+    val walletState by viewModel.walletState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,8 +34,8 @@ fun WalletScreen(
     ) {
         // Coins Card
         CoinCard(
-            coins = totalCoins,
-            onClick = { /* maybe open deposit screen */ },
+            coins = walletState.totalCoins,
+            onClick = { onDepositClick() },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -53,36 +46,9 @@ fun WalletScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = "Deposit",
-                color = CharcoalBlack,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .weight(1f)
-                    .background(Gold)
-                    .clickable { onDepositClick() }
-                    .padding(12.dp),
-            )
-            Text(
-                text = "Withdraw",
-                color = CharcoalBlack,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .weight(1f)
-                    .background(Gold)
-                    .clickable { onWithdrawClick() }
-                    .padding(12.dp),
-            )
-            Text(
-                text = "Daily Bonus",
-                color = CharcoalBlack,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .weight(1f)
-                    .background(Gold)
-                    .clickable { onDailyBonusClick() }
-                    .padding(12.dp),
-            )
+            WalletActionButton("Deposit") { onDepositClick() }
+            WalletActionButton("Withdraw") { onWithdrawClick() }
+            WalletActionButton("Daily Bonus") { onDailyBonusClick() }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -98,7 +64,7 @@ fun WalletScreen(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(transactions) { transaction ->
+            items(walletState.transactions) { transaction ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -108,16 +74,44 @@ fun WalletScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text(text = transaction.title, color = CharcoalBlack, fontSize = 16.sp)
-                        Text(text = "ID: ${transaction.id}", color = CharcoalBlack.copy(alpha = 0.6f), fontSize = 12.sp)
+                        Text(
+                            text = transaction.title,
+                            color = CharcoalBlack,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = "ID: ${transaction.id}",
+                            color = CharcoalBlack.copy(alpha = 0.6f),
+                            fontSize = 12.sp
+                        )
                     }
                     Text(
-                        text = if (transaction.type == "credit") "+${transaction.amount}" else "-${transaction.amount}",
-                        color = if (transaction.type == "credit") Gold else CharcoalBlack,
+                        text = if (transaction.isCredit)
+                            "+${transaction.amount}"
+                        else
+                            "-${transaction.amount}",
+                        color = if (transaction.isCredit) Gold else CharcoalBlack,
                         fontSize = 16.sp
                     )
                 }
             }
         }
     }
+}
+
+@Composable
+private fun WalletActionButton(
+    title: String,
+    onClick: () -> Unit
+) {
+    Text(
+        text = title,
+        color = CharcoalBlack,
+        fontSize = 16.sp,
+        modifier = Modifier
+            .weight(1f)
+            .background(Gold)
+            .clickable { onClick() }
+            .padding(12.dp),
+    )
 }
