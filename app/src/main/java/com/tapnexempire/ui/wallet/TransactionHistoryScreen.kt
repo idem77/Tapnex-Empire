@@ -7,19 +7,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.models.TransactionModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.ui.theme.LightCream
 import com.tapnexempire.ui.theme.CharcoalBlack
 import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun TransactionHistoryScreen(
-    transactions: List<TransactionModel>
+    viewModel: WalletViewModel = hiltViewModel()
 ) {
+    val walletState by viewModel.walletState.collectAsState()
+    val transactions = walletState.transactions
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +56,9 @@ fun TransactionHistoryScreen(
                         Card(
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.15f))
+                            colors = CardDefaults.cardColors(
+                                containerColor = Gold.copy(alpha = 0.15f)
+                            )
                         ) {
                             Row(
                                 modifier = Modifier
@@ -60,10 +68,22 @@ fun TransactionHistoryScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text(text = tx.type, color = CharcoalBlack, fontSize = 16.sp)
-                                    Text(text = tx.date, color = CharcoalBlack.copy(alpha = 0.7f), fontSize = 12.sp)
+                                    Text(
+                                        text = tx.type,
+                                        color = CharcoalBlack,
+                                        fontSize = 16.sp
+                                    )
+                                    Text(
+                                        text = tx.date,
+                                        color = CharcoalBlack.copy(alpha = 0.7f),
+                                        fontSize = 12.sp
+                                    )
                                 }
-                                Text(text = "${tx.amount} coins", color = CharcoalBlack, fontSize = 16.sp)
+                                Text(
+                                    text = "${tx.amount} coins",
+                                    color = CharcoalBlack,
+                                    fontSize = 16.sp
+                                )
                             }
                         }
                     }
