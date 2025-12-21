@@ -1,123 +1,146 @@
 package com.tapnexempire.ui.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
+import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.ui.theme.LightCream
 
 @Composable
 fun SettingsScreen(
-    onBack: () -> Unit
+    onLogoutClick: () -> Unit = {}
 ) {
-    var notificationsEnabled by remember { mutableStateOf(true) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
+    var notificationEnabled by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
+            .background(LightCream)
+            .padding(16.dp)
     ) {
-        // Header
+
         Text(
             text = "Settings",
-            fontSize = 28.sp,
-            color = Color(0xFF333333),
-            modifier = Modifier.padding(vertical = 16.dp)
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        // Notifications Toggle
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { notificationsEnabled = !notificationsEnabled },
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Notifications",
-                    fontSize = 18.sp,
-                    color = Color(0xFF333333)
-                )
-                Switch(
-                    checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it }
-                )
-            }
-        }
+        SettingsItem(
+            icon = Icons.Default.Person,
+            title = "Account Settings",
+            onClick = {}
+        )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        SettingsToggleItem(
+            icon = Icons.Default.Notifications,
+            title = "Notifications",
+            checked = notificationEnabled,
+            onCheckedChange = { notificationEnabled = it }
+        )
 
-        // Dark Mode Toggle
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { darkModeEnabled = !darkModeEnabled },
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Dark Mode",
-                    fontSize = 18.sp,
-                    color = Color(0xFF333333)
-                )
-                Switch(
-                    checked = darkModeEnabled,
-                    onCheckedChange = { darkModeEnabled = it }
-                )
-            }
-        }
+        SettingsItem(
+            icon = Icons.Default.Info,
+            title = "About App",
+            onClick = {}
+        )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        SettingsItem(
+            icon = Icons.Default.PrivacyTip,
+            title = "Privacy Policy",
+            onClick = {}
+        )
 
-        // Help & Support
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { /* open help screen */ },
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0E0))
-        ) {
-            Text(
-                text = "Help & Support",
-                fontSize = 18.sp,
-                color = Color(0xFF333333),
-                modifier = Modifier.padding(16.dp)
-            )
-        }
+        SettingsItem(
+            icon = Icons.Default.Description,
+            title = "Terms & Conditions",
+            onClick = {}
+        )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // Back Button
         Button(
-            onClick = { onBack() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC1C1)),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            onClick = onLogoutClick,
+            colors = ButtonDefaults.buttonColors(containerColor = Gold),
+            shape = RoundedCornerShape(14.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Back", color = Color(0xFF333333), fontSize = 18.sp)
+            Icon(Icons.Default.Logout, contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Logout", color = Color.Black)
+        }
+    }
+}
+
+@Composable
+private fun SettingsItem(
+    icon: ImageVector,
+    title: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(icon, contentDescription = null, tint = Gold)
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(title, fontSize = 16.sp)
+        }
+    }
+}
+
+@Composable
+private fun SettingsToggleItem(
+    icon: ImageVector,
+    title: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(icon, contentDescription = null, tint = Gold)
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = title,
+                modifier = Modifier.weight(1f),
+                fontSize = 16.sp
+            )
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(checkedThumbColor = Gold)
+            )
         }
     }
 }
