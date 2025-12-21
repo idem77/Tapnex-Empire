@@ -1,30 +1,29 @@
 package com.tapnexempire.ui.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.Color
-import com.tapnexempire.ui.theme.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tapnexempire.ui.theme.*
 import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
-fun OtpLoginScreen() {
+fun OtpLoginScreen(
+    onOtpSent: (String) -> Unit
+) {
     val authViewModel: AuthViewModel = hiltViewModel()
-    
-    val loginState = authViewModel.loginState.collectAsState().value
-
-    // UI yaha
-    // onOtpSent -> authViewModel.sendOtp(phoneNumber)
-}
+    val context = LocalContext.current
     var phoneNumber by remember { mutableStateOf("") }
 
     Column(
@@ -48,7 +47,20 @@ fun OtpLoginScreen() {
             value = phoneNumber,
             onValueChange = { phoneNumber = it },
             label = { Text("Phone Number") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (phoneNumber.length == 10) {
+                        authViewModel.sendOtp(phoneNumber)
+                        onOtpSent(phoneNumber)
+                    } else {
+                        Toast.makeText(context, "Enter valid 10-digit number", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            ),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -56,9 +68,18 @@ fun OtpLoginScreen() {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { onOtpSent(phoneNumber) },
+            onClick = {
+                if (phoneNumber.length == 10) {
+                    authViewModel.sendOtp(phoneNumber)
+                    onOtpSent(phoneNumber)
+                } else {
+                    Toast.makeText(context, "Enter valid 10-digit number", Toast.LENGTH_SHORT).show()
+                }
+            },
             colors = ButtonDefaults.buttonColors(containerColor = Gold),
-            modifier = Modifier.fillMaxWidth().height(50.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
         ) {
             Text(
                 text = "Send OTP",
