@@ -6,7 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,9 +20,10 @@ import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
 fun TournamentListScreen(
-    viewModel: TournamentViewModel = hiltViewModel()
+    onTournamentClick: (Tournament) -> Unit
 ) {
-    val tournaments by viewModel.tournaments.collectAsState()
+    val tournamentViewModel: TournamentViewModel = hiltViewModel()
+    val tournaments = tournamentViewModel.tournamentState.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -36,44 +38,25 @@ fun TournamentListScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        if (tournaments.isEmpty()) {
-            Text(
-                text = "No tournaments available",
-                color = CharcoalBlack,
-                fontSize = 16.sp
-            )
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(tournaments) { tournament ->
-                    Card(
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(tournaments) { tournament ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onTournamentClick(tournament) },
+                    colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.15f))
+                ) {
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                viewModel.joinTournament(tournament.id)
-                            },
-                        colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.15f))
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = tournament.name,
-                                fontSize = 18.sp,
-                                color = CharcoalBlack
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "Entry: ${tournament.entryFee} coins",
-                                fontSize = 14.sp,
-                                color = CharcoalBlack
-                            )
-                            Text(
-                                text = "Prize: ${tournament.prize} coins",
-                                fontSize = 14.sp,
-                                color = CharcoalBlack
-                            )
+                        Column {
+                            Text(text = tournament.name, color = CharcoalBlack, fontSize = 18.sp)
+                            Text(text = "Prize: ${tournament.prize}", color = CharcoalBlack.copy(alpha = 0.7f), fontSize = 14.sp)
                         }
                     }
                 }
@@ -81,3 +64,10 @@ fun TournamentListScreen(
         }
     }
 }
+
+// Sample data class
+data class Tournament(
+    val id: Int,
+    val name: String,
+    val prize: String
+)
