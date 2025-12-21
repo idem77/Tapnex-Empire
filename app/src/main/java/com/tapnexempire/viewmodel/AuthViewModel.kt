@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapnexempire.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -13,26 +12,19 @@ class AuthViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    val isLoggedIn: StateFlow<Boolean> = repository.isLoggedIn
-    val phoneNumber: StateFlow<String> = repository.phoneNumber
-
-    fun sendOtp(phone: String) {
+    fun sendOtp(phone: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.sendOtp(phone)
+            onResult(repository.sendOtp(phone))
         }
     }
 
-    fun verifyOtp(otp: String): Boolean {
-        var result = false
+    fun verifyOtp(phone: String, otp: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            result = repository.verifyOtp(otp)
+            onResult(repository.verifyOtp(phone, otp))
         }
-        return result
     }
 
-    fun logout() {
-        viewModelScope.launch {
-            repository.logout()
-        }
-    }
+    fun isLoggedIn(): Boolean = repository.isLoggedIn()
+
+    fun logout() = repository.logout()
 }
