@@ -1,29 +1,21 @@
 package com.tapnexempire.service
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.tapnexempire.models.UserModel
+import kotlinx.coroutines.delay
 
 class AuthService {
 
-    private val _isLoggedIn = MutableStateFlow(false)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
-
-    private val _phoneNumber = MutableStateFlow("")
-    val phoneNumber: StateFlow<String> = _phoneNumber
-
-    fun sendOtp(phone: String) {
-        // 🔐 Future: Firebase OTP
-        _phoneNumber.value = phone
-    }
-
-    fun verifyOtp(otp: String): Boolean {
-        // 🔐 Future: Firebase verification
-        _isLoggedIn.value = true
+    suspend fun sendOtp(phone: String): Boolean {
+        delay(300)
         return true
     }
 
-    fun logout() {
-        _isLoggedIn.value = false
-        _phoneNumber.value = ""
+    suspend fun verifyOtp(phone: String, otp: String): UserModel {
+        delay(300)
+        return UserModel(
+            uid = "UID_${phone.takeLast(4)}",
+            phone = phone,
+            isNewUser = true
+        )
     }
 }
