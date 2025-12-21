@@ -12,12 +12,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import com.tapnexempire.ui.theme.*
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
 fun OtpVerificationScreen(
     phoneNumber: String,
     onVerified: () -> Unit
-) {
+) {    val authViewModel: AuthViewModel = hiltViewModel()
+
+    val otpState = authViewModel.otpState.collectAsState().value                                                 
     var otp by remember { mutableStateOf("") }
 
     Column(
