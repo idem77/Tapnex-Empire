@@ -1,36 +1,57 @@
 package com.tapnexempire.repository
 
-import com.tapnexempire.models.UserModel
-import com.tapnexempire.service.AuthService
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import java.util.concurrent.TimeUnit
 
-@Singleton
-class AuthRepository @Inject constructor(
-    private val authService: AuthService,
-    private val walletRepository: WalletRepository
+class AuthRepository(
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) {
 
-    var currentUser: UserModel? = null
-        private set
+    // Send OTP
+    fun sendOtp(phoneNumber: String, onCodeSent: (String) -> Unit, onFailure: (String) -> Unit) {
+        val options = PhoneAuthOptions.newBuilder(auth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(/* provide current activity if needed */)
+            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    // Auto verification completed
+                }
 
-    suspend fun sendOtp(phone: String): Boolean {
-        return authService.sendOtp(phone)
+                override fun onVerificationFailed(e: Exception) {
+                    onFailure(e.message ?: "Verification failed")
+                }
+
+                override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
+                    onCodeSent(verificationId)
+                }
+            })
+            .build()
+
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    suspend fun verifyOtp(phone: String, otp: String): Boolean {
-        val user = authService.verifyOtp(phone, otp)
-        currentUser = user
+    // Verify OTP
+    suspend fun verifyOtp(verificationId: String, otp: String): Boolean {
+        val credential = PhoneAuthProvider.getCredential(verificationId, otp)
+        val result = auth.signInWithCredential(credential).await()
+        val user = result.user ?: return false
 
-        if (user.isNewUser) {
-            walletRepository.addDepositCoins(500) // 🎁 Welcome bonus
+        // Create user document if not exist
+        val userDoc = firestore.collection("users").document(user.uid)
+        if (!(userDoc.get().await().exists())) {
+            userDoc.set(mapOf("coins" to 0)).await()
         }
         return true
     }
 
-    fun isLoggedIn(): Boolean = currentUser != null
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
 
-    fun logout() {
-        currentUser = null
-    }
+    fun signOut() = auth.signOut()
 }
