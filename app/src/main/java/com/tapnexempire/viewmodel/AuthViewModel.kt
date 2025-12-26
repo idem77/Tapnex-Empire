@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapnexempire.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -12,19 +14,35 @@ class AuthViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    fun sendOtp(phone: String, onResult: (Boolean) -> Unit) {
+    private val _otpState = MutableStateFlow("")
+    val otpState: StateFlow<String> get() = _otpState
+
+    private val _authState = MutableStateFlow(false)
+    val authState: StateFlow<Boolean> get() = _authState
+
+    fun sendOtp(phoneNumber: String, onCodeSent: (String) -> Unit, onError: (String) -> Unit) {
+        repository.sendOtp(phoneNumber, { code ->
+            _otpState.value = code
+            onCodeSent(code)
+        }, { error ->
+            onError(error)
+        })
+    }
+
+    fun verifyOtp(verificationId: String, otp: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            onResult(repository.sendOtp(phone))
+            try {
+                val result = repository.verifyOtp(verificationId, otp)
+                _authState.value = result
+                if (result) onSuccess() else onError("Verification failed")
+            } catch (e: Exception) {
+                onError(e.message ?: "Unknown error")
+            }
         }
     }
 
-    fun verifyOtp(phone: String, otp: String, onResult: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            onResult(repository.verifyOtp(phone, otp))
-        }
+    fun signOut() {
+        repository.signOut()
+        _authState.value = false
     }
-
-    fun isLoggedIn(): Boolean = repository.isLoggedIn()
-
-    fun logout() = repository.logout()
 }
