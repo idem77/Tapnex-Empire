@@ -1,46 +1,61 @@
 package com.tapnexempire.repository
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.models.TournamentModel
-import com.tapnexempire.service.TournamentService
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.coroutines.tasks.await
 
-@Singleton
-class TournamentRepository @Inject constructor(
-    private val service: TournamentService,
-    private val walletRepository: WalletRepository
+class TournamentRepository(
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) {
 
-    private val _tournaments = MutableStateFlow<List<TournamentModel>>(emptyList())
-    val tournaments: StateFlow<List<TournamentModel>> = _tournaments
+    private val userId: String
+        get() = auth.currentUser?.uid ?: throw Exception("User not logged in")
 
-    suspend fun loadTournaments() {
-        _tournaments.value = service.fetchTournaments()
+    private val tournamentsRef = firestore.collection("tournaments")
+    private val usersRef = firestore.collection("users")
+
+    // Get all active tournaments
+    suspend fun getTournaments(): List<TournamentModel> {
+        val snapshot = tournamentsRef.get().await()
+        return snapshot.documents.map { it.toObject(TournamentModel::class.java)!! }
     }
 
-    suspend fun joinTournament(tournamentId: String): Boolean {
-        val tournament = _tournaments.value.find { it.id == tournamentId } ?: return false
+    // Get tournaments joined by current user
+    suspend fun getMyTournaments(): List<TournamentModel> {
+        val snapshot = tournamentsRef
+            .whereArrayContains("participants", userId)
+            .get()
+            .await()
+        return snapshot.documents.map { it.toObject(TournamentModel::class.java)!! }
+    }
 
-        // 1️⃣ Deduct entry fee from deposit coins
-        val success = walletRepository.deductEntryFee(tournament.entryFee)
-        if (!success) return false
+    // Join tournament
+    suspend fun joinTournament(tournamentId: String, entryFee: Int) {
+        val userDoc = usersRef.document(userId)
+        val userCoins = userDoc.get().await().getLong("coins")?.toInt() ?: 0
 
-        // 2️⃣ Mark joined
-        _tournaments.value = _tournaments.value.map {
-            if (it.id == tournamentId)
-                it.copy(
-                    joinedPlayers = it.joinedPlayers + 1,
-                    isJoined = true
-                )
-            else it
+        if (entryFee > userCoins) throw Exception("Not enough coins to join")
+
+        // Deduct coins
+        userDoc.update("coins", userCoins - entryFee).await()
+
+        // Add user to tournament participants
+        tournamentsRef.document(tournamentId)
+            .update("participants", FieldValue.arrayUnion(userId))
+            .await()
+    }
+
+    // Distribute prize (internal use, admin action)
+    suspend fun distributePrize(tournamentId: String, prizeMap: Map<String, Int>) {
+        val tournamentDoc = tournamentsRef.document(tournamentId)
+        prizeMap.forEach { (uid, coins) ->
+            val userDoc = usersRef.document(uid)
+            val currentCoins = userDoc.get().await().getLong("coins")?.toInt() ?: 0
+            userDoc.update("coins", currentCoins + coins).await()
         }
-        return true
-    }
-
-    suspend fun rewardWinner(amount: Int) {
-        // Winning coins are withdrawable
-        walletRepository.addWinningCoins(amount)
+        // Optionally mark tournament as completed
+        tournamentDoc.update("status", "completed").await()
     }
 }
