@@ -1,97 +1,78 @@
 package com.tapnexempire.repository
 
-import com.tapnexempire.models.*
-import com.tapnexempire.service.WalletService
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.tapnexempire.models.TransactionModel
+import kotlinx.coroutines.tasks.await
 
-@Singleton
-class WalletRepository @Inject constructor(
-    private val service: WalletService
+class WalletRepository(
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) {
 
-    private val _walletState = MutableStateFlow(WalletModel())
-    val walletState: StateFlow<WalletModel> = _walletState
+    private val userId: String
+        get() = auth.currentUser?.uid ?: throw Exception("User not logged in")
 
-    suspend fun loadWallet() {
-        _walletState.value = service.getWallet()
+    private val userWalletRef
+        get() = firestore.collection("users").document(userId).collection("wallet")
+
+    // Fetch total coins
+    suspend fun getTotalCoins(): Int {
+        val doc = firestore.collection("users").document(userId).get().await()
+        return doc.getLong("coins")?.toInt() ?: 0
     }
 
-    suspend fun addDepositCoins(amount: Int) {
-        val tx = transaction(TransactionType.DEPOSIT, amount, "Deposit")
-        updateWallet(
-            depositDelta = amount,
-            tx = tx
+    // Deposit coins
+    suspend fun depositCoins(amount: Int) {
+        val currentCoins = getTotalCoins()
+        firestore.collection("users").document(userId)
+            .update("coins", currentCoins + amount).await()
+
+        // Add transaction record
+        val tx = TransactionModel(
+            id = System.currentTimeMillis(),
+            type = "Deposit",
+            amount = amount,
+            date = System.currentTimeMillis()
         )
+        userWalletRef.add(tx).await()
     }
 
-    suspend fun addWinningCoins(amount: Int) {
-        val tx = transaction(TransactionType.WIN, amount, "Tournament Win")
-        updateWallet(
-            winningDelta = amount,
-            tx = tx
+    // Withdraw coins
+    suspend fun withdrawCoins(amount: Int) {
+        val currentCoins = getTotalCoins()
+        if (amount > currentCoins) throw Exception("Not enough coins")
+
+        firestore.collection("users").document(userId)
+            .update("coins", currentCoins - amount).await()
+
+        val tx = TransactionModel(
+            id = System.currentTimeMillis(),
+            type = "Withdraw",
+            amount = amount,
+            date = System.currentTimeMillis()
         )
+        userWalletRef.add(tx).await()
     }
 
-    suspend fun claimDailyBonus(amount: Int = 50) {
-        val tx = transaction(TransactionType.BONUS, amount, "Daily Bonus")
-        updateWallet(
-            depositDelta = amount,
-            tx = tx
+    // Claim daily bonus
+    suspend fun claimDailyBonus(bonus: Int) {
+        val currentCoins = getTotalCoins()
+        firestore.collection("users").document(userId)
+            .update("coins", currentCoins + bonus).await()
+
+        val tx = TransactionModel(
+            id = System.currentTimeMillis(),
+            type = "Daily Bonus",
+            amount = bonus,
+            date = System.currentTimeMillis()
         )
+        userWalletRef.add(tx).await()
     }
 
-    suspend fun deductEntryFee(amount: Int): Boolean {
-        val wallet = _walletState.value
-        if (wallet.depositCoins < amount) return false
-
-        val tx = transaction(TransactionType.ENTRY_FEE, amount, "Tournament Entry")
-        updateWallet(
-            depositDelta = -amount,
-            tx = tx
-        )
-        return true
+    // Get transaction history
+    suspend fun getTransactions(): List<TransactionModel> {
+        val snapshot = userWalletRef.orderBy("id").get().await()
+        return snapshot.documents.map { it.toObject(TransactionModel::class.java)!! }
     }
-
-    suspend fun withdraw(amount: Int): Boolean {
-        val wallet = _walletState.value
-        if (wallet.winningCoins < amount) return false
-
-        val tx = transaction(TransactionType.WITHDRAW, amount, "Withdraw")
-        updateWallet(
-            winningDelta = -amount,
-            tx = tx
-        )
-        return true
-    }
-
-    private suspend fun updateWallet(
-        depositDelta: Int = 0,
-        winningDelta: Int = 0,
-        tx: TransactionModel
-    ) {
-        val current = _walletState.value
-        val updated = current.copy(
-            depositCoins = current.depositCoins + depositDelta,
-            winningCoins = current.winningCoins + winningDelta,
-            transactions = listOf(tx) + current.transactions
-        )
-        _walletState.value = updated
-        service.updateWallet(updated)
-    }
-
-    private fun transaction(
-        type: TransactionType,
-        amount: Int,
-        desc: String
-    ) = TransactionModel(
-        id = UUID.randomUUID().toString(),
-        type = type,
-        amount = amount,
-        timestamp = System.currentTimeMillis(),
-        description = desc
-    )
 }
