@@ -1,5 +1,6 @@
 package com.tapnexempire.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapnexempire.repository.AuthRepository
@@ -11,38 +12,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val repo: AuthRepository
 ) : ViewModel() {
 
-    private val _otpState = MutableStateFlow("")
-    val otpState: StateFlow<String> get() = _otpState
+    private val _otpState = MutableStateFlow<String?>(null)
+    val otpState: StateFlow<String?> = _otpState
 
-    private val _authState = MutableStateFlow(false)
-    val authState: StateFlow<Boolean> get() = _authState
+    private val _authSuccess = MutableStateFlow(false)
+    val authSuccess: StateFlow<Boolean> = _authSuccess
 
-    fun sendOtp(phoneNumber: String, onCodeSent: (String) -> Unit, onError: (String) -> Unit) {
-        repository.sendOtp(phoneNumber, { code ->
-            _otpState.value = code
-            onCodeSent(code)
-        }, { error ->
-            onError(error)
-        })
+    fun sendOtp(
+        activity: Activity,
+        phone: String,
+        onError: (String) -> Unit
+    ) {
+        repo.sendOtp(
+            activity,
+            phone,
+            onCodeSent = { _otpState.value = it },
+            onFailure = onError
+        )
     }
 
-    fun verifyOtp(verificationId: String, otp: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun verifyOtp(verificationId: String, otp: String) {
         viewModelScope.launch {
-            try {
-                val result = repository.verifyOtp(verificationId, otp)
-                _authState.value = result
-                if (result) onSuccess() else onError("Verification failed")
-            } catch (e: Exception) {
-                onError(e.message ?: "Unknown error")
-            }
+            _authSuccess.value = repo.verifyOtp(verificationId, otp)
         }
     }
 
-    fun signOut() {
-        repository.signOut()
-        _authState.value = false
-    }
+    fun logout() = repo.signOut()
 }
