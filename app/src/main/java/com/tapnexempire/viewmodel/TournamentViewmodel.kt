@@ -2,6 +2,7 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tapnexempire.repository.AuthRepository
 import com.tapnexempire.repository.TournamentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -9,20 +10,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TournamentViewModel @Inject constructor(
-    private val repository: TournamentRepository
+    private val authRepo: AuthRepository,
+    private val repo: TournamentRepository
 ) : ViewModel() {
 
-    val tournaments = repository.tournaments
-
-    init {
-        viewModelScope.launch { repository.loadTournaments() }
-    }
-
-    fun joinTournament(tournamentId: String) = viewModelScope.launch {
-        repository.joinTournament(tournamentId)
-    }
-
-    fun rewardWinner(amount: Int) = viewModelScope.launch {
-        repository.rewardWinner(amount)
+    fun joinTournament(tournamentId: String, score: Int) {
+        viewModelScope.launch {
+            authRepo.getCurrentUserId()?.let {
+                repo.joinTournament(tournamentId, it, score)
+            }
+        }
     }
 }
