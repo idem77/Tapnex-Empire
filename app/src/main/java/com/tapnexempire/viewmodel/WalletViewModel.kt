@@ -2,31 +2,46 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tapnexempire.repository.AuthRepository
 import com.tapnexempire.repository.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WalletViewModel @Inject constructor(
-    private val repository: WalletRepository
+    private val authRepo: AuthRepository,
+    private val walletRepo: WalletRepository
 ) : ViewModel() {
 
-    val walletState = repository.walletState
+    private val _wallet = MutableStateFlow<Map<String, Long>>(emptyMap())
+    val wallet: StateFlow<Map<String, Long>> = _wallet
 
-    init {
-        viewModelScope.launch { repository.loadWallet() }
+    fun loadWallet() {
+        viewModelScope.launch {
+            authRepo.getCurrentUserId()?.let {
+                _wallet.value = walletRepo.getWallet(it)
+            }
+        }
     }
 
-    fun deposit(amount: Int) = viewModelScope.launch {
-        repository.addDepositCoins(amount)
+    fun deposit(coins: Int) {
+        viewModelScope.launch {
+            authRepo.getCurrentUserId()?.let {
+                walletRepo.depositCoins(it, coins)
+                loadWallet()
+            }
+        }
     }
 
-    fun claimBonus() = viewModelScope.launch {
-        repository.claimDailyBonus()
-    }
-
-    fun withdraw(amount: Int) = viewModelScope.launch {
-        repository.withdraw(amount)
+    fun withdraw(coins: Int) {
+        viewModelScope.launch {
+            authRepo.getCurrentUserId()?.let {
+                walletRepo.withdrawCoins(it, coins)
+                loadWallet()
+            }
+        }
     }
 }
