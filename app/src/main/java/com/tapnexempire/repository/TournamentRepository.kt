@@ -8,24 +8,21 @@ class TournamentRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
-    suspend fun joinTournament(
+    suspend fun saveTournamentScore(
         tournamentId: String,
         userId: String,
         score: Int
     ) {
-        firestore.collection("tournament_players")
-            .add(
-                mapOf(
-                    "tournamentId" to tournamentId,
-                    "userId" to userId,
-                    "score" to score,
-                    "rank" to 0
-                )
-            ).await()
-    }
+        val data = hashMapOf(
+            "tournamentId" to tournamentId,
+            "userId" to userId,
+            "score" to score,
+            "timestamp" to System.currentTimeMillis()
+        )
 
-    suspend fun getMyTournaments(userId: String) =
-        firestore.collection("tournament_players")
-            .whereEqualTo("userId", userId)
-            .get().await()
+        firestore
+            .collection("tournament_players")
+            .add(data)
+            .await()
+    }
 }
