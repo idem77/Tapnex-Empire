@@ -2,8 +2,8 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.repository.AuthRepository
 import com.tapnexempire.repository.WalletRepository
+import com.tapnexempire.model.Wallet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,36 +12,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WalletViewModel @Inject constructor(
-    private val authRepo: AuthRepository,
-    private val walletRepo: WalletRepository
+    private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    private val _wallet = MutableStateFlow<Map<String, Long>>(emptyMap())
-    val wallet: StateFlow<Map<String, Long>> = _wallet
+    private val _wallet = MutableStateFlow(Wallet())
+    val wallet: StateFlow<Wallet> = _wallet
 
-    fun loadWallet() {
+    fun loadWallet(userId: String) {
         viewModelScope.launch {
-            authRepo.getCurrentUserId()?.let {
-                _wallet.value = walletRepo.getWallet(it)
-            }
-        }
-    }
-
-    fun deposit(coins: Int) {
-        viewModelScope.launch {
-            authRepo.getCurrentUserId()?.let {
-                walletRepo.depositCoins(it, coins)
-                loadWallet()
-            }
-        }
-    }
-
-    fun withdraw(coins: Int) {
-        viewModelScope.launch {
-            authRepo.getCurrentUserId()?.let {
-                walletRepo.withdrawCoins(it, coins)
-                loadWallet()
-            }
+            walletRepository.createWalletIfNotExists(userId)
+            _wallet.value = walletRepository.getWallet(userId)
         }
     }
 }
