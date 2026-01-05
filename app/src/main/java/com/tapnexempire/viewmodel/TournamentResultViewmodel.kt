@@ -3,18 +3,25 @@ package com.tapnexempire.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapnexempire.repository.TournamentResultRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class TournamentResultViewModel @Inject constructor(
+class TournamentResultViewModel(
     private val repository: TournamentResultRepository
 ) : ViewModel() {
 
-    fun finishTournament(tournamentId: String, isPaid: Boolean) {
+    fun submitTournamentResult(
+        tournamentId: String,
+        rankedUsers: List<Pair<String, Int>>,
+        totalCollectedCoins: Int,
+        isPaidTournament: Boolean
+    ) {
         viewModelScope.launch {
-            repository.distributeRewards(tournamentId, isPaid)
+            repository.submitResult(
+                tournamentId,
+                rankedUsers,
+                totalCollectedCoins,
+                isPaidTournament
+            )
         }
     }
 }
