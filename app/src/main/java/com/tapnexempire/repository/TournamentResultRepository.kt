@@ -1,61 +1,57 @@
 package com.tapnexempire.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tapnexempire.models.TournamentResultModel
 import kotlinx.coroutines.tasks.await
 
 class TournamentResultRepository(
-    private val firestore: FirebaseFirestore,
-    private val walletRepository: WalletRepository
+    private val firestore: FirebaseFirestore
 ) {
 
-    suspend fun distributeRewards(
+    suspend fun submitResult(
         tournamentId: String,
-        isPaid: Boolean
+        rankedUsers: List<Pair<String, Int>>, // userId to rank
+        totalCollectedCoins: Int,
+        isPaidTournament: Boolean
     ) {
-        val playersSnap = firestore
-            .collection("tournament_players")
-            .whereEqualTo("tournamentId", tournamentId)
-            .get()
-            .await()
+        if (!isPaidTournament) return
 
-        val totalPlayers = playersSnap.size()
-        if (totalPlayers == 0) return
+        val empireCoins = (totalCollectedCoins * 0.70).toInt()
+        val playerCoins = (totalCollectedCoins * 0.20).toInt()
 
-        val entryCoins = 250
-        val totalPool = totalPlayers * entryCoins
-        val empireCut = (totalPool * 0.70).toInt()
-        val rewardPool = totalPool - empireCut
+        val prizePerWinner = playerCoins / rankedUsers.size
 
-        val sortedPlayers = playersSnap.documents.sortedByDescending {
-            it.getLong("score") ?: 0
+        rankedUsers.forEach { (userId, rank) ->
+            val result = TournamentResultModel(
+                tournamentId = tournamentId,
+                userId = userId,
+                rank = rank,
+                winCoins = prizePerWinner,
+                isWithdrawable = rank <= 10
+            )
+
+            firestore.collection("tournament_results")
+                .add(result)
+                .await()
+
+            // add coins to wallet
+            firestore.collection("wallets")
+                .document(userId)
+                .update(
+                    mapOf(
+                        "withdrawableCoins" to prizePerWinner
+                    )
+                )
         }
 
-        sortedPlayers.forEachIndexed { index, doc ->
-            val rank = index + 1
-            val userId = doc.getString("userId") ?: return@forEachIndexed
-
-            val rewardCoins = when (rank) {
-                1 -> (rewardPool * 0.40).toInt()
-                2 -> (rewardPool * 0.20).toInt()
-                3 -> (rewardPool * 0.10).toInt()
-                in 4..10 -> (rewardPool * 0.30 / 7).toInt()
-                else -> 0
-            }
-
-            if (rewardCoins > 0) {
-                if (isPaid) {
-                    walletRepository.addWithdrawableCoins(userId, rewardCoins)
-                } else {
-                    walletRepository.addBonusCoins(userId, rewardCoins)
-                }
-            }
-
-            doc.reference.update("rank", rank)
-        }
-
-        firestore.collection("tournaments")
-            .document(tournamentId)
-            .update("status", "COMPLETED")
-            .await()
+        // Empire profit record
+        firestore.collection("empire_earnings")
+            .add(
+                mapOf(
+                    "tournamentId" to tournamentId,
+                    "coins" to empireCoins,
+                    "createdAt" to System.currentTimeMillis()
+                )
+            )
     }
 }
