@@ -1,123 +1,85 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.tapnexempire.ui.auth.OtpLoginScreen
-import com.tapnexempire.ui.auth.OtpVerificationScreen
+import androidx.navigation.NavType
+import androidx.navigation.compose.*
+import androidx.navigation.navArgument
+import com.tapnexempire.ui.auth.*
 import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.profile.ProfileScreen
-import com.tapnexempire.ui.profile.SettingsScreen
+import com.tapnexempire.ui.profile.*
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.MyTournamentsScreen
-import com.tapnexempire.ui.tournament.TournamentListScreen
-import com.tapnexempire.ui.wallet.WalletScreen
-import com.tapnexempire.ui.wallet.WithdrawScreen
-
-object Routes {
-    const val SPLASH = "splash"
-    const val LOGIN = "login"
-    const val OTP = "otp"
-    const val HOME = "home"
-    const val WALLET = "wallet"
-    const val WITHDRAW = "withdraw"
-    const val TOURNAMENTS = "tournaments"
-    const val MY_TOURNAMENTS = "my_tournaments"
-    const val TASKS = "tasks"
-    const val PROFILE = "profile"
-    const val SETTINGS = "settings"
-}
+import com.tapnexempire.ui.tournament.*
+import com.tapnexempire.ui.wallet.*
 
 @Composable
 fun AppNavGraph() {
+
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Routes.SPLASH
+        startDestination = "splash"
     ) {
 
-        composable(Routes.SPLASH) {
-            SplashScreen(
-                onNavigateToLogin = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.SPLASH) { inclusive = true }
-                    }
-                }
-            )
+        // Splash
+        composable("splash") {
+            SplashScreen(navController)
         }
 
-        composable(Routes.LOGIN) {
-            OtpLoginScreen(
-                onOtpSent = { verificationId ->
-                    navController.navigate("${Routes.OTP}/$verificationId")
-                }
-            )
+        // Auth
+        composable("login") {
+            OtpLoginScreen(navController)
         }
 
-        composable("${Routes.OTP}/{verificationId}") {
-            OtpVerificationScreen(
-                onLoginSuccess = {
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
-                    }
-                }
-            )
+        composable("otp") {
+            OtpVerificationScreen(navController)
         }
 
-        composable(Routes.HOME) {
-            HomeScreen(
-                onWalletClick = { navController.navigate(Routes.WALLET) },
-                onTournamentClick = { navController.navigate(Routes.TOURNAMENTS) },
-                onTaskClick = { navController.navigate(Routes.TASKS) },
-                onProfileClick = { navController.navigate(Routes.PROFILE) }
-            )
+        // Main
+        composable("home") {
+            HomeScreen(navController)
         }
 
-        composable(Routes.WALLET) {
-            WalletScreen(
-                onWithdrawClick = { navController.navigate(Routes.WITHDRAW) }
-            )
+        composable("task") {
+            TaskScreen(navController)
         }
 
-        composable(Routes.WITHDRAW) {
-            WithdrawScreen(
-                onBack = { navController.popBackStack() }
-            )
+        composable("wallet") {
+            WalletScreen(navController)
         }
 
-        composable(Routes.TOURNAMENTS) {
-            TournamentListScreen(
-                onMyTournamentsClick = {
-                    navController.navigate(Routes.MY_TOURNAMENTS)
-                }
-            )
+        composable("profile") {
+            ProfileScreen(navController)
         }
 
-        composable(Routes.MY_TOURNAMENTS) {
-            MyTournamentsScreen(
-                onBack = { navController.popBackStack() }
-            )
+        // Wallet Sub
+        composable("deposit") {
+            DepositScreen(navController)
         }
 
-        composable(Routes.TASKS) {
-            TaskScreen()
+        composable("withdraw") {
+            WithdrawScreen(navController)
         }
 
-        composable(Routes.PROFILE) {
-            ProfileScreen(
-                onSettingsClick = {
-                    navController.navigate(Routes.SETTINGS)
-                }
-            )
+        composable("transactions") {
+            TransactionHistoryScreen(navController)
         }
 
-        composable(Routes.SETTINGS) {
-            SettingsScreen(
-                onBack = { navController.popBackStack() }
-            )
+        // Tournament
+        composable("tournaments") {
+            TournamentListScreen(navController)
+        }
+
+        composable(
+            "tournament_detail/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            TournamentDetailScreen(navController)
+        }
+
+        composable("my_tournaments") {
+            MyTournamentsScreen(navController)
         }
     }
 }
