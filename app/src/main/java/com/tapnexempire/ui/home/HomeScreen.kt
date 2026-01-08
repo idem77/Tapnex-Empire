@@ -1,83 +1,82 @@
 package com.tapnexempire.ui.home
 
-import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.tapnexempire.components.CoinCard
 import com.tapnexempire.components.GameTile
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.LightCream
-import com.tapnexempire.viewmodel.HomeViewModel
+import com.tapnexempire.components.RewardCard
+import com.tapnexempire.viewmodel.TaskViewModel
+import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun HomeScreen(
-    onWalletClick: () -> Unit,
-    onTournamentClick: () -> Unit,
-    onProfileClick: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    navController: NavController,
+    walletViewModel: WalletViewModel = hiltViewModel(),
+    taskViewModel: TaskViewModel = hiltViewModel()
 ) {
-    val walletState by viewModel.walletState.collectAsState()
 
-    val scaleAnim = remember { Animatable(0.8f) }
+    val walletState by walletViewModel.walletState.collectAsState()
+    val dailyReward by taskViewModel.dailyReward.collectAsState()
 
     LaunchedEffect(Unit) {
-        scaleAnim.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 800,
-                easing = FastOutSlowInEasing
-            )
-        )
+        walletViewModel.fetchWallet()
+        taskViewModel.fetchDailyReward()
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Coins Card
-        CoinCard(
-            coins = walletState.totalCoins,
-            onClick = onWalletClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .scale(scaleAnim.value)
-        )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            CoinCard(
+                coins = walletState.coins,
+                onWalletClick = {
+                    navController.navigate("wallet")
+                }
+            )
+        }
 
-        // Games Section
-        Text(
-            text = "Games",
-            fontSize = 20.sp,
-            color = CharcoalBlack,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        item {
+            Text(
+                text = "Games",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
 
-        val games = listOf("Ludo", "Quiz", "Spin & Win", "Puzzle")
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(games) { game ->
-                GameTile(
-                    title = game,
-                    onClick = {
-                        // future: navigate to game
-                    }
-                )
-            }
+        item {
+            GameTile(
+                gameName = "Ludo",
+                onClick = {
+                    navController.navigate("ludo")
+                }
+            )
+        }
+
+        item {
+            Text(
+                text = "Rewards",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        item {
+            RewardCard(
+                title = "Daily Reward",
+                coins = dailyReward.coins,
+                onClick = {
+                    taskViewModel.claimDailyReward()
+                }
+            )
         }
     }
 }
