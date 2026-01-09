@@ -1,89 +1,90 @@
 package com.tapnexempire.ui.wallet
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.Gold
-import com.tapnexempire.ui.theme.LightCream
-import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.viewmodel.WithdrawViewModel
 
 @Composable
 fun WithdrawScreen(
     navController: NavController,
-    viewModel: WalletViewModel = hiltViewModel()
+    viewModel: WithdrawViewModel = hiltViewModel()
 ) {
-    val walletState = viewModel.walletState.collectAsState().value
-    val totalCoins = walletState.totalCoins
+    var coinInput by remember { mutableStateOf("") }
 
-    var withdrawAmount by remember { mutableStateOf("") }
+    val isLoading by viewModel.loading.collectAsState()
+    val message by viewModel.message.collectAsState()
+    val error by viewModel.error.collectAsState()
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.fillMaxSize()
+
+        Text(
+            text = "Withdraw Coins",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        OutlinedTextField(
+            value = coinInput,
+            onValueChange = { coinInput = it },
+            label = { Text("Coins to Withdraw") },
+            keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            text = "₹ ${(coinInput.toIntOrNull() ?: 0) * 0.10}",
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        if (message != null) {
+            Text(
+                text = message ?: "",
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        if (error != null) {
+            Text(
+                text = error ?: "",
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
+        Button(
+            onClick = {
+                val coins = coinInput.toIntOrNull() ?: return@Button
+                viewModel.requestWithdraw(coins)
+            },
+            enabled = !isLoading,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Withdraw Coins",
-                fontSize = 24.sp,
-                color = CharcoalBlack,
-                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
-            )
-
-            Text(
-                text = "Available: $totalCoins coins",
-                fontSize = 16.sp,
-                color = CharcoalBlack,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            OutlinedTextField(
-                value = withdrawAmount,
-                onValueChange = { withdrawAmount = it },
-                label = { Text("Enter amount") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(0.8f)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    val amount = withdrawAmount.toIntOrNull() ?: 0
-                    if (amount in 1..totalCoins) {
-                        viewModel.withdrawCoins(amount)
-                        navController.popBackStack()
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Gold),
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .height(50.dp)
-            ) {
-                Text(
-                    text = "Withdraw",
-                    color = CharcoalBlack,
-                    fontSize = 18.sp
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp
                 )
+            } else {
+                Text("Request Withdraw")
             }
+        }
+
+        OutlinedButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Back")
         }
     }
 }
