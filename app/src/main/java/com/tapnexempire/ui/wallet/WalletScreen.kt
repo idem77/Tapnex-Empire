@@ -1,14 +1,15 @@
 package com.tapnexempire.ui.wallet
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.tapnexempire.components.CoinCard
 import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
@@ -16,83 +17,94 @@ fun WalletScreen(
     navController: NavController,
     viewModel: WalletViewModel = hiltViewModel()
 ) {
-    val walletState by viewModel.wallet.collectAsState()
-    val isLoading by viewModel.loading.collectAsState()
-    val errorMessage by viewModel.error.collectAsState()
+    val state = viewModel.walletState
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
 
-        when {
-            isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-
-            errorMessage != null -> {
+        // 🔹 TOTAL COINS
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(6.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Total Coins", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = errorMessage ?: "Something went wrong",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
+                    text = state.totalCoins.toString(),
+                    style = MaterialTheme.typography.headlineMedium
                 )
             }
+        }
 
-            else -> {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 🔹 ACTION BUTTONS
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { navController.navigate("deposit") }
+            ) {
+                Text("Deposit")
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { navController.navigate("withdraw") }
+            ) {
+                Text("Withdraw")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 🔹 TRANSACTION HISTORY
+        Text(
+            text = "Recent Transactions",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyColumn {
+            items(state.transactions) { txn ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
+                    elevation = CardDefaults.cardElevation(2.dp)
                 ) {
-
-                    Text(
-                        text = "My Wallet",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-                    CoinCard(
-                        title = "Total Coins",
-                        coins = walletState.totalCoins
-                    )
-
-                    CoinCard(
-                        title = "Withdrawable Coins",
-                        coins = walletState.withdrawableCoins
-                    )
-
-                    CoinCard(
-                        title = "Bonus Coins",
-                        coins = walletState.bonusCoins
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = {
-                            navController.navigate("deposit")
-                        },
-                        modifier = Modifier.fillMaxWidth()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Deposit Coins")
-                    }
-
-                    Button(
-                        onClick = {
-                            navController.navigate("withdraw")
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Withdraw")
-                    }
-
-                    OutlinedButton(
-                        onClick = {
-                            navController.navigate("transactions")
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Transaction History")
+                        Column {
+                            Text(txn.title)
+                            Text(
+                                txn.date,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        Text(
+                            text = if (txn.isCredit) "+${txn.amount}" else "-${txn.amount}",
+                            color = if (txn.isCredit)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             }
