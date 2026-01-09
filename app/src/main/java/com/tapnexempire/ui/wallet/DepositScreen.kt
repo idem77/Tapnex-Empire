@@ -1,21 +1,14 @@
 package com.tapnexempire.ui.wallet
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.Gold
-import com.tapnexempire.ui.theme.LightCream
 import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
@@ -23,57 +16,67 @@ fun DepositScreen(
     navController: NavController,
     viewModel: WalletViewModel = hiltViewModel()
 ) {
-    var depositAmount by remember { mutableStateOf("") }
+    var coinInput by remember { mutableStateOf("") }
+    val isLoading by viewModel.loading.collectAsState()
+    val errorMessage by viewModel.error.collectAsState()
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.fillMaxSize()
-        ) {
+
+        Text(
+            text = "Deposit Coins",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        OutlinedTextField(
+            value = coinInput,
+            onValueChange = { coinInput = it },
+            label = { Text("Enter Coins") },
+            keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            text = "₹ ${(coinInput.toIntOrNull() ?: 0) * 0.10}",
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        if (errorMessage != null) {
             Text(
-                text = "Deposit Coins",
-                fontSize = 24.sp,
-                color = CharcoalBlack,
-                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
+                text = errorMessage ?: "",
+                color = MaterialTheme.colorScheme.error
             )
+        }
 
-            OutlinedTextField(
-                value = depositAmount,
-                onValueChange = { depositAmount = it },
-                label = { Text("Enter amount") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(0.8f)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    val amount = depositAmount.toIntOrNull() ?: 0
-                    if (amount > 0) {
-                        viewModel.depositCoins(amount)
-                        navController.popBackStack()
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Gold),
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .height(50.dp)
-            ) {
-                Text(
-                    text = "Deposit",
-                    color = CharcoalBlack,
-                    fontSize = 18.sp
+        Button(
+            onClick = {
+                val coins = coinInput.toIntOrNull() ?: return@Button
+                viewModel.depositCoins(coins)
+            },
+            enabled = !isLoading,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp
                 )
+            } else {
+                Text("Confirm Deposit")
             }
+        }
+
+        OutlinedButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Back")
         }
     }
 }
