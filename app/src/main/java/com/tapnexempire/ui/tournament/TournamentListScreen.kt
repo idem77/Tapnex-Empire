@@ -20,54 +20,37 @@ import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
 fun TournamentListScreen(
-    onTournamentClick: (Tournament) -> Unit
+    onTournamentClick: (String) -> Unit,
+    viewModel: TournamentViewModel = hiltViewModel()
 ) {
-    val tournamentViewModel: TournamentViewModel = hiltViewModel()
-    val tournaments = tournamentViewModel.tournamentState.collectAsState().value
+    val state by viewModel.state.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp)
+    if (state.isLoading) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
     ) {
-        Text(
-            text = "Tournaments",
-            fontSize = 24.sp,
-            color = CharcoalBlack,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(tournaments) { tournament ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onTournamentClick(tournament) },
-                    colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.15f))
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(text = tournament.name, color = CharcoalBlack, fontSize = 18.sp)
-                            Text(text = "Prize: ${tournament.prize}", color = CharcoalBlack.copy(alpha = 0.7f), fontSize = 14.sp)
-                        }
+        items(state.tournaments) { tournament ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+                    .clickable {
+                        onTournamentClick(tournament.id)
                     }
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(tournament.name)
+                    Text("Prize: ${tournament.prize}")
+                    Text("Entry Fee: ${tournament.entryFee}")
                 }
             }
         }
     }
 }
-
-// Sample data class
-data class Tournament(
-    val id: Int,
-    val name: String,
-    val prize: String
-)
