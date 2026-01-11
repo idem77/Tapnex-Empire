@@ -1,9 +1,11 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tapnexempire.ui.auth.OtpLoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.home.HomeScreen
@@ -15,167 +17,91 @@ import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
 import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
-import com.tapnexempire.ui.wallet.DepositScreen
-import com.tapnexempire.ui.wallet.TransactionHistoryScreen
-import com.tapnexempire.ui.wallet.WalletScreen
-import com.tapnexempire.ui.wallet.WithdrawScreen
-import com.tapnexempire.viewmodel.HomeViewModel
-import com.tapnexempire.viewmodel.TaskViewModel
-import com.tapnexempire.viewmodel.TournamentDetailViewModel
-import com.tapnexempire.viewmodel.TournamentViewModel
-import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.ui.wallet.*
 
 @Composable
-fun AppNavGraph(
-    navController: NavHostController,
-    homeViewModel: HomeViewModel,
-    walletViewModel: WalletViewModel,
-    taskViewModel: TaskViewModel,
-    tournamentViewModel: TournamentViewModel,
-    tournamentDetailViewModel: TournamentDetailViewModel
-) {
+fun AppNavGraph() {
+
+    val navController = rememberNavController()
+
     NavHost(
         navController = navController,
         startDestination = "splash"
     ) {
-        // SPLASH
+
+        // Splash
         composable("splash") {
-            SplashScreen(
-                navController = navController
-            )
+            SplashScreen(navController)
         }
 
-        // AUTH
+        // Auth
         composable("otp_login") {
-            OtpLoginScreen(
-                navController = navController,
-                onOtpSent = { phoneNumber ->
-                    navController.navigate("otp_verification/$phoneNumber")
-                }
-            )
+            OtpLoginScreen(navController)
         }
 
-        composable("otp_verification/{phoneNumber}") { backStackEntry ->
-            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber") ?: ""
-            OtpVerificationScreen(
-                navController = navController,
-                phoneNumber = phoneNumber,
-                onVerified = {
-                    navController.navigate("home") {
-                        popUpTo("splash") { inclusive = true }
-                    }
-                }
-            )
+        composable(
+            "otp_verify/{phone}",
+            arguments = listOf(navArgument("phone") { type = NavType.StringType })
+        ) {
+            OtpVerificationScreen(navController)
         }
 
-        // HOME
+        // Home
         composable("home") {
-            HomeScreen(
-                navController = navController,
-                homeViewModel = homeViewModel,
-                onWalletClick = { navController.navigate("wallet") },
-                onTaskClick = { navController.navigate("task") },
-                onTournamentClick = { tournamentId ->
-                    navController.navigate("tournament_detail/$tournamentId")
-                },
-                onProfileClick = { navController.navigate("profile") }
-            )
+            HomeScreen(navController)
         }
 
-        // WALLET
+        // Tasks
+        composable("tasks") {
+            TaskScreen()
+        }
+
+        // Wallet
         composable("wallet") {
-            WalletScreen(
-                navController = navController,
-                walletViewModel = walletViewModel,
-                onDepositClick = { navController.navigate("deposit") },
-                onWithdrawClick = { navController.navigate("withdraw") },
-                onTransactionHistoryClick = { navController.navigate("transaction_history") }
-            )
+            WalletScreen(navController)
         }
 
         composable("deposit") {
-            DepositScreen(
-                navController = navController,
-                walletViewModel = walletViewModel,
-                onDepositCoins = { /* handle deposit */ }
-            )
+            DepositScreen()
         }
 
         composable("withdraw") {
-            WithdrawScreen(
-                navController = navController,
-                walletViewModel = walletViewModel,
-                onWithdrawCoins = { /* handle withdraw */ }
-            )
+            WithdrawScreen()
         }
 
-        composable("transaction_history") {
-            TransactionHistoryScreen(
-                navController = navController,
-                walletViewModel = walletViewModel
-            )
+        composable("transactions") {
+            TransactionHistoryScreen()
         }
 
-        // TASK
-        composable("task") {
-            TaskScreen(
-                navController = navController,
-                taskViewModel = taskViewModel,
-                onCompleteTask = { taskId ->
-                    taskViewModel.completeTask(taskId)
-                }
-            )
+        // Tournaments
+        composable("tournaments") {
+            TournamentListScreen(navController)
         }
 
-        // TOURNAMENT
-        composable("tournament_list") {
-            TournamentListScreen(
-                navController = navController,
-                tournamentViewModel = tournamentViewModel,
-                onTournamentClick = { tournamentId ->
-                    navController.navigate("tournament_detail/$tournamentId")
-                }
-            )
-        }
-
-        composable("tournament_detail/{tournamentId}") { backStackEntry ->
-            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
+        composable(
+            "tournament_detail/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
             TournamentDetailScreen(
-                navController = navController,
-                tournamentDetailViewModel = tournamentDetailViewModel,
-                tournamentId = tournamentId,
-                onJoinTournament = { /* handle join */ }
+                tournamentId = it.arguments?.getString("id") ?: ""
             )
         }
 
         composable("my_tournaments") {
-            MyTournamentsScreen(
-                navController = navController,
-                tournamentViewModel = tournamentViewModel
-            )
+            MyTournamentsScreen(navController)
         }
 
-        // PROFILE
+        // Profile
         composable("profile") {
-            ProfileScreen(
-                navController = navController,
-                onEditProfileClick = { navController.navigate("edit_profile") },
-                onSettingsClick = { navController.navigate("settings") }
-            )
+            ProfileScreen(navController)
         }
 
         composable("edit_profile") {
-            EditProfileScreen(
-                navController = navController,
-                onSaveProfile = { navController.popBackStack() }
-            )
+            EditProfileScreen()
         }
 
         composable("settings") {
-            SettingsScreen(
-                navController = navController,
-                onLogout = { navController.navigate("otp_login") }
-            )
+            SettingsScreen()
         }
     }
 }
