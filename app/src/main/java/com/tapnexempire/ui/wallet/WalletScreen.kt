@@ -14,100 +14,39 @@ import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun WalletScreen(
-    navController: NavController,
+    onDeposit: () -> Unit,
+    onWithdraw: () -> Unit,
+    onTransactions: () -> Unit,
     viewModel: WalletViewModel = hiltViewModel()
 ) {
-    val state = viewModel.walletState
+    val state by viewModel.state.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
-        // 🔹 TOTAL COINS
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(6.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Total Coins", style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = state.totalCoins.toString(),
-                    style = MaterialTheme.typography.headlineMedium
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 🔹 ACTION BUTTONS
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = { navController.navigate("deposit") }
-            ) {
-                Text("Deposit")
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = { navController.navigate("withdraw") }
-            ) {
-                Text("Withdraw")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 🔹 TRANSACTION HISTORY
         Text(
-            text = "Recent Transactions",
-            style = MaterialTheme.typography.titleMedium
+            text = "Total Coins: ${state.totalCoins}",
+            style = MaterialTheme.typography.titleLarge
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(24.dp))
 
-        LazyColumn {
-            items(state.transactions) { txn ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp),
-                    elevation = CardDefaults.cardElevation(2.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column {
-                            Text(txn.title)
-                            Text(
-                                txn.date,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                        Text(
-                            text = if (txn.isCredit) "+${txn.amount}" else "-${txn.amount}",
-                            color = if (txn.isCredit)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-            }
+        Button(onClick = onDeposit, modifier = Modifier.fillMaxWidth()) {
+            Text("Deposit")
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Button(onClick = onWithdraw, modifier = Modifier.fillMaxWidth()) {
+            Text("Withdraw")
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Button(onClick = onTransactions, modifier = Modifier.fillMaxWidth()) {
+            Text("Transaction History")
         }
     }
 }
