@@ -24,69 +24,40 @@ fun TournamentDetailScreen(
         viewModel.loadTournament(tournamentId)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp)
-    ) {
-        when {
-            state.isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+    when {
+        state.isLoading -> {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
             }
+        }
 
-            else -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Tournament Details",
-                        fontSize = 24.sp,
-                        color = CharcoalBlack
-                    )
+        state.error != null -> {
+            Text(
+                text = state.error ?: "",
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Text(text = state.name, style = MaterialTheme.typography.titleLarge)
+                Spacer(Modifier.height(8.dp))
+                Text(text = "Prize: ${state.prize}")
+                Text(text = "Entry Fee: ${state.entryFee}")
+                Spacer(Modifier.height(24.dp))
 
-                    Text(
-                        text = "Your Coins: ${state.coins}",
-                        fontSize = 16.sp,
-                        color = CharcoalBlack
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = "Entry Fee: 250 coins",
-                        fontSize = 16.sp,
-                        color = CharcoalBlack
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    if (state.isJoined) {
-                        Text(
-                            text = "✅ You have joined this tournament",
-                            color = CharcoalBlack,
-                            fontSize = 16.sp
-                        )
-                    } else {
-                        Button(
-                            onClick = { viewModel.joinTournament(tournamentId) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Gold),
-                            modifier = Modifier.fillMaxWidth(0.6f)
-                        ) {
-                            Text("Join Tournament", color = CharcoalBlack)
-                        }
-                    }
-
-                    state.error?.let {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = it,
-                            color = MaterialTheme.colorScheme.error
-                        )
+                if (state.isJoined) {
+                    Text("✅ Already Joined")
+                } else {
+                    Button(
+                        onClick = { viewModel.joinTournament(tournamentId) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Join Tournament")
                     }
                 }
             }
