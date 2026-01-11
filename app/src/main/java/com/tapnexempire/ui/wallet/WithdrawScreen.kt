@@ -12,79 +12,41 @@ import com.tapnexempire.viewmodel.WithdrawViewModel
 
 @Composable
 fun WithdrawScreen(
-    navController: NavController,
     viewModel: WithdrawViewModel = hiltViewModel()
 ) {
-    var coinInput by remember { mutableStateOf("") }
-
-    val isLoading by viewModel.loading.collectAsState()
-    val message by viewModel.message.collectAsState()
-    val error by viewModel.error.collectAsState()
+    var amount by remember { mutableStateOf("") }
+    val state by viewModel.state.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(16.dp)
     ) {
-
-        Text(
-            text = "Withdraw Coins",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
         OutlinedTextField(
-            value = coinInput,
-            onValueChange = { coinInput = it },
-            label = { Text("Coins to Withdraw") },
-            keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            modifier = Modifier.fillMaxWidth()
+            value = amount,
+            onValueChange = { amount = it },
+            label = { Text("Withdraw Amount") }
         )
 
-        Text(
-            text = "₹ ${(coinInput.toIntOrNull() ?: 0) * 0.10}",
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        if (message != null) {
-            Text(
-                text = message ?: "",
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        if (error != null) {
-            Text(
-                text = error ?: "",
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+        Spacer(Modifier.height(16.dp))
 
         Button(
             onClick = {
-                val coins = coinInput.toIntOrNull() ?: return@Button
-                viewModel.requestWithdraw(coins)
+                viewModel.requestWithdraw(amount.toIntOrNull() ?: 0)
             },
-            enabled = !isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    strokeWidth = 2.dp
-                )
-            } else {
-                Text("Request Withdraw")
-            }
+            Text("Withdraw")
         }
 
-        OutlinedButton(
-            onClick = { navController.popBackStack() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Back")
+        state.error?.let {
+            Spacer(Modifier.height(8.dp))
+            Text(it, color = MaterialTheme.colorScheme.error)
+        }
+
+        state.message?.let {
+            Spacer(Modifier.height(8.dp))
+            Text(it)
         }
     }
 }
