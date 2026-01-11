@@ -14,54 +14,29 @@ import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun TransactionHistoryScreen(
-    navController: NavController,
     viewModel: WalletViewModel = hiltViewModel()
 ) {
-    val transactions by viewModel.transactions.collectAsState()
-    val loading by viewModel.loading.collectAsState()
+    val state by viewModel.transactionState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
     ) {
-
-        Text(
-            text = "Transaction History",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (loading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+        items(state.transactions) { txn ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
             ) {
-                CircularProgressIndicator()
-            }
-        } else if (transactions.isEmpty()) {
-            Text(
-                text = "No transactions yet",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(transactions) { txn ->
-                    TransactionItem(txn)
+                Column(Modifier.padding(16.dp)) {
+                    Text(txn.title)
+                    Text(txn.date)
+                    Text(
+                        text = if (txn.isCredit) "+${txn.amount}" else "-${txn.amount}",
+                        color = if (txn.isCredit) Color.Green else Color.Red
+                    )
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedButton(
-            onClick = { navController.popBackStack() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Back")
         }
     }
 }
