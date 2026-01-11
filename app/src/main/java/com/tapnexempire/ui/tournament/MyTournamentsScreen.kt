@@ -20,52 +20,28 @@ import com.tapnexempire.ui.theme.Gold
 import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
-fun MyTournamentScreen(
-    onTournamentClick: (Tournament) -> Unit
+fun MyTournamentsScreen(
+    onTournamentClick: (String) -> Unit,
+    viewModel: TournamentViewModel = hiltViewModel()
 ) {
-    val tournamentViewModel: TournamentViewModel = hiltViewModel()
-    val myTournaments = tournamentViewModel.getMyTournaments().collectAsState(initial = emptyList()).value
+    val state by viewModel.state.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp)
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
     ) {
-        Text(
-            text = "My Tournaments",
-            fontSize = 24.sp,
-            color = CharcoalBlack,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        if (myTournaments.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "You haven't joined any tournaments yet.", color = CharcoalBlack)
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(myTournaments) { tournament ->
-                    Card(
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onTournamentClick(tournament) },
-                        colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.15f))
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(text = tournament.name, fontSize = 18.sp, color = CharcoalBlack)
-                            Text(text = "Prize: ${tournament.prize}", fontSize = 14.sp, color = CharcoalBlack.copy(alpha = 0.7f))
-                            Text(text = "Entry Fee: ${tournament.entryFee}", fontSize = 14.sp, color = CharcoalBlack.copy(alpha = 0.7f))
-                        }
+        items(state.myTournaments) { tournament ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+                    .clickable {
+                        onTournamentClick(tournament.id)
                     }
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(tournament.name)
+                    Text("Prize: ${tournament.prize}")
                 }
             }
         }
