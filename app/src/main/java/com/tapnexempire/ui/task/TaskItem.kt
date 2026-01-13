@@ -5,37 +5,54 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.tapnexempire.models.TaskModel
+import com.tapnexempire.ui.theme.CharcoalBlack
+import com.tapnexempire.ui.theme.Gold
 
 @Composable
-fun TaskItem(task: TaskUiModel) {
-
+fun TaskItem(task: TaskModel) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(4.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
 
-            Column {
-                Text(text = task.title, style = MaterialTheme.typography.bodyLarge)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = task.progress, style = MaterialTheme.typography.bodySmall)
-            }
+            Text(
+                text = task.title,
+                fontSize = 18.sp,
+                color = CharcoalBlack
+            )
 
-            Column(horizontalAlignment = androidx.compose.ui.Alignment.End) {
-                Text(text = "+${task.reward} coins")
+            Spacer(modifier = Modifier.height(4.dp))
 
-                Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = task.description,
+                fontSize = 14.sp
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "+${task.reward} coins",
+                    fontSize = 14.sp,
+                    color = CharcoalBlack
+                )
 
                 Button(
-                    onClick = { },
-                    enabled = !task.completed
+                    onClick = { /* later: completeTask */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Gold),
+                    enabled = !task.isCompleted
                 ) {
-                    Text(if (task.completed) "Claimed" else "Claim")
+                    Text(
+                        text = if (task.isCompleted) "Completed" else "Claim",
+                        color = CharcoalBlack
+                    )
                 }
             }
         }
