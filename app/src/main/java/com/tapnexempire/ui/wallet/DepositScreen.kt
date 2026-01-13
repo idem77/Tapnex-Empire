@@ -7,35 +7,58 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.tapnexempire.viewmodel.WalletViewModel
+import androidx.compose.ui.text.input.KeyboardOptions
 
 @Composable
 fun DepositScreen(
-    viewModel: WalletViewModel = hiltViewModel()
+    onBack: () -> Unit,
+    onProceed: (Int) -> Unit
 ) {
     var amount by remember { mutableStateOf("") }
-    val state by viewModel.depositState.collectAsState()
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+    val rupees = amount.toIntOrNull() ?: 0
+    val coins = rupees * 10   // 🔥 ₹1 = 10 coins (changeable later)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+
+        Text(
+            text = "Deposit Coins 💰",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
         OutlinedTextField(
             value = amount,
             onValueChange = { amount = it },
-            label = { Text("Enter Amount") }
+            label = { Text("Enter Amount (₹)") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(16.dp))
+        Text(
+            text = "You will get: $coins coins",
+            style = MaterialTheme.typography.titleMedium
+        )
 
         Button(
-            onClick = { viewModel.depositCoins(amount.toIntOrNull() ?: 0) },
-            modifier = Modifier.fillMaxWidth()
+            onClick = { onProceed(coins) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = rupees > 0
         ) {
-            Text("Deposit")
+            Text("Proceed to Pay")
         }
 
-        state.error?.let {
-            Text(it, color = MaterialTheme.colorScheme.error)
+        OutlinedButton(
+            onClick = onBack,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Back")
         }
     }
 }
