@@ -24,43 +24,86 @@ fun TournamentDetailScreen(
         viewModel.loadTournament(tournamentId)
     }
 
-    when {
-        state.isLoading -> {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(LightCream)
+            .padding(16.dp)
+    ) {
+
+        when {
+            state.isLoading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Gold
+                )
             }
-        }
 
-        state.error != null -> {
-            Text(
-                text = state.error ?: "",
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+            else -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-        else -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                Text(text = state.name, style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.height(8.dp))
-                Text(text = "Prize: ${state.prize}")
-                Text(text = "Entry Fee: ${state.entryFee}")
-                Spacer(Modifier.height(24.dp))
+                    Text(
+                        text = "Tournament Details 🏆",
+                        fontSize = 24.sp,
+                        color = CharcoalBlack
+                    )
 
-                if (state.isJoined) {
-                    Text("✅ Already Joined")
-                } else {
-                    Button(
-                        onClick = { viewModel.joinTournament(tournamentId) },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Join Tournament")
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    InfoRow(label = "Your Coins", value = "${state.coins}")
+                    InfoRow(label = "Entry Fee", value = "250 coins")
+                    InfoRow(label = "Type", value = "Paid Tournament")
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    if (state.isJoined) {
+                        Text(
+                            text = "✅ You have joined this tournament",
+                            fontSize = 16.sp,
+                            color = CharcoalBlack
+                        )
+                    } else {
+                        Button(
+                            onClick = { viewModel.joinTournament(tournamentId) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Gold),
+                            modifier = Modifier.fillMaxWidth(0.7f)
+                        ) {
+                            Text(
+                                text = "Join Tournament",
+                                color = CharcoalBlack,
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
+
+                    state.error?.let { error ->
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = error,
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun InfoRow(
+    label: String,
+    value: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = label, color = CharcoalBlack)
+        Text(text = value, color = CharcoalBlack)
     }
 }
