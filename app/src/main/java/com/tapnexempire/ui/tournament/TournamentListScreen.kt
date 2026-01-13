@@ -1,56 +1,76 @@
 package com.tapnexempire.ui.tournament
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.tapnexempire.ui.theme.LightCream
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.models.TournamentModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
 fun TournamentListScreen(
-    onTournamentClick: (String) -> Unit,
-    viewModel: TournamentViewModel = hiltViewModel()
+    viewModel: TournamentViewModel,
+    onTournamentClick: (String) -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
+    val tournaments by viewModel.tournaments.collectAsState()
 
-    if (state.isLoading) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-        return
+    LaunchedEffect(Unit) {
+        viewModel.loadTournaments()
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        items(state.tournaments) { tournament ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-                    .clickable {
-                        onTournamentClick(tournament.id)
-                    }
-            ) {
-                Column(Modifier.padding(16.dp)) {
-                    Text(tournament.name)
-                    Text("Prize: ${tournament.prize}")
-                    Text("Entry Fee: ${tournament.entryFee}")
-                }
+
+        Text(
+            text = "Tournaments 🏆",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(tournaments) { tournament ->
+                TournamentCard(
+                    tournament = tournament,
+                    onClick = { onTournamentClick(tournament.id) }
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun TournamentCard(
+    tournament: TournamentModel,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+
+            Text(
+                text = tournament.title,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text("Entry: ${tournament.entryCoins} coins")
+            Text("Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}")
+            Text("Status: ${tournament.status}")
         }
     }
 }
