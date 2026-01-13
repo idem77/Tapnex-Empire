@@ -2,54 +2,54 @@ package com.tapnexempire.ui.task
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.models.TaskModel
+import com.tapnexempire.ui.theme.CharcoalBlack
+import com.tapnexempire.ui.theme.Gold
 import com.tapnexempire.viewmodel.TaskViewModel
 
 @Composable
 fun TaskScreen(
-    taskViewModel: TaskViewModel
+    viewModel: TaskViewModel = hiltViewModel()
 ) {
-    // Get tasks from ViewModel
-    val tasks = taskViewModel.taskState.collectAsState().value
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(tasks.size) { index ->
-            val task = tasks[index]
-            TaskCard(task = task, onClick = { 
-                // Handle task click, reward claim
-                taskViewModel.completeTask(task.id)
-            })
-        }
+    // ⚠️ Abhi repo sirf fetch kar raha hai, UI dummy list se chalega
+    val tasks = remember {
+        listOf(
+            TaskModel("1", "Play 1 Match", "Complete one game", 50),
+            TaskModel("2", "Daily Login", "Open app today", 20),
+            TaskModel("3", "Invite Friend", "Invite 1 friend", 100)
+        )
     }
-}
 
-@Composable
-fun TaskCard(task: TaskModel, onClick: () -> Unit) {
-    Card(
+    LaunchedEffect(Unit) {
+        viewModel.loadTasks()
+    }
+
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+
+        Text(
+            text = "Tasks 📋",
+            fontSize = 24.sp,
+            color = CharcoalBlack
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = task.title, style = MaterialTheme.typography.bodyLarge)
-            Button(onClick = onClick) {
-                Text("Claim ${task.reward} Coins")
+            items(tasks) { task ->
+                TaskItem(task)
             }
         }
     }
