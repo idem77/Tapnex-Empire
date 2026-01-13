@@ -1,123 +1,84 @@
 package com.tapnexempire.ui.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme.CardBackground
 import com.tapnexempire.ui.theme.CharcoalBlack
 import com.tapnexempire.ui.theme.Gold
+import com.tapnexempire.ui.theme.LightCream
 
 @Composable
 fun ProfileScreen(
-    userName: String,
-    onEditProfileClick: () -> Unit,
-    onSettingsClick: () -> Unit,
+    phoneNumber: String = "",
+    onEditProfile: () -> Unit,
+    onSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFBF5))
-            .padding(16.dp)
+            .background(LightCream)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
-            text = "Profile",
-            fontSize = 22.sp,
-            color = CharcoalBlack,
-            style = MaterialTheme.typography.titleLarge
+            text = "My Profile 👤",
+            fontSize = 24.sp,
+            color = CharcoalBlack
         )
-        Spacer(modifier = Modifier.height(12.dp))
 
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = CardBackground)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ProfileItem(label = "Phone Number", value = phoneNumber.ifEmpty { "Not Available" })
+        ProfileItem(label = "User Type", value = "Tapnex Player")
+        ProfileItem(label = "Status", value = "Active")
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = onEditProfile,
+            colors = ButtonDefaults.buttonColors(containerColor = Gold),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = userName,
-                        fontSize = 18.sp,
-                        color = CharcoalBlack,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "View and edit your profile",
-                        fontSize = 14.sp,
-                        color = Gold
-                    )
-                }
-                Text(
-                    text = "Edit",
-                    fontSize = 16.sp,
-                    color = Gold,
-                    modifier = Modifier.clickable { onEditProfileClick() }
-                )
-            }
+            Text("Edit Profile", color = CharcoalBlack)
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Settings Card
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onSettingsClick() },
-            colors = CardDefaults.cardColors(containerColor = CardBackground)
+        OutlinedButton(
+            onClick = onSettings,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Settings",
-                    fontSize = 18.sp,
-                    color = CharcoalBlack
-                )
-            }
+            Text("Settings")
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Logout Card
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onLogout() },
-            colors = CardDefaults.cardColors(containerColor = CardBackground)
+        TextButton(
+            onClick = onLogout
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Logout",
-                    fontSize = 18.sp,
-                    color = Color.Red
-                )
-            }
+            Text("Logout", color = MaterialTheme.colorScheme.error)
         }
+    }
+}
+
+@Composable
+private fun ProfileItem(
+    label: String,
+    value: String
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+    ) {
+        Text(text = label, fontSize = 14.sp, color = CharcoalBlack)
+        Text(text = value, fontSize = 16.sp, color = CharcoalBlack)
     }
 }
