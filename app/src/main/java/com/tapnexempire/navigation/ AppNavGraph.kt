@@ -1,66 +1,91 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+
+import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.auth.OtpLoginScreen
 import com.tapnexempire.ui.auth.OtpVerificationScreen
 import com.tapnexempire.ui.home.HomeScreen
+
+import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.wallet.DepositScreen
+import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.ui.wallet.TransactionHistoryScreen
+
+import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.tournament.MyTournamentsScreen
+import com.tapnexempire.ui.tournament.TournamentDetailScreen
+
 import com.tapnexempire.ui.profile.ProfileScreen
+import com.tapnexempire.ui.profile.EditProfileScreen
 import com.tapnexempire.ui.profile.SettingsScreen
+
 import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.*
-import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
-import com.tapnexempire.ui.wallet.*
 
 @Composable
-fun AppNavGraph(startDestination: String = Routes.SPLASH) {
+fun AppNavGraph() {
 
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = Routes.SPLASH
     ) {
 
-        /* ---------------- AUTH ---------------- */
+        /* ---------------- SPLASH ---------------- */
 
         composable(Routes.SPLASH) {
             SplashScreen(
-                onFinished = {
-                    navController.navigate(Routes.LOGIN) {
+                onNavigateToHome = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
+                },
+                onNavigateToAuth = {
+                    navController.navigate(Routes.AUTH_LOGIN) {
                         popUpTo(Routes.SPLASH) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable(Routes.LOGIN) {
+        /* ---------------- AUTH ---------------- */
+
+        composable(Routes.AUTH_LOGIN) {
             OtpLoginScreen(
-                onOtpSent = { verificationId ->
+                onOtpSent = { verificationId, phone ->
                     navController.navigate(
-                        Routes.OTP_VERIFY + "/$verificationId"
+                        Routes.AUTH_VERIFY
+                            .replace("{verificationId}", verificationId)
+                            .replace("{phone}", phone)
                     )
                 }
             )
         }
 
         composable(
-            route = Routes.OTP_VERIFY + "/{verificationId}",
+            route = Routes.AUTH_VERIFY,
             arguments = listOf(
-                navArgument("verificationId") { type = NavType.StringType }
+                navArgument("verificationId") { type = NavType.StringType },
+                navArgument("phone") { type = NavType.StringType }
             )
-        ) {
-            val verificationId = it.arguments?.getString("verificationId") ?: ""
+        ) { backStackEntry ->
+            val verificationId =
+                backStackEntry.arguments?.getString("verificationId") ?: ""
+            val phone =
+                backStackEntry.arguments?.getString("phone") ?: ""
+
             OtpVerificationScreen(
                 verificationId = verificationId,
-                onSuccess = {
+                phoneNumber = phone,
+                onVerified = {
                     navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
+                        popUpTo(Routes.AUTH_LOGIN) { inclusive = true }
                     }
                 }
             )
@@ -72,7 +97,8 @@ fun AppNavGraph(startDestination: String = Routes.SPLASH) {
             HomeScreen(
                 onWalletClick = { navController.navigate(Routes.WALLET) },
                 onTournamentClick = { navController.navigate(Routes.TOURNAMENT_LIST) },
-                onTaskClick = { navController.navigate(Routes.TASKS) }
+                onTaskClick = { navController.navigate(Routes.TASKS) },
+                onProfileClick = { navController.navigate(Routes.PROFILE) }
             )
         }
 
@@ -80,56 +106,56 @@ fun AppNavGraph(startDestination: String = Routes.SPLASH) {
 
         composable(Routes.WALLET) {
             WalletScreen(
-                onDeposit = { navController.navigate(Routes.DEPOSIT) },
-                onWithdraw = { navController.navigate(Routes.WITHDRAW) },
-                onTransactions = { navController.navigate(Routes.TRANSACTIONS) }
+                onDepositClick = { navController.navigate(Routes.DEPOSIT) },
+                onWithdrawClick = { navController.navigate(Routes.WITHDRAW) },
+                onTransactionClick = { navController.navigate(Routes.TRANSACTIONS) }
             )
         }
 
         composable(Routes.DEPOSIT) {
-            DepositScreen()
+            DepositScreen(onBack = { navController.popBackStack() })
         }
 
         composable(Routes.WITHDRAW) {
-            WithdrawScreen()
+            WithdrawScreen(onBack = { navController.popBackStack() })
         }
 
         composable(Routes.TRANSACTIONS) {
-            TransactionHistoryScreen()
+            TransactionHistoryScreen(onBack = { navController.popBackStack() })
         }
 
         /* ---------------- TOURNAMENT ---------------- */
 
         composable(Routes.TOURNAMENT_LIST) {
             TournamentListScreen(
-                onTournamentClick = { tournamentId ->
+                onTournamentClick = { id ->
                     navController.navigate(
-                        Routes.TOURNAMENT_DETAIL + "/$tournamentId"
+                        Routes.TOURNAMENT_DETAIL.replace("{tournamentId}", id)
+                    )
+                }
+            )
+        }
+
+        composable(Routes.MY_TOURNAMENTS) {
+            MyTournamentsScreen(
+                onTournamentClick = { id ->
+                    navController.navigate(
+                        Routes.TOURNAMENT_DETAIL.replace("{tournamentId}", id)
                     )
                 }
             )
         }
 
         composable(
-            route = Routes.TOURNAMENT_DETAIL + "/{tournamentId}",
+            route = Routes.TOURNAMENT_DETAIL,
             arguments = listOf(
                 navArgument("tournamentId") { type = NavType.StringType }
             )
-        ) {
-            val tournamentId = it.arguments?.getString("tournamentId") ?: ""
-            TournamentDetailScreen(
-                tournamentId = tournamentId
-            )
-        }
+        ) { backStackEntry ->
+            val tournamentId =
+                backStackEntry.arguments?.getString("tournamentId") ?: ""
 
-        composable(Routes.MY_TOURNAMENTS) {
-            MyTournamentsScreen(
-                onTournamentClick = { tournamentId ->
-                    navController.navigate(
-                        Routes.TOURNAMENT_DETAIL + "/$tournamentId"
-                    )
-                }
-            )
+            TournamentDetailScreen(tournamentId = tournamentId)
         }
 
         /* ---------------- TASKS ---------------- */
@@ -142,20 +168,17 @@ fun AppNavGraph(startDestination: String = Routes.SPLASH) {
 
         composable(Routes.PROFILE) {
             ProfileScreen(
-                onSettingsClick = {
-                    navController.navigate(Routes.SETTINGS)
-                }
+                onEditProfile = { navController.navigate(Routes.EDIT_PROFILE) },
+                onSettings = { navController.navigate(Routes.SETTINGS) }
             )
         }
 
+        composable(Routes.EDIT_PROFILE) {
+            EditProfileScreen(onBack = { navController.popBackStack() })
+        }
+
         composable(Routes.SETTINGS) {
-            SettingsScreen(
-                onLogout = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.HOME) { inclusive = true }
-                    }
-                }
-            )
+            SettingsScreen(onBack = { navController.popBackStack() })
         }
     }
 }
