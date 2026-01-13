@@ -1,52 +1,89 @@
 package com.tapnexempire.ui.wallet
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun WalletScreen(
-    onDeposit: () -> Unit,
-    onWithdraw: () -> Unit,
-    onTransactions: () -> Unit,
+    userId: String,
     viewModel: WalletViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
+    val wallet by viewModel.walletState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadWallet(userId)
+    }
+
+    when {
+        wallet == null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        else -> {
+            WalletContent(wallet!!)
+        }
+    }
+}
+
+@Composable
+private fun WalletContent(wallet: com.tapnexempire.models.WalletModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+
         Text(
-            text = "Total Coins: ${state.totalCoins}",
-            style = MaterialTheme.typography.titleLarge
+            text = "My Wallet 👑",
+            style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(Modifier.height(24.dp))
+        WalletCard(title = "Deposit Coins", value = wallet.depositCoins)
+        WalletCard(title = "Bonus Coins", value = wallet.bonusCoins)
+        WalletCard(title = "Withdrawable Coins", value = wallet.withdrawableCoins)
+        WalletCard(title = "Locked Coins", value = wallet.lockedCoins)
 
-        Button(onClick = onDeposit, modifier = Modifier.fillMaxWidth()) {
-            Text("Deposit")
-        }
+        Divider()
 
-        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "Total Earnings: ${wallet.totalEarnings} coins",
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
+}
 
-        Button(onClick = onWithdraw, modifier = Modifier.fillMaxWidth()) {
-            Text("Withdraw")
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        Button(onClick = onTransactions, modifier = Modifier.fillMaxWidth()) {
-            Text("Transaction History")
+@Composable
+private fun WalletCard(
+    title: String,
+    value: Int
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = title)
+            Text(
+                text = value.toString(),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }
