@@ -19,13 +19,12 @@ import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 
 import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.tournament.MyTournamentsScreen
-import com.tapnexempire.ui.tournament.TournamentDetailScreen
+import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 
+import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.profile.ProfileScreen
 import com.tapnexempire.ui.profile.EditProfileScreen
 import com.tapnexempire.ui.profile.SettingsScreen
-
-import com.tapnexempire.ui.task.TaskScreen
 
 @Composable
 fun AppNavGraph() {
@@ -37,7 +36,7 @@ fun AppNavGraph() {
         startDestination = Routes.SPLASH
     ) {
 
-        /* ---------------- SPLASH ---------------- */
+        /* ---------- SPLASH ---------- */
 
         composable(Routes.SPLASH) {
             SplashScreen(
@@ -54,7 +53,7 @@ fun AppNavGraph() {
             )
         }
 
-        /* ---------------- AUTH ---------------- */
+        /* ---------- AUTH ---------- */
 
         composable(Routes.AUTH_LOGIN) {
             OtpLoginScreen(
@@ -91,7 +90,7 @@ fun AppNavGraph() {
             )
         }
 
-        /* ---------------- HOME ---------------- */
+        /* ---------- HOME ---------- */
 
         composable(Routes.HOME) {
             HomeScreen(
@@ -102,7 +101,7 @@ fun AppNavGraph() {
             )
         }
 
-        /* ---------------- WALLET ---------------- */
+        /* ---------- WALLET ---------- */
 
         composable(Routes.WALLET) {
             WalletScreen(
@@ -124,7 +123,7 @@ fun AppNavGraph() {
             TransactionHistoryScreen(onBack = { navController.popBackStack() })
         }
 
-        /* ---------------- TOURNAMENT ---------------- */
+        /* ---------- TOURNAMENT ---------- */
 
         composable(Routes.TOURNAMENT_LIST) {
             TournamentListScreen(
@@ -158,13 +157,13 @@ fun AppNavGraph() {
             TournamentDetailScreen(tournamentId = tournamentId)
         }
 
-        /* ---------------- TASKS ---------------- */
+        /* ---------- TASKS ---------- */
 
         composable(Routes.TASKS) {
             TaskScreen()
         }
 
-        /* ---------------- PROFILE ---------------- */
+        /* ---------- PROFILE ---------- */
 
         composable(Routes.PROFILE) {
             ProfileScreen(
