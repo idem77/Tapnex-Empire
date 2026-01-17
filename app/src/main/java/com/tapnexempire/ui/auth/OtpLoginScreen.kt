@@ -10,7 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.viewmodel.AuthViewModel
-
+import androidx.compose.ui.platform.LocalContext
 @Composable
 fun OtpLoginScreen(
     onOtpSent: (verificationId: String) -> Unit,
