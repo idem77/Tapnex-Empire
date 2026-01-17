@@ -3,6 +3,7 @@ package com.tapnexempire.repository
 import android.app.Activity
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.FirebaseException
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
