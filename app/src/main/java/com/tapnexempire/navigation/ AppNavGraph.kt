@@ -12,8 +12,8 @@ import com.tapnexempire.ui.auth.OtpLoginScreen
 import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
-import com.tapnexempire.ui.tournament.list.TournamentListScreen
-import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
+import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.tournament.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.withdraw.WithdrawScreen
 import com.tapnexempire.viewmodel.TournamentViewModel
