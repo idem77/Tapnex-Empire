@@ -50,7 +50,7 @@ fun AppNavGraph(
         }
 
         composable(Routes.LOGIN) {
-            LoginScreen(
+            OtpLoginScreen(
                 onLoginSuccess = {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
