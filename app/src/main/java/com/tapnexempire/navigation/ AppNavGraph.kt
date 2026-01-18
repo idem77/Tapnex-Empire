@@ -3,18 +3,21 @@ package com.tapnexempire.navigation
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.NavType
-import com.tapnexempire.ui.splash.SplashScreen
-import com.tapnexempire.ui.auth.LoginScreen
+import com.google.firebase.auth.FirebaseAuth
+import com.tapnexempire.ui.auth.OtpLoginScreen
 import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.wallet.WalletScreen
+import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.list.TournamentListScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
+import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.withdraw.WithdrawScreen
+import com.tapnexempire.viewmodel.TournamentViewModel
+import com.tapnexempire.viewmodel.WalletViewModel
 
 object Routes {
     const val SPLASH = "splash"
@@ -29,29 +32,25 @@ object Routes {
 
 @Composable
 fun AppNavGraph(
-    navController: NavHostController,
-    startDestination: String = Routes.SPLASH
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = Routes.SPLASH
     ) {
 
+        // 🔹 Splash
         composable(Routes.SPLASH) {
             SplashScreen(
-                onNavigateNext = { isLoggedIn ->
-                    navController.navigate(
-                        if (isLoggedIn) Routes.HOME else Routes.LOGIN
-                    ) {
-                        popUpTo(Routes.SPLASH) { inclusive = true }
-                    }
-                }
+                navController = navController,
+                isLoggedIn = FirebaseAuth.getInstance().currentUser != null
             )
         }
 
+        // 🔹 OTP Login
         composable(Routes.LOGIN) {
             OtpLoginScreen(
-                onLoginSuccess = {
+                onOtpSent = {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
@@ -59,37 +58,45 @@ fun AppNavGraph(
             )
         }
 
+        // 🔹 Home
         composable(Routes.HOME) {
             HomeScreen(
                 onWalletClick = { navController.navigate(Routes.WALLET) },
-                onTaskClick = { navController.navigate(Routes.TASKS) },
-                onTournamentClick = { navController.navigate(Routes.TOURNAMENTS) }
+                onTournamentClick = { navController.navigate(Routes.TOURNAMENTS) },
+                onTaskClick = { navController.navigate(Routes.TASKS) }
             )
         }
 
+        // 🔹 Wallet
         composable(Routes.WALLET) {
-    WalletScreen(
-        onDepositClick = { },
-        onWithdrawClick = { },
-        onTransactionClick = { }
-    )
-        }
-        
+            val walletViewModel: WalletViewModel = hiltViewModel()
 
+            WalletScreen(
+                viewModel = walletViewModel,
+                onDepositClick = { /* later */ },
+                onWithdrawClick = { navController.navigate(Routes.WITHDRAW) },
+                onTransactionClick = { /* later */ }
+            )
+        }
+
+        // 🔹 Tasks
         composable(Routes.TASKS) {
             TaskScreen()
         }
 
+        // 🔹 Tournament List
         composable(Routes.TOURNAMENTS) {
+            val tournamentViewModel: TournamentViewModel = hiltViewModel()
+
             TournamentListScreen(
-                onTournamentClick = { tournamentId ->
-                    navController.navigate(
-                        "${Routes.TOURNAMENT_DETAIL}/$tournamentId"
-                    )
+                viewModel = tournamentViewModel,
+                onTournamentClick = { id ->
+                    navController.navigate("${Routes.TOURNAMENT_DETAIL}/$id")
                 }
             )
         }
 
+        // 🔹 Tournament Detail
         composable(
             route = "${Routes.TOURNAMENT_DETAIL}/{tournamentId}",
             arguments = listOf(
@@ -98,14 +105,12 @@ fun AppNavGraph(
                 }
             )
         ) { backStackEntry ->
-            val tournamentId =
-                backStackEntry.arguments?.getString("tournamentId") ?: ""
-
             TournamentDetailScreen(
-                tournamentId = tournamentId
+                tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
             )
         }
 
+        // 🔹 Withdraw
         composable(Routes.WITHDRAW) {
             WithdrawScreen()
         }
