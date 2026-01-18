@@ -68,12 +68,13 @@ fun AppNavGraph(
         }
 
         composable(Routes.WALLET) {
-            WalletScreen(
-                onWithdrawClick = {
-                    navController.navigate(Routes.WITHDRAW)
-                }
-            )
+    WalletScreen(
+        onDepositClick = { },
+        onWithdrawClick = { },
+        onTransactionClick = { }
+    )
         }
+        
 
         composable(Routes.TASKS) {
             TaskScreen()
