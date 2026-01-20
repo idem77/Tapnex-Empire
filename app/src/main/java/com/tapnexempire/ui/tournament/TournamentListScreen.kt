@@ -49,7 +49,7 @@ fun TournamentListScreen(
 }
 
 @Composable
-private fun TournamentCard(
+fun TournamentCard(
     tournament: TournamentModel,
     onClick: () -> Unit
 ) {
