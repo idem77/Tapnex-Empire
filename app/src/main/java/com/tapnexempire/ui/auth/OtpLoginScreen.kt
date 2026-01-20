@@ -18,11 +18,14 @@ fun OtpLoginScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     var phone by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     val otpState by viewModel.otpState.collectAsState()
 
     LaunchedEffect(otpState) {
-        otpState?.let { onOtpSent(it) }
+        otpState?.let { verificationId ->
+            onOtpSent(verificationId)
+        }
     }
 
     Column(
@@ -50,7 +53,7 @@ fun OtpLoginScreen(
         Button(
             onClick = {
                 viewModel.sendOtp(
-                    activity = LocalContext.current as android.app.Activity,
+                    activity = context as android.app.Activity,
                     phone = phone,
                     onError = {}
                 )
