@@ -42,11 +42,14 @@ fun AppNavGraph(
         // 🔹 Splash
         composable(Routes.SPLASH) {
             SplashScreen(
-                navController = navController,
-                isLoggedIn = FirebaseAuth.getInstance().currentUser != null
-            )
+    onNavigateNext = { isLoggedIn ->
+        navController.navigate(
+            if (isLoggedIn) Routes.HOME else Routes.LOGIN
+        ) {
+            popUpTo(Routes.SPLASH) { inclusive = true }
         }
-
+    }
+)
         // 🔹 OTP Login
         composable(Routes.LOGIN) {
             OtpLoginScreen(
