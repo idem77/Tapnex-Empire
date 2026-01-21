@@ -34,12 +34,12 @@ object FirebaseModule {
         TournamentRepository(firestore)
 
     @Provides
-    @Singleton
-    fun provideWithdrawRepository(
-        firestore: FirebaseFirestore,
-        auth: FirebaseAuth
-    ): WithdrawRepository =
-        WithdrawRepository(firestore, auth)
+@Singleton
+fun provideWithdrawRepository(
+    firestore: FirebaseFirestore
+): WithdrawRepository {
+    return WithdrawRepository(firestore)
+}
 
     @Provides
     @Singleton
