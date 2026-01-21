@@ -40,16 +40,17 @@ fun AppNavGraph(
     ) {
 
         // 🔹 Splash
-        composable(Routes.SPLASH) {
-            SplashScreen(
-    onNavigateNext = { isLoggedIn ->
-        navController.navigate(
-            if (isLoggedIn) Routes.HOME else Routes.LOGIN
-        ) {
-            popUpTo(Routes.SPLASH) { inclusive = true }
+composable(Routes.SPLASH) {
+    SplashScreen(
+        onNavigateNext = { isLoggedIn ->
+            navController.navigate(
+                if (isLoggedIn) Routes.HOME else Routes.LOGIN
+            ) {
+                popUpTo(Routes.SPLASH) { inclusive = true }
+            }
         }
-    }
-)
+    )
+} // 👈 THIS WAS MISSING
         // 🔹 OTP Login
         composable(Routes.LOGIN) {
             OtpLoginScreen(
