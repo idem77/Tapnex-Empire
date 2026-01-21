@@ -37,8 +37,9 @@ object FirebaseModule {
 @Singleton
 fun provideWithdrawRepository(
     firestore: FirebaseFirestore
-): WithdrawRepository =
+): WithdrawRepository {
     return WithdrawRepository(firestore)
+}
 
     @Provides
     @Singleton
