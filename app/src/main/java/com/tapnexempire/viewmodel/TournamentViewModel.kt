@@ -22,11 +22,16 @@ class TournamentViewModel(
     }
 
     fun joinTournament(
-    tournamentId: String,
-    userId: String,
-    entryFee: Int
-) {
-    viewModelScope.launch {
-        repository.joinTournament(tournamentId, userId, entryFee)
+        tournamentId: String,
+        userId: String,
+        entryFee: Int
+    ) {
+        viewModelScope.launch {
+            repository.joinTournament(
+                tournamentId = tournamentId,
+                userId = userId,
+                entryFee = entryFee
+            )
+        }
     }
-    }
+}
