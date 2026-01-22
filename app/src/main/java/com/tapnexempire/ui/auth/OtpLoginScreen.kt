@@ -1,5 +1,6 @@
 package com.tapnexempire.ui.auth
 
+import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,10 +19,12 @@ fun OtpLoginScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     var phone by remember { mutableStateOf("") }
-    val context = LocalContext.current
+    var error by remember { mutableStateOf<String?>(null) }
 
+    val context = LocalContext.current
     val otpState by viewModel.otpState.collectAsState()
 
+    // 🔁 Navigate when OTP sent
     LaunchedEffect(otpState) {
         otpState?.let { verificationId ->
             onOtpSent(verificationId)
@@ -36,29 +39,59 @@ fun OtpLoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text("Login with Phone", style = MaterialTheme.typography.titleLarge)
+        Text(
+            text = "Login with Phone",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
             value = phone,
-            onValueChange = { phone = it },
+            onValueChange = {
+                if (it.length <= 10) phone = it
+            },
             label = { Text("Phone Number") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            placeholder = { Text("10 digit mobile number") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Phone
+            ),
+            singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(Modifier.height(12.dp))
+
+        error?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(Modifier.height(24.dp))
 
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
+                error = null
+
+                if (phone.length != 10) {
+                    error = "Enter valid 10 digit number"
+                    return@Button
+                }
+
+                val formattedPhone = "+91$phone"
+
                 viewModel.sendOtp(
-                    activity = context as android.app.Activity,
-                    phone = phone,
-                    onError = {}
+                    activity = context as Activity,
+                    phone = formattedPhone,
+                    onError = { msg ->
+                        error = msg
+                    }
                 )
-            },
-            modifier = Modifier.fillMaxWidth()
+            }
         ) {
             Text("Send OTP")
         }
