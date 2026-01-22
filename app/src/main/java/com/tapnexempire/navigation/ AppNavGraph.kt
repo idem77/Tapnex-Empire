@@ -21,9 +21,10 @@ import com.tapnexempire.viewmodel.WalletViewModel
 
 object Routes {
     const val SPLASH = "splash"
-    const val LOGIN = "login"
+    const val LOGIN = "login"     
+    const val VERIFY = "Verify"   
     const val HOME = "home"
-    const val WALLET = "wallet"
+    const val WALLET = "wallet"     
     const val TASKS = "tasks"
     const val TOURNAMENTS = "tournaments"
     const val TOURNAMENT_DETAIL = "tournament_detail"
@@ -53,16 +54,35 @@ composable(Routes.SPLASH) {
 } // 👈 THIS WAS MISSING
         // 🔹 OTP Login
         composable(Routes.LOGIN) {
-            OtpLoginScreen(
-                onOtpSent = {
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
-                    }
-                }
-            )
+    OtpLoginScreen(
+        onOtpSent = { verificationId ->
+            navController.navigate("${Routes.OTP_VERIFY}/$verificationId")
         }
+    )
+        }
+            // 🔹 OTP VERIFY
+        composable(
+    route = "${Routes.OTP_VERIFY}/{verificationId}",
+    arguments = listOf(
+        navArgument("verificationId") {
+            type = NavType.StringType
+        }
+    )
+) { backStackEntry ->
 
-        // 🔹 Home
+    val verificationId =
+        backStackEntry.arguments?.getString("verificationId") ?: ""
+
+    OtpVerifyScreen(
+        verificationId = verificationId,
+        onLoginSuccess = {
+            navController.navigate(Routes.HOME) {
+                popUpTo(Routes.LOGIN) { inclusive = true }
+            }
+        }
+    )
+        }     
+             //🔹home
         composable(Routes.HOME) {
             HomeScreen(
                 onWalletClick = { navController.navigate(Routes.WALLET) },
