@@ -22,7 +22,7 @@ import com.tapnexempire.viewmodel.WalletViewModel
 object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"     
-    const val VERIFY = "Verify"   
+    const val OTP_VERIFY = "opt_Verify"   
     const val HOME = "home"
     const val WALLET = "wallet"     
     const val TASKS = "tasks"
