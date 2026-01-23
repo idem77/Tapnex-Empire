@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
 import com.tapnexempire.ui.auth.OtpLoginScreen   
-import com.tapnexempire.ui.auth.OtpverifyScreen
+import com.tapnexempire.ui.auth.OtpVerifyScreen
 import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
