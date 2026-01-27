@@ -3,6 +3,7 @@ package com.tapnexempire.ui.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,57 +33,45 @@ fun HomeScreen(
             .padding(16.dp)
     ) {
 
+        // 👑 Empire Header
         Text(
             text = "Tapnex Empire 👑",
-            fontSize = 26.sp,
+            fontSize = 28.sp,
+            color = Gold
+        )
+
+        Text(
+            text = "Cultivator Rank: Mortal Realm 🌱",
+            fontSize = 14.sp,
             color = CharcoalBlack
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // 💰 Wallet Card
+        // 💰 Empire Wallet Card
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text("Total Coins", fontSize = 16.sp)
+
+                Text(
+                    text = "Empire Balance 💰",
+                    fontSize = 16.sp
+                )
 
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = wallet?.totalEarnings?.toString() ?: "0",
-                    fontSize = 28.sp,
+                    text = (wallet?.totalEarnings ?: 0).toString(),
+                    fontSize = 30.sp,
                     color = Gold
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-                Button(
-                    onClick = onWalletClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Gold)
-                ) {
-                    Text("Open Wallet", color = CharcoalBlack)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // 🎯 Action Buttons
-        HomeActionButton(
-            title = "Tournaments 🏆",
-            description = "Join & win coins",
-            onClick = onTournamentClick
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        HomeActionButton(
-            title = "Tasks 📋",
-            description = "Complete & earn",
-            onClick = onTaskClick
-        )
-    }
-}
+                Text(
+                    text = "Bonus + Deposit + Wins",
+                    fontSize = 12.sp,
