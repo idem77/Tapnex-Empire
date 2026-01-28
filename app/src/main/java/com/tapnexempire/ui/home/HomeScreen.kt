@@ -24,7 +24,8 @@ fun HomeScreen(
     walletViewModel: WalletViewModel = hiltViewModel()
 ) {
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "TEST_USER" 
-    
+    // TEMP
+val wallet = null
 
     LaunchedEffect(userId) {
         userId?.let { walletViewModel.loadWallet(it) }
