@@ -7,11 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.google.firebase.auth.FirebaseAuth
-import com.tapnexempire.ui.auth.OtpLoginScreen   
-import com.tapnexempire.ui.auth.OtpVerifyScreen
 import com.tapnexempire.ui.home.HomeScreen
-import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
@@ -21,11 +17,8 @@ import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 
 object Routes {
-    const val SPLASH = "splash"
-    const val LOGIN = "login"     
-    const val OTP_VERIFY = "opt_Verify"   
     const val HOME = "home"
-    const val WALLET = "wallet"     
+    const val WALLET = "wallet"
     const val TASKS = "tasks"
     const val TOURNAMENTS = "tournaments"
     const val TOURNAMENT_DETAIL = "tournament_detail"
@@ -38,52 +31,10 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.SPLASH
+        startDestination = Routes.HOME // 🔥 DIRECT HOME (OTP/BILLING BYPASS)
     ) {
 
-        // 🔹 Splash
-composable(Routes.SPLASH) {
-    SplashScreen(
-        onNavigateNext = { isLoggedIn ->
-            navController.navigate(
-                if (isLoggedIn) Routes.HOME else Routes.LOGIN
-            ) {
-                popUpTo(Routes.SPLASH) { inclusive = true }
-            }
-        }
-    )
-} // 👈 THIS WAS MISSING
-        // 🔹 OTP Login
-        composable(Routes.LOGIN) {
-    OtpLoginScreen(
-        onOtpSent = { verificationId ->
-            navController.navigate("${Routes.OTP_VERIFY}/$verificationId")
-        }
-    )
-        }
-            // 🔹 OTP VERIFY
-        composable(
-    route = "${Routes.OTP_VERIFY}/{verificationId}",
-    arguments = listOf(
-        navArgument("verificationId") {
-            type = NavType.StringType
-        }
-    )
-) { backStackEntry ->
-
-    val verificationId =
-        backStackEntry.arguments?.getString("verificationId") ?: ""
-
-    OtpVerifyScreen(
-        verificationId = verificationId,
-        onLoginSuccess = {
-            navController.navigate(Routes.HOME) {
-                popUpTo(Routes.LOGIN) { inclusive = true }
-            }
-        }
-    )
-        }     
-             //🔹home
+        // 🔹 Home
         composable(Routes.HOME) {
             HomeScreen(
                 onWalletClick = { navController.navigate(Routes.WALLET) },
@@ -98,7 +49,7 @@ composable(Routes.SPLASH) {
 
             WalletScreen(
                 viewModel = walletViewModel,
-                onDepositClick = { /* later */ },
+                onDepositClick = { /* billing later */ },
                 onWithdrawClick = { navController.navigate(Routes.WITHDRAW) },
                 onTransactionClick = { /* later */ }
             )
