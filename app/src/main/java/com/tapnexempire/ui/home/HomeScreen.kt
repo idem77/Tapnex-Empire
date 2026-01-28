@@ -11,29 +11,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.tapnexempire.R
-import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun HomeScreen(
     onWalletClick: () -> Unit,
     onTournamentClick: () -> Unit,
-    onTaskClick: () -> Unit,
-    walletViewModel: WalletViewModel = hiltViewModel()
+    onTaskClick: () -> Unit
 ) {
-    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "TEST_USER" 
-    // TEMP
-val wallet = null
 
-    LaunchedEffect(userId) {
-        userId?.let { walletViewModel.loadWallet(it) }
-    }
+    // 🔐 TEMP SAFE COINS (billing/firebase later)
+    val qiCoins by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // 🌌 BACKGROUND IMAGE (Cultivation Empire)
+        // 🌌 BACKGROUND IMAGE
         Image(
             painter = painterResource(id = R.drawable.home_bg),
             contentDescription = null,
@@ -41,7 +33,6 @@ val wallet = null
             contentScale = ContentScale.Crop
         )
 
-        // 🔮 DARK OVERLAY (readability ke liye)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,13 +65,14 @@ val wallet = null
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.6f)
+                        containerColor = Color.Black.copy(alpha = 0.65f)
                     )
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+
                         Text(
                             text = "Qi Coins",
                             color = Color.LightGray
@@ -89,12 +81,12 @@ val wallet = null
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
-                            text = wallet?.totalEarnings?.toString() ?: "0",
-                            fontSize = 30.sp,
-                            color = Color(0xFFFFD700) // Gold
+                            text = qiCoins.toString(),
+                            fontSize = 32.sp,
+                            color = Color(0xFFFFD700)
                         )
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
                         Button(onClick = onWalletClick) {
                             Text("Open Treasury")
