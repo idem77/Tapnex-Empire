@@ -28,7 +28,7 @@ fun HomeScreen(
 ) {
     // 🔐 TEMP SAFE COINS (billing/firebase later)
     val qiCoins by remember { mutableStateOf(0) }
-
+     val wallet= null
     Box(modifier = Modifier.fillMaxSize()) {
     
 
