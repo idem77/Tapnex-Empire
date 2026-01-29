@@ -30,7 +30,7 @@ fun HomeScreen(
     val qiCoins by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-    }
+    
 
         // 🌌 BACKGROUND
         Image(
