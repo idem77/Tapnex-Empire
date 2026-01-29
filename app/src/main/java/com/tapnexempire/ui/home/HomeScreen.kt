@@ -1,17 +1,23 @@
 package com.tapnexempire.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.tapnexempire.R
+import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun HomeScreen(
@@ -24,8 +30,7 @@ fun HomeScreen(
     val qiCoins by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
-    LaunchedEffect(userId) {
+    }
 
         // 🌌 BACKGROUND
         Image(
@@ -38,60 +43,37 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             // 👑 HEADER
-            Text(
-                text = "Tapnex Empire 👑",
-                fontSize = 28.sp,
-                color = Color.White
-            )
+            Column {
+                Text(
+                    text = "Tapnex Empire 👑",
+                    fontSize = 28.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = "Cultivation Path Begins",
+                    fontSize = 14.sp,
+                    color = Color.LightGray
+                )
+            }
 
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = "Cultivation Path Begins",
-                fontSize = 14.sp,
-                color = Color.LightGray
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 💰 TREASURY (IMAGE CLICK)
-            EmpireActionImage(
-                imageRes = R.drawable.treasury,
-                onClick = onWalletClick
-            )
-
-            // 🏆 TOURNAMENT HALL
-            EmpireActionImage(
-                imageRes = R.drawable.tournament_hall,
-                onClick = onTournamentClick
-            )
-
-            // 📜 DAILY TASKS
-            EmpireActionImage(
-                imageRes = R.drawable.daily_tasks,
-                onClick = onTaskClick
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 👑 COIN DISPLAY (OPTIONAL)
+            // 💰 QI CARD
             Card(
-                modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.Black.copy(alpha = 0.6f)
+                    containerColor = Color.Black.copy(alpha = 0.55f)
                 )
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Qi Coins", color = Color.LightGray)
-
+                    Text("Current Qi", color = Color.LightGray)
                     Text(
                         text = wallet?.totalEarnings?.toString() ?: "0",
                         fontSize = 30.sp,
@@ -99,6 +81,62 @@ fun HomeScreen(
                     )
                 }
             }
+
+            // 🏦 TREASURY IMAGE
+            HomeImageCard(
+                image = R.drawable.home_treasury,
+                title = "Treasury",
+                onClick = onWalletClick
+            )
+
+            // 🏆 TOURNAMENT IMAGE
+            HomeImageCard(
+                image = R.drawable.home_tournament,
+                title = "Tournament Hall",
+                onClick = onTournamentClick
+            )
+
+            // 📜 TASK IMAGE
+            HomeImageCard(
+                image = R.drawable.home_tasks,
+                title = "Daily Tasks",
+                onClick = onTaskClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeImageCard(
+    image: Int,
+    title: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .clickable { onClick() }
+    ) {
+        Image(
+            painter = painterResource(id = image),
+            contentDescription = title,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            contentAlignment = Alignment.BottomStart
+        ) {
+            Text(
+                text = title,
+                color = Color.White,
+                fontSize = 18.sp
+            )
         }
     }
 }
