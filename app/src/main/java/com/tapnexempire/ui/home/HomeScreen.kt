@@ -14,23 +14,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.tapnexempire.R
-import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
 fun HomeScreen(
     onWalletClick: () -> Unit,
     onTournamentClick: () -> Unit,
-    onTaskClick: () -> Unit,
-    walletViewModel: WalletViewModel = hiltViewModel()
+    onTaskClick: () -> Unit
 ) {
     // 🔐 TEMP SAFE COINS (billing/firebase later)
     val qiCoins by remember { mutableStateOf(0) }
-     val wallet= null
+
     Box(modifier = Modifier.fillMaxSize()) {
-    
 
         // 🌌 BACKGROUND
         Image(
@@ -75,28 +70,28 @@ fun HomeScreen(
                 ) {
                     Text("Current Qi", color = Color.LightGray)
                     Text(
-                        text = wallet?.totalEarnings?.toString() ?: "0",
+                        text = qiCoins.toString(),
                         fontSize = 30.sp,
                         color = Color(0xFFFFD700)
                     )
                 }
             }
 
-            // 🏦 TREASURY IMAGE
+            // 🏦 TREASURY
             HomeImageCard(
                 image = R.drawable.home_treasury,
                 title = "Treasury",
                 onClick = onWalletClick
             )
 
-            // 🏆 TOURNAMENT IMAGE
+            // 🏆 TOURNAMENT
             HomeImageCard(
                 image = R.drawable.home_tournament,
                 title = "Tournament Hall",
                 onClick = onTournamentClick
             )
 
-            // 📜 TASK IMAGE
+            // 📜 TASKS
             HomeImageCard(
                 image = R.drawable.home_tasks,
                 title = "Daily Tasks",
