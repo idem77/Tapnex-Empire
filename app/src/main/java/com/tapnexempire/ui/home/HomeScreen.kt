@@ -32,7 +32,7 @@ fun HomeScreen(
 
         // 👑 MASTER BACKGROUND
         Image(
-            painter = painterResource(id = R.drawable.home_master),
+            painter = painterResource(id = R.drawable.home_bg),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
