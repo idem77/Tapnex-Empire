@@ -22,116 +22,61 @@ fun HomeScreen(
     onTournamentClick: () -> Unit,
     onTaskClick: () -> Unit
 ) {
-    // 🔐 TEMP SAFE COINS (billing/firebase later)
-    val qiCoins by remember { mutableStateOf(0) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
-        // 🌌 BACKGROUND
+        val screenWidth = maxWidth
+        val screenHeight = maxHeight
+
+        // 👑 MASTER BACKGROUND
         Image(
-            painter = painterResource(id = R.drawable.home_bg),
+            painter = painterResource(id = R.drawable.home_master),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-
-            // 👑 HEADER
-            Column {
-                Text(
-                    text = "Tapnex Empire 👑",
-                    fontSize = 28.sp,
-                    color = Color.White
-                )
-                Text(
-                    text = "Cultivation Path Begins",
-                    fontSize = 14.sp,
-                    color = Color.LightGray
-                )
-            }
-
-            // 💰 QI CARD
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.Black.copy(alpha = 0.55f)
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("Current Qi", color = Color.LightGray)
-                    Text(
-                        text = qiCoins.toString(),
-                        fontSize = 30.sp,
-                        color = Color(0xFFFFD700)
-                    )
-                }
-            }
-
-            // 🏦 TREASURY
-            HomeImageCard(
-                image = R.drawable.home_treasury,
-                title = "Treasury",
-                onClick = onWalletClick
-            )
-
-            // 🏆 TOURNAMENT
-            HomeImageCard(
-                image = R.drawable.home_tournament,
-                title = "Tournament Hall",
-                onClick = onTournamentClick
-            )
-
-            // 📜 TASKS
-            HomeImageCard(
-                image = R.drawable.home_tasks,
-                title = "Daily Tasks",
-                onClick = onTaskClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun HomeImageCard(
-    image: Int,
-    title: String,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .clickable { onClick() }
-    ) {
-        Image(
-            painter = painterResource(id = image),
-            contentDescription = title,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
+        // 💰 COINS AREA (Top Center)
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            contentAlignment = Alignment.BottomStart
-        ) {
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 18.sp
-            )
-        }
+                .size(screenWidth * 0.35f, screenHeight * 0.12f)
+                .align(Alignment.TopCenter)
+                .offset(y = screenHeight * 0.08f)
+                .clickable { onWalletClick() }
+        )
+
+        // 🏆 TOURNAMENT AREA (Center)
+        Box(
+            modifier = Modifier
+                .size(screenWidth * 0.7f, screenHeight * 0.18f)
+                .align(Alignment.Center)
+                .clickable { onTournamentClick() }
+        )
+
+        // 🏦 TREASURY AREA (Bottom Left)
+        Box(
+            modifier = Modifier
+                .size(screenWidth * 0.4f, screenHeight * 0.15f)
+                .align(Alignment.BottomStart)
+                .offset(
+                    x = screenWidth * 0.05f,
+                    y = -(screenHeight * 0.08f)
+                )
+                .clickable { onWalletClick() }
+        )
+
+        // 📜 TASK AREA (Bottom Right)
+        Box(
+            modifier = Modifier
+                .size(screenWidth * 0.4f, screenHeight * 0.15f)
+                .align(Alignment.BottomEnd)
+                .offset(
+                    x = -(screenWidth * 0.05f),
+                    y = -(screenHeight * 0.08f)
+                )
+                .clickable { onTaskClick() }
+        )
     }
 }
