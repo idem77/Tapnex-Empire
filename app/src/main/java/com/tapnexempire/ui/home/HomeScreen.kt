@@ -17,66 +17,42 @@ import androidx.compose.ui.unit.sp
 import com.tapnexempire.R
 
 @Composable
-fun HomeScreen(
-    onWalletClick: () -> Unit,
-    onTournamentClick: () -> Unit,
-    onTaskClick: () -> Unit
-) {
+fun HomeScreen() {
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        val screenWidth = maxWidth
-        val screenHeight = maxHeight
-
-        // 👑 MASTER BACKGROUND
+        // 🔥 Background Image
         Image(
             painter = painterResource(id = R.drawable.home_bg),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
 
-        // 💰 COINS AREA (Top Center)
-        Box(
+        // 🔥 Main Content Layer
+        Column(
             modifier = Modifier
-                .size(screenWidth * 0.35f, screenHeight * 0.12f)
-                .align(Alignment.TopCenter)
-                .offset(y = screenHeight * 0.08f)
-                .clickable { onWalletClick() }
-        )
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
 
-        // 🏆 TOURNAMENT AREA (Center)
-        Box(
-            modifier = Modifier
-                .size(screenWidth * 0.7f, screenHeight * 0.18f)
-                .align(Alignment.Center)
-                .clickable { onTournamentClick() }
-        )
+            // Top Space (for Coin Card later)
+            Spacer(modifier = Modifier.height(40.dp))
 
-        // 🏦 TREASURY AREA (Bottom Left)
-        Box(
-            modifier = Modifier
-                .size(screenWidth * 0.4f, screenHeight * 0.15f)
-                .align(Alignment.BottomStart)
-                .offset(
-                    x = screenWidth * 0.05f,
-                    y = -(screenHeight * 0.08f)
-                )
-                .clickable { onWalletClick() }
-        )
+            // Center Character placeholder (we will add image next)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Character Here", color = Color.White)
+            }
 
-        // 📜 TASK AREA (Bottom Right)
-        Box(
-            modifier = Modifier
-                .size(screenWidth * 0.4f, screenHeight * 0.15f)
-                .align(Alignment.BottomEnd)
-                .offset(
-                    x = -(screenWidth * 0.05f),
-                    y = -(screenHeight * 0.08f)
-                )
-                .clickable { onTaskClick() }
-        )
+            // Bottom space for navigation
+            Spacer(modifier = Modifier.height(80.dp))
+        }
     }
 }
