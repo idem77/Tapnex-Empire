@@ -1,19 +1,16 @@
 package com.tapnexempire.ui.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.tapnexempire.R
 
 @Composable
@@ -23,36 +20,68 @@ fun HomeScreen() {
         modifier = Modifier.fillMaxSize()
     ) {
 
-        // 🔥 Background Image
+        // 🔥 BACKGROUND
         Image(
             painter = painterResource(id = R.drawable.home_bg),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
 
-        // 🔥 Main Content Layer
+        // 🔥 CONTENT AREA
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(bottom = 70.dp) // space for bottom nav
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Top Space (for Coin Card later)
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Center Character placeholder (we will add image next)
-            Box(
+            // 👑 EMPIRE TITLE (temporary, can remove later)
+            Text(
+                text = "Tapnex Empire",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 💰 COIN BALANCE CARD (placeholder)
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth(0.9f)
+                    .height(120.dp),
+                elevation = CardDefaults.cardElevation(8.dp)
             ) {
-                Text("Character Here", color = Color.White)
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Balance: 0 Coins",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
 
-            // Bottom space for navigation
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 🎯 SLIDE BANNER AREA (Future HorizontalPager here)
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .height(150.dp),
+                elevation = CardDefaults.cardElevation(6.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Upcoming Tournaments / Offers")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }
