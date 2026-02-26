@@ -1,16 +1,18 @@
 package com.tapnexempire.ui.profile
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.tapnexempire.ui.theme.CharcoalBlack
-import com.tapnexempire.ui.theme.Gold
-import com.tapnexempire.ui.theme.LightCream
+import com.tapnexempire.R
 
 @Composable
 fun ProfileScreen(
@@ -19,51 +21,99 @@ fun ProfileScreen(
     onSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LightCream)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
 
-        Text(
-            text = "My Profile 👤",
-            fontSize = 24.sp,
-            color = CharcoalBlack
+        // 🔥 BACKGROUND
+        Image(
+            painter = painterResource(id = R.drawable.profile_bg), // make sure this exists
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        ProfileItem(label = "Phone Number", value = phoneNumber.ifEmpty { "Not Available" })
-        ProfileItem(label = "User Type", value = "Tapnex Player")
-        ProfileItem(label = "Status", value = "Active")
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(
-            onClick = onEditProfile,
-            colors = ButtonDefaults.buttonColors(containerColor = Gold),
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 70.dp) // bottom nav safe space
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Edit Profile", color = CharcoalBlack)
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = "My Profile 👤",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            ProfileCard(
+                phoneNumber = phoneNumber
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onEditProfile,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Edit Profile")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedButton(
+                onClick = onSettings,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Settings")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            TextButton(
+                onClick = onLogout
+            ) {
+                Text(
+                    text = "Logout",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        OutlinedButton(
-            onClick = onSettings,
-            modifier = Modifier.fillMaxWidth()
+@Composable
+private fun ProfileCard(
+    phoneNumber: String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(6.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Settings")
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "User Information",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
 
-        TextButton(
-            onClick = onLogout
-        ) {
-            Text("Logout", color = MaterialTheme.colorScheme.error)
+            Divider()
+
+            ProfileItem("Phone Number", phoneNumber.ifEmpty { "Not Available" })
+            ProfileItem("User Type", "Tapnex Player")
+            ProfileItem("Status", "Active")
         }
     }
 }
@@ -73,12 +123,14 @@ private fun ProfileItem(
     label: String,
     value: String
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp)
-    ) {
-        Text(text = label, fontSize = 14.sp, color = CharcoalBlack)
-        Text(text = value, fontSize = 16.sp, color = CharcoalBlack)
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
