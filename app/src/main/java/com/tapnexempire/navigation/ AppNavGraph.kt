@@ -36,7 +36,7 @@ fun AppNavGraph(
 
         // 🔹 Home
         composable(Routes.HOME) {
-            HomeScreen( )
+            HomeScreen()
         }
 
         // 🔹 Wallet
