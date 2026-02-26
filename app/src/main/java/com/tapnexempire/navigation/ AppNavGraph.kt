@@ -36,11 +36,7 @@ fun AppNavGraph(
 
         // 🔹 Home
         composable(Routes.HOME) {
-            HomeScreen(
-                onWalletClick = { navController.navigate(Routes.WALLET) },
-                onTournamentClick = { navController.navigate(Routes.TOURNAMENTS) },
-                onTaskClick = { navController.navigate(Routes.TASKS) }
-            )
+            HomeScreen( )
         }
 
         // 🔹 Wallet
