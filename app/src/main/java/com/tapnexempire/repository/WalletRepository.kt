@@ -1,7 +1,7 @@
 package com.tapnexempire.repository
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tapnexempire.models.WalletModel
 import kotlinx.coroutines.tasks.await
 
 class WalletRepository(
@@ -10,41 +10,37 @@ class WalletRepository(
 
     private val walletRef = firestore.collection("wallets")
 
-    suspend fun getWallet(userId: String): WalletModel? {
-        val doc = walletRef.document(userId).get().await()
-        return doc.toObject(WalletModel::class.java)
-    }
+    suspend fun getWallet(userId: String) =
+        walletRef.document(userId).get().await()
+            .toObject(com.tapnexempire.models.WalletModel::class.java)
 
     suspend fun createWalletIfNotExists(userId: String) {
         val doc = walletRef.document(userId).get().await()
         if (!doc.exists()) {
             walletRef.document(userId).set(
-                WalletModel(userId = userId)
+                com.tapnexempire.models.WalletModel(userId = userId)
             ).await()
         }
     }
 
-    suspend fun addDepositCoins(userId: String, coins: Int) {
-        walletRef.document(userId).update(
-            "depositCoins", com.google.firebase.firestore.FieldValue.increment(coins.toLong())
-        ).await()
+    suspend fun deductCoins(userId: String, amount: Long) {
+        val docRef = walletRef.document(userId)
+
+        firestore.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+            val total = snapshot.getLong("totalCoins") ?: 0
+
+            if (total < amount) {
+                throw Exception("Insufficient balance")
+            }
+
+            transaction.update(docRef, "totalCoins", total - amount)
+        }.await()
     }
 
-    suspend fun addBonusCoins(userId: String, coins: Int) {
-        walletRef.document(userId).update(
-            "bonusCoins", com.google.firebase.firestore.FieldValue.increment(coins.toLong())
-        ).await()
-    }
-
-    suspend fun addWithdrawableCoins(userId: String, coins: Int) {
-        walletRef.document(userId).update(
-            "withdrawableCoins", com.google.firebase.firestore.FieldValue.increment(coins.toLong())
-        ).await()
-    }
-
-    suspend fun addLockedCoins(userId: String, coins: Int) {
-        walletRef.document(userId).update(
-            "lockedCoins", com.google.firebase.firestore.FieldValue.increment(coins.toLong())
-        ).await()
+    suspend fun addWithdrawable(userId: String, amount: Long) {
+        walletRef.document(userId)
+            .update("withdrawableCoins", FieldValue.increment(amount))
+            .await()
     }
 }
