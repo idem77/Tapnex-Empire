@@ -9,22 +9,42 @@ class WithdrawRepository(
 
     suspend fun requestWithdraw(
         userId: String,
-        amountCoins: Int
+        amountCoins: Long
     ): Result<Unit> {
         return try {
-            val request = hashMapOf(
-                "userId" to userId,
-                "amountCoins" to amountCoins,
-                "amountRupees" to amountCoins * 0.10,
-                "status" to "PENDING",
-                "createdAt" to System.currentTimeMillis()
-            )
 
-            firestore.collection("withdraw_requests")
-                .add(request)
-                .await()
+            val walletRef = firestore.collection("wallets").document(userId)
+            val requestRef = firestore.collection("withdraw_requests")
+
+            firestore.runTransaction { transaction ->
+
+                val walletSnap = transaction.get(walletRef)
+                val withdrawable = walletSnap.getLong("withdrawableCoins") ?: 0
+
+                if (withdrawable < amountCoins) {
+                    throw Exception("Insufficient withdrawable balance")
+                }
+
+                transaction.update(
+                    walletRef,
+                    "withdrawableCoins",
+                    withdrawable - amountCoins
+                )
+
+                transaction.set(
+                    requestRef.document(),
+                    mapOf(
+                        "userId" to userId,
+                        "amountCoins" to amountCoins,
+                        "amountRupees" to amountCoins * 0.10,
+                        "status" to "PENDING",
+                        "createdAt" to System.currentTimeMillis()
+                    )
+                )
+            }.await()
 
             Result.success(Unit)
+
         } catch (e: Exception) {
             Result.failure(e)
         }
