@@ -2,10 +2,11 @@ package com.tapnexempire.models
 
 data class WalletModel(
     val userId: String = "",
-    val depositCoins: Int = 0,        // User ke real deposit coins
-    val bonusCoins: Int = 0,          // Ads / tasks se aaye
-    val withdrawableCoins: Int = 0,   // Withdraw allowed
-    val lockedCoins: Int = 0,         // Free / survey winnings
-    val totalEarnings: Int = 0,       // Lifetime coins earned
-    val updatedAt: Long = System.currentTimeMillis()
+    val depositCoins: Long = 0,
+    val bonusCoins: Long = 0,
+    val withdrawableCoins: Long = 0,
+    val lockedCoins: Long = 0,
+    val totalCoins: Long = 0,
+    val dailyWithdrawnCoins: Long = 0,
+    val lastWithdrawDate: Long = 0
 )
