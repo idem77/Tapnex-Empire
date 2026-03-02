@@ -110,10 +110,10 @@ fun WalletScreen(
 
 @Composable
 private fun WalletBalanceCard(
-    total: Int,
-    bonus: Int,
-    deposit: Int,
-    withdrawable: Int
+    total: long,
+    bonus: Long,
+    deposit: Long,
+    withdrawable: long
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
