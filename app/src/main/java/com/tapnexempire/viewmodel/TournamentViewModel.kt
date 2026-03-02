@@ -24,7 +24,7 @@ class TournamentViewModel(
     fun joinTournament(
         tournamentId: String,
         userId: String,
-        entryFee: Int
+        entryFee: Long
     ) {
         viewModelScope.launch {
             repository.joinTournament(
