@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tapnexempire.ui.wallet.WithdrawScreen
 
 @Composable
 fun WithdrawScreen() {
@@ -14,5 +15,5 @@ fun WithdrawScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text(text = "Withdraw Coming Soon")
-    }
+route = Screen.withdraw.route    }
 }
