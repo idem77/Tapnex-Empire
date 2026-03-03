@@ -9,12 +9,8 @@ class TournamentResultViewModel(
     private val repository: TournamentResultRepository
 ) : ViewModel() {
 
-    fun submitTournamentResult(
-        tournamentId: String,
-        rankedUsers: List<Pair<String, Int>>,
-        totalCollectedCoins: Int,
-        isPaidTournament: Boolean
-    ) {
+    fun submitTournamentResult(...)
+     {
         viewModelScope.launch {
             repository.submitResult(
                 tournamentId,
