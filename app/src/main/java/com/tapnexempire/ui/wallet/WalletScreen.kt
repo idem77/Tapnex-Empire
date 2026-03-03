@@ -66,7 +66,7 @@ fun WalletScreen(
                 )
 
                 WalletBalanceCard(
-                    total = wallet!!.totalEarnings,
+                    total = wallet!!.totalWinnings,
                     bonus = wallet!!.bonusCoins,
                     deposit = wallet!!.depositCoins,
                     withdrawable = wallet!!.withdrawableCoins
