@@ -15,5 +15,5 @@ fun WithdrawScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text(text = "Withdraw Coming Soon")
-route = Screen.withdraw.route    }
+   }
 }
