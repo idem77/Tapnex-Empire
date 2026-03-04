@@ -9,7 +9,7 @@ class TournamentResultViewModel(
     private val repository: TournamentResultRepository
 ) : ViewModel() {
 
-    fun submitTournamentResult(...)
+    fun submitTournamentResult( tournamentId: string)
      {
         viewModelScope.launch {
             repository.submitResult(
