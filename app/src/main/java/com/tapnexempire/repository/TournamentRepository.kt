@@ -2,6 +2,7 @@ package com.tapnexempire.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import com.tapnexempire.models.TournamentModel
 
 class TournamentRepository(
     private val firestore: FirebaseFirestore
@@ -9,6 +10,13 @@ class TournamentRepository(
 
     private val tournamentRef = firestore.collection("tournaments")
     private val walletRef = firestore.collection("wallets")
+
+    suspend fun getAllTournaments(): List<TournamentModel> {
+        val snapshot = tournamentRef.get().await()
+        return snapshot.documents.mapNotNull {
+            it.toObject(TournamentModel::class.java)
+        }
+    }
 
     suspend fun joinTournament(
         tournamentId: String,
