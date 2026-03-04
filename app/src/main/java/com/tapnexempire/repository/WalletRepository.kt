@@ -23,8 +23,6 @@ class WalletRepository(
         }
     }
 
-    suspend fun deductCoins(userId: String, amount: Long) {
-        val docRef = walletRef.document(userId)
 
         firestore.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
