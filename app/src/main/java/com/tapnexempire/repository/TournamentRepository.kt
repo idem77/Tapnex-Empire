@@ -3,8 +3,9 @@ package com.tapnexempire.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import com.tapnexempire.models.TournamentModel
+import javax.inject.Inject
 
-class TournamentRepository(
+class TournamentRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
@@ -22,37 +23,65 @@ class TournamentRepository(
         tournamentId: String,
         userId: String,
         entryFee: Long
-    ) {
-        val tournamentDoc = tournamentRef.document(tournamentId)
-        val walletDoc = walletRef.document(userId)
-        val participantDoc =
-            tournamentDoc.collection("participants").document(userId)
+    ): Result<Unit> {
 
-        firestore.runTransaction { transaction ->
+        return try {
 
-            val walletSnap = transaction.get(walletDoc)
-            val totalCoins = walletSnap.getLong("totalCoins") ?: 0
+            val tournamentDoc = tournamentRef.document(tournamentId)
+            val walletDoc = walletRef.document(userId)
+            val participantDoc =
+                tournamentDoc.collection("participants").document(userId)
 
-            if (totalCoins < entryFee) {
-                throw Exception("Not enough coins")
-            }
+            firestore.runTransaction { transaction ->
 
-            val participantSnap = transaction.get(participantDoc)
-            if (participantSnap.exists()) {
-                throw Exception("Already joined")
-            }
+                val walletSnap = transaction.get(walletDoc)
+                val totalCoins =
+                    walletSnap.getLong("totalCoins") ?: 0
 
-            val tournamentSnap = transaction.get(tournamentDoc)
-            val joined = tournamentSnap.getLong("joinedPlayers") ?: 0
-            val maxPlayers = tournamentSnap.getLong("maxPlayers") ?: 0
+                if (totalCoins < entryFee)
+                    throw Exception("Not enough coins")
 
-            if (joined >= maxPlayers) {
-                throw Exception("Tournament full")
-            }
+                val participantSnap =
+                    transaction.get(participantDoc)
 
-            transaction.update(walletDoc, "totalCoins", totalCoins - entryFee)
-            transaction.update(tournamentDoc, "joinedPlayers", joined + 1)
-            transaction.set(participantDoc, mapOf("joinedAt" to System.currentTimeMillis()))
-        }.await()
+                if (participantSnap.exists())
+                    throw Exception("Already joined")
+
+                val tournamentSnap =
+                    transaction.get(tournamentDoc)
+
+                val joined =
+                    tournamentSnap.getLong("joinedPlayers") ?: 0
+
+                val maxPlayers =
+                    tournamentSnap.getLong("maxPlayers") ?: 0
+
+                if (joined >= maxPlayers)
+                    throw Exception("Tournament full")
+
+                transaction.update(
+                    walletDoc,
+                    "totalCoins",
+                    totalCoins - entryFee
+                )
+
+                transaction.update(
+                    tournamentDoc,
+                    "joinedPlayers",
+                    joined + 1
+                )
+
+                transaction.set(
+                    participantDoc,
+                    mapOf("joinedAt" to System.currentTimeMillis())
+                )
+
+            }.await()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
