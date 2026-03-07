@@ -93,7 +93,7 @@ fun WalletScreen(
                     Button(
                         onClick = onWithdrawClick,
                         modifier = Modifier.weight(1f),
-                        enabled = wallet!!.withdrawableCoins > 0
+                        enabled = (wallet?.withdrawableCoins ?: 0) > 0
                     ) {
                         Text("Withdraw")
                     }
