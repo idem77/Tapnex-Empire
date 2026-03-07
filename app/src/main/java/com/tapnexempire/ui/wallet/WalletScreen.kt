@@ -65,12 +65,16 @@ fun WalletScreen(
                     style = MaterialTheme.typography.headlineMedium
                 )
 
-                WalletBalanceCard(
-                    total = wallet!!.totalCoins,
-                    bonus = wallet!!.bonusCoins,
-                    deposit = wallet!!.depositCoins,
-                    withdrawable = wallet!!.withdrawableCoins
-                )
+                wallet?.let {
+
+    WalletBalanceCard(
+        total = it.totalCoins,
+        bonus = it.bonusCoins,
+        deposit = it.depositCoins,
+        withdrawable = it.withdrawableCoins
+    )
+
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
