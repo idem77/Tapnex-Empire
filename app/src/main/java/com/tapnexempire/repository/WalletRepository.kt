@@ -3,42 +3,38 @@ package com.tapnexempire.repository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
+import com.tapnexempire.models.WalletModel
 
-class WalletRepository(
+class WalletRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
     private val walletRef = firestore.collection("wallets")
 
-    suspend fun getWallet(userId: String) =
-        walletRef.document(userId).get().await()
-            .toObject(com.tapnexempire.models.WalletModel::class.java)
+    suspend fun getWallet(userId: String): WalletModel? {
+        return walletRef.document(userId)
+            .get()
+            .await()
+            .toObject(WalletModel::class.java)
+    }
 
     suspend fun createWalletIfNotExists(userId: String) {
         val doc = walletRef.document(userId).get().await()
+
         if (!doc.exists()) {
-            walletRef.document(userId).set(
-                com.tapnexempire.models.WalletModel(userId = userId)
-            ).await()
+            walletRef.document(userId)
+                .set(WalletModel(userId = userId))
+                .await()
         }
-    }
-
-
-        firestore.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-            val total = snapshot.getLong("totalCoins") ?: 0
-
-            if (total < amount) {
-                throw Exception("Insufficient balance")
-            }
-
-            transaction.update(docRef, "totalCoins", total - amount)
-        }.await()
     }
 
     suspend fun addWithdrawable(userId: String, amount: Long) {
         walletRef.document(userId)
-            .update("withdrawableCoins", FieldValue.increment(amount))
+            .update(
+                "withdrawableCoins",
+                FieldValue.increment(amount)
+            )
             .await()
     }
 }
