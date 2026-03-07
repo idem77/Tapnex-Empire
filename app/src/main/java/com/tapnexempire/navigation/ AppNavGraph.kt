@@ -1,6 +1,7 @@
 package com.tapnexempire.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -27,11 +28,14 @@ object Routes {
 
 @Composable
 fun AppNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
+
     NavHost(
         navController = navController,
-        startDestination = Routes.HOME // 🔥 DIRECT HOME (OTP/BILLING BYPASS)
+        startDestination = Routes.HOME,
+        modifier = modifier
     ) {
 
         // 🔹 Home
@@ -41,13 +45,16 @@ fun AppNavGraph(
 
         // 🔹 Wallet
         composable(Routes.WALLET) {
+
             val walletViewModel: WalletViewModel = hiltViewModel()
 
             WalletScreen(
                 viewModel = walletViewModel,
                 onDepositClick = { /* billing later */ },
-                onWithdrawClick = { navController.navigate(Routes.WITHDRAW) },
-                onTransactionClick = { /* later */ }
+                onWithdrawClick = {
+                    navController.navigate(Routes.WITHDRAW)
+                },
+                onTransactionClick = { /* future */ }
             )
         }
 
@@ -58,6 +65,7 @@ fun AppNavGraph(
 
         // 🔹 Tournament List
         composable(Routes.TOURNAMENTS) {
+
             val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
             TournamentListScreen(
@@ -77,8 +85,12 @@ fun AppNavGraph(
                 }
             )
         ) { backStackEntry ->
+
+            val tournamentId =
+                backStackEntry.arguments?.getString("tournamentId") ?: ""
+
             TournamentDetailScreen(
-                tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
+                tournamentId = tournamentId
             )
         }
 
