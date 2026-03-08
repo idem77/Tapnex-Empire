@@ -2,21 +2,23 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.repository.WithdrawRepository
+import com.tapnexempire.data.repository.WalletRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WithdrawViewModel(
-    private val repository: WithdrawRepository
+@HiltViewModel
+class WithdrawViewModel @Inject constructor(
+    private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    fun requestWithdraw(
-        userId: String,
-        amountCoins: Long,
-        onResult: (Result<Unit>) -> Unit
-    ) {
+    fun withdraw(userId: String, amount: Int) {
         viewModelScope.launch {
-            val result = repository.requestWithdraw(userId, amountCoins)
-            onResult(result)
+            try {
+                walletRepository.withdrawCoins(userId, amount)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }
