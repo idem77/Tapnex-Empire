@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dagger.hilt.android.AndroidEntryPoint
 import com.tapnexempire.navigation.AppNavGraph
+import com.tapnexempire.navigation.Routes
 import com.tapnexempire.navigation.BottomNavBar
 import com.tapnexempire.ui.theme.TapnexEmpireTheme
 
