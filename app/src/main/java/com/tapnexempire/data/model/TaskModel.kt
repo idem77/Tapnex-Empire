@@ -1,4 +1,4 @@
-package com.tapnexempire.models
+package com.tapnexempire.model
 
 data class TaskModel(
     val id: String = "",           // 🆔 Unique ID for each task
