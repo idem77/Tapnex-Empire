@@ -1,4 +1,4 @@
-package com.tapnexempire.models
+package com.tapnexempire.model
 
 enum class TransactionType {
     DEPOSIT,
