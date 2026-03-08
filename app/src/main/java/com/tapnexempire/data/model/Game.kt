@@ -1,4 +1,4 @@
-package com.tapnexempire.models
+package com.tapnexempire.model
 
 data class Game(
     val id: String,
