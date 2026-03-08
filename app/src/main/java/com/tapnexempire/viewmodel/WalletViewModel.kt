@@ -2,8 +2,8 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.data.repository.WalletRepository
-import com.tapnexempire.data.model.Wallet
+import com.tapnexempire.repository.WalletRepository
+import com.tapnexempire.model.Wallet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
