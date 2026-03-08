@@ -2,8 +2,8 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.data.model.Tournament
-import com.tapnexempire.data.repository.TournamentRepository
+import com.tapnexempire.models.Tournament
+import com.tapnexempire..repository.TournamentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
