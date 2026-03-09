@@ -4,7 +4,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import com.tapnexempire.models.WalletModel
+import com.tapnexempire.data.model.WalletModel
 
 class WalletRepository @Inject constructor(
     private val firestore: FirebaseFirestore
