@@ -2,7 +2,7 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.repository.SurveyRepository
+import com.tapnexempire.data.repository.SurveyRepository
 import kotlinx.coroutines.launch
 
 class SurveyViewModel(
