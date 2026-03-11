@@ -16,7 +16,7 @@ class WalletViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _walletState = MutableStateFlow<WalletModel?>(null)
-    val walletState: StateFlow<Wallet?> = _walletState
+    val walletState: StateFlow<WalletModel?> = _walletState
 
     fun loadWallet(userId: String) {
         viewModelScope.launch {
