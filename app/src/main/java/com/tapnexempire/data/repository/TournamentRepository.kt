@@ -2,7 +2,7 @@ package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import com.tapnexempire.models.TournamentModel
+import com.tapnexempire.data.model.TournamentModel
 import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
