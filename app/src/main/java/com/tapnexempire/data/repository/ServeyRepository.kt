@@ -1,4 +1,4 @@
-package com.tapnexempire.repository
+package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
