@@ -1,4 +1,4 @@
-package com.tapnexempire.repository
+package com.tapnexempire.data.repository
 
 import android.app.Activity
 import com.google.firebase.auth.*
