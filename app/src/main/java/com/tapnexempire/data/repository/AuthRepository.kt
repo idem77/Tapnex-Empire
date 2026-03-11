@@ -7,7 +7,7 @@ import com.google.firebase.FirebaseException
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import com.tapnexempire.models.WalletModel
+import com.tapnexempire.data.model.WalletModel
 
 class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth,
