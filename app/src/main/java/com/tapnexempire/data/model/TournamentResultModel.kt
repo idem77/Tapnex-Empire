@@ -1,4 +1,4 @@
-package com.tapnexempire.model
+package com.tapnexempire.data.model
 
 data class TournamentResultModel(
     val tournamentId: String = "",
