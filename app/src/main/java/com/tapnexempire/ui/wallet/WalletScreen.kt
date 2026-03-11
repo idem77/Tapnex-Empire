@@ -24,8 +24,8 @@ fun WalletScreen(
     onWithdrawClick: () -> Unit,
     onTransactionClick: () -> Unit
 ) {
-    val wallet by viewModel.walletState.collectAsState()
-
+    val walletState = viewModel.walletState.collectAsState()
+val wallet = walletState.value
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
