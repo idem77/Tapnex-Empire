@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tapnexempire.models.TaskModel
+import com.tapnexempire.data.model.TaskModel
 import com.tapnexempire.ui.theme.CharcoalBlack
 import com.tapnexempire.ui.theme.Gold
 import com.tapnexempire.viewmodel.TaskViewModel
