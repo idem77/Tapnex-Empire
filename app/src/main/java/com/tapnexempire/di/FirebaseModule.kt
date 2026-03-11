@@ -2,10 +2,10 @@ package com.tapnexempire.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tapnexempire.repository.TournamentRepository
-import com.tapnexempire.repository.WithdrawRepository
-import com.tapnexempire.repository.TaskRepository
-import com.tapnexempire.repository.AuthRepository
+import com.tapnexempire.data.repository.TournamentRepository
+import com.tapnexempire.data.repository.WithdrawRepository
+import com.tapnexempire.data.repository.TaskRepository
+import com.tapnexempire.data.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
