@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.models.TransactionModel
-import com.tapnexempire.models.TransactionType
+import com.tapnexempire.data.model.TransactionModel
+import com.tapnexempire.data.model.TransactionType
 import java.text.SimpleDateFormat
 import java.util.*
 
