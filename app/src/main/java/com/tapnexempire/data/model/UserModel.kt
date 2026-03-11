@@ -1,4 +1,4 @@
-package com.tapnexempire.model
+package com.tapnexempire.data.model
 
 data class UserModel(
     val uid: String,
