@@ -2,7 +2,7 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.data.model.Tournament
+import com.tapnexempire.data.model.TournamentModel
 import com.tapnexempire.data.repository.TournamentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +15,8 @@ class TournamentDetailViewModel @Inject constructor(
     private val repository: TournamentRepository
 ) : ViewModel() {
 
-    private val _tournament = MutableStateFlow<Tournament?>(null)
-    val tournament: StateFlow<Tournament?> = _tournament
+    private val _tournament = MutableStateFlow<TournamentModel?>(null)
+    val tournament: StateFlow<TournamentModel?> = _tournament
 
     fun loadTournament(tournamentId: String) {
         viewModelScope.launch {
