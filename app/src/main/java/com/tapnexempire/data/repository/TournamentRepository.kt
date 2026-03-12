@@ -25,7 +25,15 @@ class TournamentRepository @Inject constructor(
         entryFee: Long
     ): Result<Unit> {
 
-        return try {
+       fun getTournaments(): List<TournamentModel> {
+    return listOf()
+}
+
+fun getTournamentById(id: String): TournamentModel? {
+    return null
+} 
+
+return try {
 
             val tournamentDoc = tournamentRef.document(tournamentId)
             val walletDoc = walletRef.document(userId)
