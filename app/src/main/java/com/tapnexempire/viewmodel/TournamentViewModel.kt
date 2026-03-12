@@ -22,7 +22,7 @@ class TournamentViewModel @Inject constructor(
         loadTournaments()
     }
 
-    private fun loadTournaments() {
+     fun loadTournaments() {
         viewModelScope.launch {
             try {
                 val data = repository.getTournaments()
