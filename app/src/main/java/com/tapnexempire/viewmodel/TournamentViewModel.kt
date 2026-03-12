@@ -18,10 +18,15 @@ class TournamentViewModel @Inject constructor(
     private val _tournaments = MutableStateFlow<List<TournamentModel>>(emptyList())
     val tournaments: StateFlow<List<TournamentModel>> = _tournaments
 
-    fun loadTournaments() {
+    init {
+        loadTournaments()
+    }
+
+    private fun loadTournaments() {
         viewModelScope.launch {
             try {
-                _tournaments.value = repository.getTournaments()
+                val data = repository.getTournaments()
+                _tournaments.value = data
             } catch (e: Exception) {
                 e.printStackTrace()
             }
