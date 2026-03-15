@@ -12,28 +12,28 @@ class TournamentRepository @Inject constructor(
     private val tournamentRef = firestore.collection("tournaments")
     private val walletRef = firestore.collection("wallets")
 
-    suspend fun getAllTournaments(): List<TournamentModel> {
+    // 🔹 Get all tournaments
+    suspend fun getTournaments(): List<TournamentModel> {
         val snapshot = tournamentRef.get().await()
         return snapshot.documents.mapNotNull {
             it.toObject(TournamentModel::class.java)
         }
     }
 
+    // 🔹 Get single tournament
+    suspend fun getTournamentById(id: String): TournamentModel? {
+        val snapshot = tournamentRef.document(id).get().await()
+        return snapshot.toObject(TournamentModel::class.java)
+    }
+
+    // 🔹 Join tournament
     suspend fun joinTournament(
         tournamentId: String,
         userId: String,
         entryFee: Long
     ): Result<Unit> {
 
-       fun getTournaments(): List<TournamentModel> {
-    return listOf()
-}
-
-fun getTournamentById(id: String): TournamentModel? {
-    return null
-} 
-
-return try {
+        return try {
 
             val tournamentDoc = tournamentRef.document(tournamentId)
             val walletDoc = walletRef.document(userId)
@@ -67,21 +67,27 @@ return try {
                 if (joined >= maxPlayers)
                     throw Exception("Tournament full")
 
+                // Deduct coins
                 transaction.update(
                     walletDoc,
                     "totalCoins",
                     totalCoins - entryFee
                 )
 
+                // Increase players
                 transaction.update(
                     tournamentDoc,
                     "joinedPlayers",
                     joined + 1
                 )
 
+                // Add participant
                 transaction.set(
                     participantDoc,
-                    mapOf("joinedAt" to System.currentTimeMillis())
+                    mapOf(
+                        "userId" to userId,
+                        "joinedAt" to System.currentTimeMillis()
+                    )
                 )
 
             }.await()
