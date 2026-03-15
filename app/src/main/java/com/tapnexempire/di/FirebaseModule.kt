@@ -1,5 +1,6 @@
 package com.tapnexempire.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.repository.TournamentRepository
 import com.tapnexempire.data.repository.WalletRepository
@@ -13,26 +14,32 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
 
-@Provides  
-@Singleton  
-fun provideFirestore(): FirebaseFirestore {  
-    return FirebaseFirestore.getInstance()  
-}  
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
 
-@Provides  
-@Singleton  
-fun provideWalletRepository(  
-    firestore: FirebaseFirestore  
-): WalletRepository {  
-    return WalletRepository(firestore)  
-}  
+    // 🔥 ADD THIS
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
 
-@Provides  
-@Singleton  
-fun provideTournamentRepository(  
-    firestore: FirebaseFirestore  
-): TournamentRepository {  
-    return TournamentRepository(firestore)  
-}
+    @Provides
+    @Singleton
+    fun provideTournamentRepository(
+        firestore: FirebaseFirestore
+    ): TournamentRepository {
+        return TournamentRepository(firestore)
+    }
 
+    @Provides
+    @Singleton
+    fun provideWalletRepository(
+        firestore: FirebaseFirestore
+    ): WalletRepository {
+        return WalletRepository(firestore)
+    }
 }
