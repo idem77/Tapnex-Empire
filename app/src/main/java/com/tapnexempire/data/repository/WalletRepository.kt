@@ -12,6 +12,7 @@ class WalletRepository @Inject constructor(
 
     private val walletRef = firestore.collection("wallets")
 
+    // 🔹 Get wallet
     suspend fun getWallet(userId: String): WalletModel? {
         return walletRef.document(userId)
             .get()
@@ -19,6 +20,7 @@ class WalletRepository @Inject constructor(
             .toObject(WalletModel::class.java)
     }
 
+    // 🔹 Create wallet if not exists
     suspend fun createWalletIfNotExists(userId: String) {
         val doc = walletRef.document(userId).get().await()
 
@@ -29,6 +31,7 @@ class WalletRepository @Inject constructor(
         }
     }
 
+    // 🔹 Add withdrawable coins (reward etc.)
     suspend fun addWithdrawable(userId: String, amount: Long) {
         walletRef.document(userId)
             .update(
@@ -36,5 +39,37 @@ class WalletRepository @Inject constructor(
                 FieldValue.increment(amount)
             )
             .await()
+    }
+
+    // 🔹 Withdraw coins
+    suspend fun withdrawCoins(userId: String, amount: Long): Result<Unit> {
+        return try {
+
+            val walletDoc = walletRef.document(userId)
+
+            firestore.runTransaction { transaction ->
+
+                val snapshot = transaction.get(walletDoc)
+
+                val withdrawable =
+                    snapshot.getLong("withdrawableCoins") ?: 0
+
+                if (withdrawable < amount) {
+                    throw Exception("Not enough withdrawable coins")
+                }
+
+                transaction.update(
+                    walletDoc,
+                    "withdrawableCoins",
+                    withdrawable - amount
+                )
+
+            }.await()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
