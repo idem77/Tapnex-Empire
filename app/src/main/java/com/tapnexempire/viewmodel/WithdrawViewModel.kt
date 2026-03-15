@@ -12,7 +12,7 @@ class WithdrawViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    fun withdraw(userId: String, amount: Int) {
+    fun withdraw(userId: String, amount: Long) {
         viewModelScope.launch {
             try {
                 walletRepository.withdrawCoins(userId, amount)
