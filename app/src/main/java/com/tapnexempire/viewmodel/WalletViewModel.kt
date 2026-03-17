@@ -1,31 +1,23 @@
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.tapnexempire.data.repository.WalletRepository
 import com.tapnexempire.data.model.WalletModel
+import com.tapnexempire.data.repository.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class WalletViewModel @Inject constructor(
-    private val walletRepository: WalletRepository
+    private val repo: WalletRepository
 ) : ViewModel() {
 
     private val _walletState = MutableStateFlow<WalletModel?>(null)
     val walletState: StateFlow<WalletModel?> = _walletState
 
-    fun loadWallet(userId: String) {
-        viewModelScope.launch {
-            try {
-                val wallet = walletRepository.getWallet(userId)
-                _walletState.value = wallet
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+    fun startListening(userId: String) {
+        repo.listenToWallet(userId) {
+            _walletState.value = it
         }
     }
 }
