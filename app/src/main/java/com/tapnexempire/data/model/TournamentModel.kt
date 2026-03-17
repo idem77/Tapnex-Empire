@@ -1,12 +1,11 @@
-package com.tapnexempire.models
+package com.tapnexempire.data.model
 
 data class TournamentModel(
     val id: String = "",
-    val name: String = "", // 🔥 FIXED
-    val entryFee: Long = 0, // 🔥 FIXED
-    val prizePool: Long = 0, // 🔥 ADDED
-    val maxPlayers: Long = 0,
-    val joinedPlayers: Long = 0,
+    val title: String = "",
+    val entryCoins: Int = 0,
+    val maxPlayers: Int = 0,
+    val joinedPlayers: Int = 0,
 
     val isPaid: Boolean = false,
     val isSurveyEligible: Boolean = false,
@@ -14,6 +13,6 @@ data class TournamentModel(
     val empireCutPercent: Int = 70,
     val withdrawablePercent: Int = 20,
 
-    val status: String = "UPCOMING",
+    val status: String = "UPCOMING", // UPCOMING | LIVE | COMPLETED
     val createdAt: Long = System.currentTimeMillis()
 )
