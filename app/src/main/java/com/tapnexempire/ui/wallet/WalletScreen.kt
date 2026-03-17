@@ -20,125 +20,22 @@ import com.tapnexempire.viewmodel.WalletViewModel
 @Composable
 fun WalletScreen(
     viewModel: WalletViewModel,
-    onDepositClick: () -> Unit,
-    onWithdrawClick: () -> Unit,
-    onTransactionClick: () -> Unit
+    userId: String
 ) {
-    val walletState = viewModel.walletState.collectAsState()
-val wallet = walletState.value
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
 
-        // 🔥 BACKGROUND
-        Image(
-            painter = painterResource(id = R.drawable.wallet_bg), // ensure this png exists
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+    val wallet by viewModel.walletState.collectAsState()
 
-        if (wallet == null) {
-
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-
-        } else {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 70.dp) // bottom nav safe space
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = "My Wallet 👑",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-
-                wallet?.let {
-
-    WalletBalanceCard(
-        total = it.totalCoins,
-        bonus = it.bonusCoins,
-        deposit = it.depositCoins,
-        withdrawable = it.withdrawableCoins
-    )
-
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Button(
-                        onClick = onDepositClick,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Deposit")
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Button(
-                        onClick = onWithdrawClick,
-                        modifier = Modifier.weight(1f),
-                        enabled = (wallet?.withdrawableCoins ?: 0) > 0
-                    ) {
-                        Text("Withdraw")
-                    }
-                }
-
-                OutlinedButton(
-                    onClick = onTransactionClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Transaction History")
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-            }
-        }
+    LaunchedEffect(Unit) {
+        viewModel.startListening(userId)
     }
-}
 
-@Composable
-private fun WalletBalanceCard(
-    total: Long,
-    bonus: Long,
-    deposit: Long,
-    withdrawable: Long
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-
-            Text(
-                text = "Total Balance: $total coins",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Divider()
-
-            Text("Bonus Coins: $bonus")
-            Text("Deposit Coins: $deposit")
-            Text("Withdrawable Coins: $withdrawable")
+    if (wallet == null) {
+        CircularProgressIndicator()
+    } else {
+        Column {
+            Text("Total: ${wallet!!.totalCoins}")
+            Text("Bonus: ${wallet!!.bonusCoins}")
+            Text("Withdrawable: ${wallet!!.withdrawableCoins}")
         }
     }
 }
