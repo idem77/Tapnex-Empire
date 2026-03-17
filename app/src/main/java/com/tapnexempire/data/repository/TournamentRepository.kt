@@ -25,7 +25,7 @@ class TournamentRepository @Inject constructor(
         val snapshot = tournamentRef.document(id).get().await()
         return snapshot.toObject(TournamentModel::class.java)
     }
-
+            
     // 🔹 Join tournament
     suspend fun joinTournament(
         tournamentId: String,
