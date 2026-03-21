@@ -12,12 +12,22 @@ class TournamentViewModel @Inject constructor(
     private val repository: TournamentRepository
 ) : ViewModel() {
 
-    private val _tournaments = MutableStateFlow<List<TournamentModel>>(emptyList())
-    val tournaments: StateFlow<List<TournamentModel>> = _tournaments
+    private val _state = MutableStateFlow<UiState<List<TournamentModel>>>(UiState.Loading)
+    val state: StateFlow<UiState<List<TournamentModel>>> = _state
 
-    fun startListening() {
-        repository.listenToTournaments {
-            _tournaments.value = it
+    init {
+        loadTournaments()
+    }
+
+    fun loadTournaments() {
+        viewModelScope.launch {
+            _state.value = UiState.Loading
+            try {
+                val data = repository.getTournaments()
+                _state.value = UiState.Success(data)
+            } catch (e: Exception) {
+                _state.value = UiState.Error(e.message ?: "Error loading tournaments")
+            }
         }
     }
 }
