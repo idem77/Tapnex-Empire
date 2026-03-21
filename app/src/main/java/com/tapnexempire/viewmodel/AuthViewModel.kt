@@ -15,28 +15,39 @@ class AuthViewModel @Inject constructor(
     private val repo: AuthRepository
 ) : ViewModel() {
 
+    private val _authState = MutableStateFlow<UiState<Boolean>>(UiState.Success(false))
+    val authState: StateFlow<UiState<Boolean>> = _authState
+
     private val _otpState = MutableStateFlow<String?>(null)
     val otpState: StateFlow<String?> = _otpState
-
-    private val _authSuccess = MutableStateFlow(false)
-    val authSuccess: StateFlow<Boolean> = _authSuccess
 
     fun sendOtp(
         activity: Activity,
         phone: String,
         onError: (String) -> Unit
     ) {
+        _authState.value = UiState.Loading
+
         repo.sendOtp(
             activity,
             phone,
             onCodeSent = { _otpState.value = it },
-            onFailure = onError
+            onFailure = {
+                _authState.value = UiState.Error(it)
+                onError(it)
+            }
         )
     }
 
     fun verifyOtp(verificationId: String, otp: String) {
         viewModelScope.launch {
-            _authSuccess.value = repo.verifyOtp(verificationId, otp)
+            _authState.value = UiState.Loading
+            try {
+                val success = repo.verifyOtp(verificationId, otp)
+                _authState.value = UiState.Success(success)
+            } catch (e: Exception) {
+                _authState.value = UiState.Error(e.message ?: "Auth failed")
+            }
         }
     }
 
