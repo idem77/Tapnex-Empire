@@ -15,16 +15,19 @@ class TournamentDetailViewModel @Inject constructor(
     private val repository: TournamentRepository
 ) : ViewModel() {
 
-    private val _tournament = MutableStateFlow<TournamentModel?>(null)
-    val tournament: StateFlow<TournamentModel?> = _tournament
+    private val _state = MutableStateFlow<UiState<TournamentModel>>(UiState.Loading)
+    val state: StateFlow<UiState<TournamentModel>> = _state
 
-    fun loadTournament(tournamentId: String) {
+    fun loadTournament(id: String) {
         viewModelScope.launch {
+            _state.value = UiState.Loading
             try {
-                val data = repository.getTournamentById(tournamentId)
-                _tournament.value = data
+                val data = repository.getTournamentById(id)
+                    ?: throw Exception("Tournament not found")
+
+                _state.value = UiState.Success(data)
             } catch (e: Exception) {
-                e.printStackTrace()
+                _state.value = UiState.Error(e.message ?: "Error")
             }
         }
     }
