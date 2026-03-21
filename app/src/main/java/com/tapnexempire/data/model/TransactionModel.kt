@@ -9,9 +9,10 @@ enum class TransactionType {
 }
 
 data class TransactionModel(
-    val id: String,
-    val type: TransactionType,
-    val amount: Int,
-    val timestamp: Long,
-    val description: String
+    val id: String = "",
+    val userId: String = "",
+    val type: TransactionType = TransactionType.BONUS,
+    val amount: Long = 0,
+    val description: String = "",
+    val createdAt: Long = System.currentTimeMillis()
 )
