@@ -12,12 +12,20 @@ class WalletViewModel @Inject constructor(
     private val repo: WalletRepository
 ) : ViewModel() {
 
-    private val _walletState = MutableStateFlow<WalletModel?>(null)
-    val walletState: StateFlow<WalletModel?> = _walletState
+    private val _state = MutableStateFlow<UiState<WalletModel>>(UiState.Loading)
+    val state: StateFlow<UiState<WalletModel>> = _state
 
-    fun startListening(userId: String) {
-        repo.listenToWallet(userId) {
-            _walletState.value = it
+    fun loadWallet(userId: String) {
+        viewModelScope.launch {
+            _state.value = UiState.Loading
+            try {
+                val wallet = repo.getWallet(userId)
+                    ?: throw Exception("Wallet not found")
+
+                _state.value = UiState.Success(wallet)
+            } catch (e: Exception) {
+                _state.value = UiState.Error(e.message ?: "Wallet error")
+            }
         }
     }
 }
