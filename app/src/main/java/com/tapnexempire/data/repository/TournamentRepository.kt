@@ -35,37 +35,49 @@ class TournamentRepository @Inject constructor(
 
             firestore.runTransaction { transaction ->
 
-                val walletSnap = transaction.get(walletDoc)
-                val totalCoins = walletSnap.getLong("totalCoins") ?: 0
+    val walletSnap = transaction.get(walletDoc)
+    val wallet = walletSnap.toObject(WalletModel::class.java)
+        ?: throw Exception("Wallet not found")
 
-                if (totalCoins < entryFee)
-                    throw Exception("Not enough coins")
+    val updatedWallet = deductCoins(wallet, entryFee)
 
-                val participantSnap = transaction.get(participantDoc)
-                if (participantSnap.exists())
-                    throw Exception("Already joined")
+    val tournamentSnap = transaction.get(tournamentDoc)
+    val maxPlayers = tournamentSnap.getLong("maxPlayers") ?: 0
+    val joined = tournamentSnap.getLong("joinedPlayers") ?: 0
 
-                val tournamentSnap = transaction.get(tournamentDoc)
+    if (joined >= maxPlayers)
+        throw Exception("Tournament full")
 
-                val joined = tournamentSnap.getLong("joinedPlayers") ?: 0
-                val maxPlayers = tournamentSnap.getLong("maxPlayers") ?: 0
+    // Update wallet safely
+    transaction.set(walletDoc, updatedWallet)
 
-                if (joined >= maxPlayers)
-                    throw Exception("Tournament full")
+    // Atomic increment
+    transaction.update(
+        tournamentDoc,
+        "joinedPlayers",
+        com.google.firebase.firestore.FieldValue.increment(1)
+    )
 
-                transaction.update(walletDoc, "totalCoins", totalCoins - entryFee)
-                transaction.update(tournamentDoc, "joinedPlayers", joined + 1)
+    // Add participant
+    transaction.set(
+        participantDoc,
+        mapOf(
+            "userId" to userId,
+            "joinedAt" to System.currentTimeMillis()
+        )
+    )
 
-                transaction.set(participantDoc, mapOf(
-                    "userId" to userId,
-                    "joinedAt" to System.currentTimeMillis()
-                ))
-            }.await()
+    // Add transaction log
+    val txnRef = firestore.collection("transactions").document()
+    transaction.set(
+        txnRef,
+        TransactionModel(
+            id = txnRef.id,
+            userId = userId,
+            type = TransactionType.ENTRY_FEE,
+            amount = entryFee,
+            description = "Tournament Entry"
+        )
+    )
 
-            Result.success(Unit)
-
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-}
+            }
