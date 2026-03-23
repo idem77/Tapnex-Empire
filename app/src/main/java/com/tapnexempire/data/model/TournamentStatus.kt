@@ -1,5 +1,5 @@
- package.com.tapnexempire.data.model  
-    
-   enum class TournamentStatus {
+package com.tapnexempire.data.model
+
+enum class TournamentStatus {
     UPCOMING, LIVE, COMPLETED
-   }       
+} 
