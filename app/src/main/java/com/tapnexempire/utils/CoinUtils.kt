@@ -1,6 +1,6 @@
-package.com.tapnex.empire.utils 
+package com.tapnexempire.utils
 
-import.com.tapnex.empire.data.WalletModel
+import com.tapnexempire.data.model.WalletModel
 
 fun deductCoins(
     wallet: WalletModel,
@@ -34,7 +34,6 @@ fun deductCoins(
     if (remaining > 0) {
         if (withdrawable >= remaining) {
             withdrawable -= remaining
-            remaining = 0
         } else {
             throw Exception("Not enough balance")
         }
