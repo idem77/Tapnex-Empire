@@ -1,5 +1,7 @@
-package.com.tapnex.empire.utils  
-  
+package.com.tapnex.empire.utils 
+
+import.com.tapnex.empire.data.WalletModel
+
 fun deductCoins(
     wallet: WalletModel,
     amount: Long
