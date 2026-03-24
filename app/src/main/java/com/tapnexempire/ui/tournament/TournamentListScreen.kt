@@ -36,8 +36,8 @@ fun TournamentListScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
 
-                    Text(tournament.name)
-                    Text("Entry: ${tournament.entryFee}")
+                    Text(tournament.title)
+                    Text("Entry: ${tournament.entrycoins}")
                     Text("Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}")
 
                     Button(
