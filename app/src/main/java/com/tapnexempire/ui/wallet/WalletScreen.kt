@@ -1,20 +1,14 @@
 package com.tapnexempire.ui.wallet
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.R
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import com.tapnexempire.viewmodel.WalletViewModel
 
 @Composable
@@ -26,14 +20,29 @@ fun WalletScreen(
     val wallet by viewModel.walletState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.startListening(userId)
+        viewModel.loadWallet(userId)
     }
 
     if (wallet == null) {
-        CircularProgressIndicator()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     } else {
-        Column {
-            Text("Total: ${wallet!!.totalCoins}")
+
+        val total =
+            wallet!!.depositCoins +
+            wallet!!.bonusCoins +
+            wallet!!.withdrawableCoins
+
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            Text("Total Coins: $total")
+            Text("Deposit: ${wallet!!.depositCoins}")
             Text("Bonus: ${wallet!!.bonusCoins}")
             Text("Withdrawable: ${wallet!!.withdrawableCoins}")
         }
