@@ -1,33 +1,37 @@
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tapnexempire.data.model.TournamentModel
 import com.tapnexempire.data.repository.TournamentRepository
+import com.tapnexempire.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TournamentViewModel @Inject constructor(
-    private val repository: TournamentRepository
+    private val repo: TournamentRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<UiState<List<TournamentModel>>>(UiState.Loading)
-    val state: StateFlow<UiState<List<TournamentModel>>> = _state
+    private val _tournaments =
+        MutableStateFlow<List<TournamentModel>>(emptyList())
+    val tournaments: StateFlow<List<TournamentModel>> = _tournaments
 
-    init {
-        loadTournaments()
+    fun startListening() {
+        repo.listenToTournaments {
+            _tournaments.value = it
+        }
     }
 
-    fun loadTournaments() {
+    fun joinTournament(
+        tournamentId: String,
+        userId: String,
+        entryFee: Long
+    ) {
         viewModelScope.launch {
-            _state.value = UiState.Loading
-            try {
-                val data = repository.getTournaments()
-                _state.value = UiState.Success(data)
-            } catch (e: Exception) {
-                _state.value = UiState.Error(e.message ?: "Error loading tournaments")
-            }
+            repo.joinTournament(tournamentId, userId, entryFee)
         }
     }
 }
