@@ -6,10 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.LaunchedEffect
 import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.utils.UiState
+import com.tapnexempire.data.model.WalletModel
 
 @Composable
 fun WalletScreen(
@@ -20,7 +19,7 @@ fun WalletScreen(
 
     val state by viewModel.walletState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(userId) {
         viewModel.loadWallet(userId)
     }
 
@@ -36,11 +35,13 @@ fun WalletScreen(
         }
 
         is UiState.Error -> {
+            val message = (state as UiState.Error).message
+
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Error loading wallet 😢")
+                Text(message)
             }
         }
 
@@ -65,19 +66,26 @@ fun WalletScreen(
                     style = MaterialTheme.typography.headlineMedium
                 )
 
-                Card {
+                // 💣 MAIN CARD
+                Card(
+                    elevation = CardDefaults.cardElevation(6.dp)
+                ) {
                     Column(modifier = Modifier.padding(16.dp)) {
 
-                        Text("Total Coins: $total")
+                        Text(
+                            text = "Total Coins: $total",
+                            style = MaterialTheme.typography.titleLarge
+                        )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                        Text("Deposit: ${wallet.depositCoins}")
-                        Text("Bonus: ${wallet.bonusCoins}")
-                        Text("Withdrawable: ${wallet.withdrawableCoins}")
+                        Text("Deposit Coins: ${wallet.depositCoins}")
+                        Text("Bonus Coins: ${wallet.bonusCoins}")
+                        Text("Withdrawable Coins: ${wallet.withdrawableCoins}")
                     }
                 }
 
+                // 🔥 ACTION BUTTON
                 Button(
                     onClick = onTransactionClick,
                     modifier = Modifier.fillMaxWidth()
