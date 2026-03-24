@@ -14,37 +14,77 @@ import com.tapnexempire.viewmodel.WalletViewModel
 @Composable
 fun WalletScreen(
     viewModel: WalletViewModel,
-    userId: String
+    userId: String,
+    onTransactionClick: () -> Unit
 ) {
 
-    val wallet by viewModel.walletState.collectAsState()
+    val state by viewModel.walletState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadWallet(userId)
     }
 
-    if (wallet == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    when (state) {
+
+        is UiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    } else {
 
-        val total =
-            wallet!!.depositCoins +
-            wallet!!.bonusCoins +
-            wallet!!.withdrawableCoins
+        is UiState.Error -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Error loading wallet 😢")
+            }
+        }
 
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        is UiState.Success -> {
 
-            Text("Total Coins: $total")
-            Text("Deposit: ${wallet!!.depositCoins}")
-            Text("Bonus: ${wallet!!.bonusCoins}")
-            Text("Withdrawable: ${wallet!!.withdrawableCoins}")
+            val wallet = (state as UiState.Success<WalletModel>).data
+
+            val total =
+                wallet.depositCoins +
+                wallet.bonusCoins +
+                wallet.withdrawableCoins
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+                Text(
+                    text = "My Wallet 💰",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                Card {
+                    Column(modifier = Modifier.padding(16.dp)) {
+
+                        Text("Total Coins: $total")
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text("Deposit: ${wallet.depositCoins}")
+                        Text("Bonus: ${wallet.bonusCoins}")
+                        Text("Withdrawable: ${wallet.withdrawableCoins}")
+                    }
+                }
+
+                Button(
+                    onClick = onTransactionClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("View Transactions 📜")
+                }
+            }
         }
     }
 }
