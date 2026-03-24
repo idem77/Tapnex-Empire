@@ -16,8 +16,16 @@ import java.util.*
 
 @Composable
 fun TransactionHistoryScreen(
-    transactions: List<TransactionModel>
+    viewModel: TransactionViewModel,
+    userId: String
 ) {
+
+    val state by viewModel.transactions.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadTransactions(userId)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,67 +39,41 @@ fun TransactionHistoryScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (transactions.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("No transactions yet 🪙")
+        when (state) {
+
+            is UiState.Loading -> {
+                CircularProgressIndicator()
             }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(transactions) { transaction ->
-                    TransactionItem(transaction)
+
+            is UiState.Error -> {
+                Text("Failed to load transactions 😢")
+            }
+
+            is UiState.Success -> {
+
+                val transactions =
+                    (state as UiState.Success<List<TransactionModel>>).data
+
+                if (transactions.isEmpty()) {
+
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("No transactions yet 🪙")
+                    }
+
+                } else {
+
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(transactions) { transaction ->
+                            TransactionItem(transaction)
+                        }
+                    }
                 }
             }
         }
     }
-}
-
-@Composable
-private fun TransactionItem(
-    transaction: TransactionModel
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = transaction.type.name.replace("_", " "),
-                    fontWeight = FontWeight.Bold
-                )
-
-                Text(
-                    text = "${if (transaction.amount > 0) "+" else ""}${transaction.amount} coins"
-                )
-            }
-
-            Text(
-                text = transaction.description,
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Text(
-                text = formatDate(transaction.timestamp),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-private fun formatDate(time: Long): String {
-    val sdf = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
-    return sdf.format(Date(time))
 }
