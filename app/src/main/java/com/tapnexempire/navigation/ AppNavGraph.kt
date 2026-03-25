@@ -31,7 +31,6 @@ fun AppNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
     NavHost(
         navController = navController,
         startDestination = Routes.HOME,
@@ -45,15 +44,10 @@ fun AppNavGraph(
 
         // 🔹 Wallet
         composable(Routes.WALLET) {
-
             val walletViewModel: WalletViewModel = hiltViewModel()
-
             WalletScreen(
                 viewModel = walletViewModel,
-                onDepositClick = { /* billing later */ },
-                onWithdrawClick = {
-                    navController.navigate(Routes.WITHDRAW)
-                },
+                userId = "CURRENT_USER_ID",
                 onTransactionClick = { /* future */ }
             )
         }
@@ -65,33 +59,20 @@ fun AppNavGraph(
 
         // 🔹 Tournament List
         composable(Routes.TOURNAMENTS) {
-
             val tournamentViewModel: TournamentViewModel = hiltViewModel()
-
             TournamentListScreen(
                 viewModel = tournamentViewModel,
-                onTournamentClick = { id ->
-                    navController.navigate("${Routes.TOURNAMENT_DETAIL}/$id")
-                }
+                userId = "CURRENT_USER_ID"
             )
         }
 
         // 🔹 Tournament Detail
         composable(
             route = "${Routes.TOURNAMENT_DETAIL}/{tournamentId}",
-            arguments = listOf(
-                navArgument("tournamentId") {
-                    type = NavType.StringType
-                }
-            )
+            arguments = listOf(navArgument("tournamentId") { type = NavType.StringType })
         ) { backStackEntry ->
-
-            val tournamentId =
-                backStackEntry.arguments?.getString("tournamentId") ?: ""
-
-            TournamentDetailScreen(
-                tournamentId = tournamentId
-            )
+            val tournamentId = backStackEntry.arguments?.getString("tournamentId") ?: ""
+            TournamentDetailScreen(tournamentId = tournamentId)
         }
 
         // 🔹 Withdraw
