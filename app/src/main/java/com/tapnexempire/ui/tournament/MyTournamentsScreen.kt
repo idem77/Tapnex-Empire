@@ -7,8 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.data.model.TournamentModel
 import com.tapnexempire.viewmodel.TournamentViewModel
+import com.tapnexempire.data.model.TournamentModel
 
 @Composable
 fun MyTournamentsScreen(
@@ -16,31 +16,15 @@ fun MyTournamentsScreen(
     onTournamentClick: (String) -> Unit
 ) {
     val tournaments by viewModel.tournaments.collectAsState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-
-        Text(
-            text = "My Tournaments 🎮",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text("My Tournaments 🎮", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
-
         if (tournaments.isEmpty()) {
             Text("You haven’t joined any tournament yet 😌")
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(tournaments) { tournament ->
-                    TournamentCard(
-                        tournament = tournament,
-                        onClick = { onTournamentClick(tournament.id) }
-                    )
+                    TournamentCard(tournament) { onTournamentClick(tournament.id) }
                 }
             }
         }
