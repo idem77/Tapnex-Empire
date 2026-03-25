@@ -15,14 +15,9 @@ fun TournamentDetailScreen(
     tournamentId: String
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(LightCream),
+        modifier = Modifier.fillMaxSize().background(LightCream),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Tournament Detail Coming Soon",
-            color = CharcoalBlack
-        )
+        Text(text = "Tournament Detail Coming Soon 🏆", color = CharcoalBlack)
     }
 }
