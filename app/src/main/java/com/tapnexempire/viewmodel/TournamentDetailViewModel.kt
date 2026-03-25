@@ -2,6 +2,7 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tapnexempire.utils.UiState
 import com.tapnexempire.data.model.TournamentModel
 import com.tapnexempire.data.repository.TournamentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
