@@ -1,60 +1,80 @@
 package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import com.tapnexempire.data.model.WalletModel
 import javax.inject.Inject
 
 class WithdrawRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
-    suspend fun requestWithdraw(
+    private val walletRef = firestore.collection("wallets")
+    private val withdrawRef = firestore.collection("withdraw_requests")
+
+    fun requestWithdraw(
         userId: String,
-        amountCoins: Long
-    ): Result<Unit> {
+        coins: Long,
+        onResult: (Boolean, String) -> Unit
+    ) {
 
-        return try {
+        val walletDoc = walletRef.document(userId)
 
-            val walletRef =
-                firestore.collection("wallets").document(userId)
+        firestore.runTransaction { transaction ->
 
-            val requestRef =
-                firestore.collection("withdraw_requests")
+            val snapshot = transaction.get(walletDoc)
+            val wallet = snapshot.toObject(WalletModel::class.java)
+                ?: throw Exception("Wallet not found")
 
-            firestore.runTransaction { transaction ->
+            // 💰 Min withdraw check (₹5 = 50 coins)
+            if (coins < 50) {
+                throw Exception("Minimum withdraw is ₹5")
+            }
 
-                val walletSnap =
-                    transaction.get(walletRef)
+            // 📅 Daily limit check (₹200 = 2000 coins)
+            val currentTime = System.currentTimeMillis()
+            val isSameDay =
+                (currentTime - wallet.lastWithdrawDate) < (24 * 60 * 60 * 1000)
 
-                val withdrawable =
-                    walletSnap.getLong("withdrawableCoins") ?: 0
+            val todayWithdrawn =
+                if (isSameDay) wallet.dailyWithdrawnCoins else 0
 
-                if (withdrawable < amountCoins)
-                    throw Exception("Insufficient withdrawable balance")
+            if (todayWithdrawn + coins > 2000) {
+                throw Exception("Daily limit ₹200 reached")
+            }
 
-                transaction.update(
-                    walletRef,
-                    "withdrawableCoins",
-                    withdrawable - amountCoins
+            // 👑 Only winning coins allowed
+            if (wallet.winningCoins < coins) {
+                throw Exception("Insufficient winning coins")
+            }
+
+            // ➖ Deduct coins
+            transaction.update(
+                walletDoc,
+                mapOf(
+                    "winningCoins" to (wallet.winningCoins - coins),
+                    "dailyWithdrawnCoins" to (todayWithdrawn + coins),
+                    "lastWithdrawDate" to currentTime
                 )
+            )
 
-                transaction.set(
-                    requestRef.document(),
-                    mapOf(
-                        "userId" to userId,
-                        "amountCoins" to amountCoins,
-                        "amountRupees" to amountCoins * 0.10,
-                        "status" to "pending",   // FIXED
-                        "createdAt" to System.currentTimeMillis()
-                    )
+            // 📝 Create withdraw request
+            val requestRef = withdrawRef.document()
+
+            transaction.set(
+                requestRef,
+                mapOf(
+                    "id" to requestRef.id,
+                    "userId" to userId,
+                    "coins" to coins,
+                    "status" to "pending",
+                    "createdAt" to currentTime
                 )
+            )
 
-            }.await()
-
-            Result.success(Unit)
-
-        } catch (e: Exception) {
-            Result.failure(e)
+        }.addOnSuccessListener {
+            onResult(true, "Withdraw request sent")
+        }.addOnFailureListener {
+            onResult(false, it.message ?: "Error")
         }
     }
 }
