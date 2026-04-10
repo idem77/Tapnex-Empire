@@ -1,45 +1,25 @@
-package com.tapnex.domain
+package com.tapnexempire.domain
 
 object PrizeCalculator {
 
-    fun calculateDistribution(totalPool: Int): PrizeResult {
+    // 🏆 Top 10 distribution (30% pool)
+    fun calculateTop10Prizes(totalPool: Long): List<Long> {
 
-        val empireBase = (totalPool * 0.70).toInt()
-        val userPool = totalPool - empireBase
+        val prizePool = (totalPool * 0.3).toLong()
 
-        val rankDistribution = mutableMapOf<Int, Int>()
-
-        val percentages = mapOf(
-            4 to 0.20,
-            5 to 0.15,
-            6 to 0.12,
-            7 to 0.10,
-            8 to 0.08,
-            9 to 0.07,
-            10 to 0.06
+        val percentages = listOf(
+            0.30, // Rank 1
+            0.20, // Rank 2
+            0.15, // Rank 3
+            0.10, // Rank 4
+            0.07, // Rank 5
+            0.06, // Rank 6
+            0.05, // Rank 7
+            0.04, // Rank 8
+            0.02, // Rank 9
+            0.01  // Rank 10
         )
 
-        var used = 0
-
-        percentages.forEach { (rank, percent) ->
-            val reward = (userPool * percent).toInt()
-            rankDistribution[rank] = reward
-            used += reward
-        }
-
-        val motivationPool = userPool - used
-        val motivationPerUser = motivationPool / 90
-
-        return PrizeResult(
-            empireBase,
-            rankDistribution,
-            motivationPerUser
-        )
+        return percentages.map { (it * prizePool).toLong() }
     }
 }
-
-data class PrizeResult(
-    val empireBase: Int,
-    val rankRewards: Map<Int, Int>,
-    val motivationPerUser: Int
-)
