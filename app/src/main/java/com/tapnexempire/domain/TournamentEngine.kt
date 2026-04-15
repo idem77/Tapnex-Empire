@@ -41,7 +41,7 @@ object TournamentEngine {
                         transaction.update(
                             walletRef,
                             "withdrawableCoins",
-                            wallet.withdrawable + reward
+                            wallet.withdrawableCoins + reward
                         )
                     }
                 }
