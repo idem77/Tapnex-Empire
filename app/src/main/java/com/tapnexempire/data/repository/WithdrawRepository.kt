@@ -51,7 +51,7 @@ class WithdrawRepository @Inject constructor(
             transaction.update(
                 walletDoc,
                 mapOf(
-                    "withdrawableCoins" to (wallet.winningCoins - coins),
+                    "withdrawableCoins" to (wallet.withdrawableCoins - coins),
                     "dailyWithdrawnCoins" to (todayWithdrawn + coins),
                     "lastWithdrawDate" to currentTime
                 )
