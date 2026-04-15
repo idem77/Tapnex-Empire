@@ -42,16 +42,16 @@ class WithdrawRepository @Inject constructor(
                 throw Exception("Daily limit ₹200 reached")
             }
 
-            // 👑 Only winning coins allowed
+            // 👑 Only withdawable coins allowed
             if (wallet.winningCoins < coins) {
-                throw Exception("Insufficient winning coins")
+                throw Exception("Insufficient withdrawable coins")
             }
 
             // ➖ Deduct coins
             transaction.update(
                 walletDoc,
                 mapOf(
-                    "winningCoins" to (wallet.winningCoins - coins),
+                    "withdrawableCoins" to (wallet.winningCoins - coins),
                     "dailyWithdrawnCoins" to (todayWithdrawn + coins),
                     "lastWithdrawDate" to currentTime
                 )
