@@ -42,8 +42,8 @@ class WithdrawRepository @Inject constructor(
                 throw Exception("Daily limit ₹200 reached")
             }
 
-            // 👑 Only withdawable coins allowed
-            if (wallet.winningCoins < coins) {
+            // 👑 Only withdrawable coins allowed
+            if (wallet.withdrawableCoins < coins) {
                 throw Exception("Insufficient withdrawable coins")
             }
 
