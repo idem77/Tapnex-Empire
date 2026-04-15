@@ -10,7 +10,7 @@ data class WalletModel(
     val bonusCoins: Long = 0,
 
     // 👑 Withdrawable coins
-    val winningCoins: Long = 0,
+    val withdrawableCoins: Long = 0,
 
     // 📅 Withdraw tracking
     val dailyWithdrawnCoins: Long = 0,
