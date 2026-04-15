@@ -51,8 +51,8 @@ class WalletRepository @Inject constructor(
         }
     }
 
-    // 👑 Add winning coins
-    fun addWinningCoins(userId: String, coins: Long) {
+    // 👑 Add withdrawable coins
+    fun addwithdrawableCoins(userId: String, coins: Long) {
         walletRef.document(userId)
             .update("winningCoins", FieldValue.increment(coins))
     }
