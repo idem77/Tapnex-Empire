@@ -72,11 +72,11 @@ class SurveyRepository @Inject constructor(
                 firestore.runTransaction { transaction ->
                     val snap = transaction.get(walletDoc)
                     val current =
-                        snap.getLong("winningCoins") ?: 0L
+                        snap.getLong("withdrawableCoins") ?: 0L
 
                     transaction.update(
                         walletDoc,
-                        "winningCoins",
+                        "withdrawableCoins",
                         current + reward
                     )
                 }
