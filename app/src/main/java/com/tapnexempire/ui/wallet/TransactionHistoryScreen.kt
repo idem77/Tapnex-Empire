@@ -62,7 +62,7 @@ fun TransactionItem(transaction: TransactionModel) {
             }
             Text(transaction.description, style = MaterialTheme.typography.bodyMedium)
             Text(
-                formatDate(transaction.createAt),
+                formatDate(transaction.createdAt),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
