@@ -19,7 +19,7 @@ fun WalletScreen(
 ) {
     val state by viewModel.walletState.collectAsState()
 
-    LaunchedEffect(Unit) { viewModel.loadWallet(userId) }
+    LaunchedEffect(Unit) { viewModel.startWalletListener(userId) }
 
     when (state) {
         is UiState.Loading -> {
