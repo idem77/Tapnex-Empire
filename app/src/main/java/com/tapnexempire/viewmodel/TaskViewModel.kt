@@ -24,7 +24,7 @@ class TaskViewModel @Inject constructor(
             _tasks.value = UiState.Loading
             try {
                 val list = repo.getTasks()
-                _tasks.value = UiState.Success(list)
+                _tasks.value = UiState.Success(emptyList())
             } catch (e: Exception) {
                 _tasks.value = UiState.Error(e.message ?: "Error")
             }
