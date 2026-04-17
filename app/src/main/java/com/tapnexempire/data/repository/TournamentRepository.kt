@@ -4,7 +4,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.model.TransactionModel
 import com.tapnexempire.data.model.TransactionType
-import com.tapnexempire.data.model.WalletModel
+import com.tapnexempire.data.model.WalletModel 
+import com.tapnexempire.data.model.TournamentModel
 import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
@@ -15,14 +16,8 @@ class TournamentRepository @Inject constructor(
     private val walletRef = firestore.collection("wallets")
 
     // 👀 Listen tournaments
-        fun listenToTournaments(onChange: (List<TournamentModel>) -> Unit) {
-    tournamentRef.addSnapshotListener { snapshot, _ ->
-
-        val list = snapshot?.documents?.mapNotNull { doc ->
-            doc.toObject(TournamentModel::class.java)?.copy(id = doc.id)
-        } ?: emptyList()
-
+       fun listenTournaments(onChange: (List<TournamentModel>) -> Unit) {
+    repo.listenToTournaments { list: List<TournamentModel> ->
         onChange(list)
     }
-        } 
-}
+       } 
