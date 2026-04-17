@@ -27,3 +27,4 @@ fun listenToTournaments(onChange: (List<TournamentModel>) -> Unit) {
         onChange(list)
     }
 }
+}
