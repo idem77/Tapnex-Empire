@@ -41,7 +41,9 @@ fun TournamentListScreen(
                     Text(text = tournament.name)
                     Text(text = "Entry: ${tournament.entryFee} coins")
                     Text(text = "Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}")
-
+                    Text(text = "Prize: ${tournament.prizePool} coins")
+                    Text(text = "Status: ${tournament.status}") 
+                    
                     Button(onClick = {
                         viewModel.joinTournament(
                             tournamentId = tournament.id,
