@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tapnexempire.viewmodel.TournamentViewModel
+import com.tapnexempire.data.model.TournamentModel
 
 @Composable
 fun TournamentListScreen(
@@ -15,21 +16,28 @@ fun TournamentListScreen(
     userId: String
 ) {
 
-    var tournaments by remember { mutableStateOf<List<Map<String, Any>>>(emptyList()) }
+    var tournaments by remember {
+        mutableStateOf<List<TournamentModel>>(emptyList())
+    }
 
     LaunchedEffect(Unit) {
-        viewModel.listenTournaments {
-            tournaments = it
+        viewModel.listenTournaments { list ->
+            tournaments = list.map {
+                TournamentModel(
+                    id = it["id"] as? String ?: "",
+                    name = it["name"] as? String ?: "Tournament",
+                    entryFee = it["entryFee"] as? Long ?: 0,
+                    maxPlayers = it["maxPlayers"] as? Long ?: 0,
+                    joinedPlayers = it["joinedPlayers"] as? Long ?: 0,
+                    createdAt = it["createdAt"] as? Long ?: 0
+                )
+            }
         }
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-        items(tournaments) { item ->
-
-            val id = item["id"] as? String ?: ""
-            val name = item["name"] as? String ?: "Tournament"
-            val entryFee = item["entryFee"] as? Long ?: 0L
+        items(tournaments) { tournament ->
 
             Card(
                 modifier = Modifier
@@ -38,14 +46,14 @@ fun TournamentListScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
 
-                    Text(text = name)
-                    Text(text = "Entry: $entryFee coins")
+                    Text(text = tournament.name)
+                    Text(text = "Entry: ${tournament.entryFee} coins")
 
                     Button(onClick = {
                         viewModel.joinTournament(
-                            tournamentId = id,
+                            tournamentId = tournament.id,
                             userId = userId,
-                            entryFee = entryFee
+                            entryFee = tournament.entryFee
                         ) { _, _ -> }
                     }) {
                         Text("Join")
