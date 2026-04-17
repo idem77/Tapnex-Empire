@@ -10,6 +10,23 @@ class TournamentViewModel @Inject constructor(
     private val repo: TournamentRepository
 ) : ViewModel() {
 
+    // 👇 ADD THIS FUNCTION (IMPORTANT)
+    fun listenTournaments(onChange: (List<Map<String, Any>>) -> Unit) {
+        repo.listenToTournaments { list ->
+            val mappedList = list.map {
+                mapOf(
+                    "id" to it.id,
+                    "name" to it.name,
+                    "entryFee" to it.entryFee,
+                    "maxPlayers" to it.maxPlayers,
+                    "joinedPlayers" to it.joinedPlayers,
+                    "createdAt" to it.createdAt
+                )
+            }
+            onChange(mappedList)
+        }
+    }
+
     fun joinTournament(
         tournamentId: String,
         userId: String,
