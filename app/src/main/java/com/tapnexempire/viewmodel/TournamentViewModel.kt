@@ -11,11 +11,11 @@ class TournamentViewModel @Inject constructor(
     private val repo: TournamentRepository
 ) : ViewModel() {
 
-    fun listenTournaments(onChange: (List<TournamentModel>) -> Unit) {
-        repo.listenToTournaments { list ->
-            onChange(list)
-        }
+fun listenTournaments(onChange: (List<TournamentModel>) -> Unit) {
+    repo.listenToTournaments { list: List<TournamentModel> ->
+        onChange(list)
     }
+}
 
     fun joinTournament(
         tournamentId: String,
