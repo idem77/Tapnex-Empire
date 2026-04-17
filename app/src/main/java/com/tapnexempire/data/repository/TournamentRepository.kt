@@ -25,3 +25,4 @@ class TournamentRepository @Inject constructor(
         onChange(list)
     }
         } 
+}
