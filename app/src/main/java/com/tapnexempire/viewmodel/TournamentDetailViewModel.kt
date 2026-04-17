@@ -22,10 +22,8 @@ class TournamentDetailViewModel @Inject constructor(
     fun loadTournament(id: String) {
         viewModelScope.launch {
             _state.value = UiState.Loading
-            try {
-
-                _state.value = UiState.Success(data)
-            } catch (e: Exception) {
+            
+            catch (e: Exception) {
                 _state.value = UiState.Error(e.message ?: "Error")
             }
         }
