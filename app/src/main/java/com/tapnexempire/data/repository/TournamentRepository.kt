@@ -28,3 +28,83 @@ fun listenToTournaments(onChange: (List<TournamentModel>) -> Unit) {
     }
 }
 }
+      fun joinTournament(
+    tournamentId: String,
+    userId: String,
+    entryFee: Long,
+    onResult: (Boolean, String) -> Unit
+) {
+
+    val tournamentDoc = tournamentRef.document(tournamentId)
+    val walletDoc = walletRef.document(userId)
+    val participantDoc =
+        tournamentDoc.collection("participants").document(userId)
+
+    firestore.runTransaction { transaction ->
+
+        val walletSnap = transaction.get(walletDoc)
+        val wallet = walletSnap.toObject(WalletModel::class.java)
+            ?: throw Exception("Wallet not found")
+
+        // ✅ ONLY deposit coins allowed
+        if (wallet.depositCoins < entryFee) {
+            throw Exception("Insufficient deposit coins")
+        }
+
+        // ✅ Already joined check
+        val participantSnap = transaction.get(participantDoc)
+        if (participantSnap.exists()) {
+            throw Exception("Already joined")
+        }
+
+        val tournamentSnap = transaction.get(tournamentDoc)
+        val maxPlayers = tournamentSnap.getLong("maxPlayers") ?: 0
+        val joined = tournamentSnap.getLong("joinedPlayers") ?: 0
+
+        if (joined >= maxPlayers) {
+            throw Exception("Tournament full")
+        }
+
+        // 💰 Deduct deposit coins
+        transaction.update(
+            walletDoc,
+            "depositCoins",
+            wallet.depositCoins - entryFee
+        )
+
+        // ➕ Increase players
+        transaction.update(
+            tournamentDoc,
+            "joinedPlayers",
+            FieldValue.increment(1)
+        )
+
+        // 👤 Add participant
+        transaction.set(
+            participantDoc,
+            mapOf(
+                "userId" to userId,
+                "score" to 0,
+                "joinedAt" to System.currentTimeMillis()
+            )
+        )
+
+        // 🧾 Transaction log
+        val txnRef = firestore.collection("transactions").document()
+        transaction.set(
+            txnRef,
+            TransactionModel(
+                id = txnRef.id,
+                userId = userId,
+                type = TransactionType.ENTRY_FEE,
+                amount = entryFee,
+                description = "Tournament Entry"
+            )
+        )
+
+    }.addOnSuccessListener {
+        onResult(true, "Joined Successfully")
+    }.addOnFailureListener {
+        onResult(false, it.message ?: "Error")
+    }
+      }
