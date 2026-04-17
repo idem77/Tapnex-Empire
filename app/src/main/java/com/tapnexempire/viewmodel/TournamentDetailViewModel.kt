@@ -23,7 +23,7 @@ class TournamentDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = UiState.Loading
             try {
-                val data = repository.getTournamentById(id)
+                
                     ?: throw Exception("Tournament not found")
 
                 _state.value = UiState.Success(data)
