@@ -22,16 +22,8 @@ fun TournamentListScreen(
 
     LaunchedEffect(Unit) {
         viewModel.listenTournaments { list ->
-            tournaments = list.map {
-                TournamentModel(
-                    id = it["id"] as? String ?: "",
-                    name = it["name"] as? String ?: "Tournament",
-                    entryFee = it["entryFee"] as? Long ?: 0,
-                    maxPlayers = it["maxPlayers"] as? Long ?: 0,
-                    joinedPlayers = it["joinedPlayers"] as? Long ?: 0,
-                    createdAt = it["createdAt"] as? Long ?: 0
-                )
-            }
+            // ✅ DIRECT USE (NO MAP)
+            tournaments = list
         }
     }
 
@@ -48,6 +40,7 @@ fun TournamentListScreen(
 
                     Text(text = tournament.name)
                     Text(text = "Entry: ${tournament.entryFee} coins")
+                    Text(text = "Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}")
 
                     Button(onClick = {
                         viewModel.joinTournament(
