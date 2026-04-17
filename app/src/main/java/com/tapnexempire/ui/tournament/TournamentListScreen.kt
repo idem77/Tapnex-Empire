@@ -18,7 +18,7 @@ fun TournamentListScreen(
     var tournaments by remember { mutableStateOf<List<Map<String, Any>>>(emptyList()) }
 
     LaunchedEffect(Unit) {
-        viewModel.repo.listenToTournaments {
+        viewModel.listenToTournaments {
             tournaments = it
         }
     }
