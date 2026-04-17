@@ -16,8 +16,14 @@ class TournamentRepository @Inject constructor(
     private val walletRef = firestore.collection("wallets")
 
     // 👀 Listen tournaments
-       fun listenTournaments(onChange: (List<TournamentModel>) -> Unit) {
-    repo.listenToTournaments { list: List<TournamentModel> ->
+fun listenToTournaments(onChange: (List<TournamentModel>) -> Unit) {
+    tournamentRef.addSnapshotListener { snapshot, _ ->
+
+        val list: List<TournamentModel> =
+            snapshot?.documents?.mapNotNull { doc ->
+                doc.toObject(TournamentModel::class.java)?.copy(id = doc.id)
+            } ?: emptyList()
+
         onChange(list)
     }
-       } 
+}
