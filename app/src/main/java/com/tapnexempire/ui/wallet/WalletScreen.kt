@@ -81,7 +81,6 @@ fun WalletScreen(
                         Text("Deposit Coins: ${wallet.depositCoins}")
                         Text("Bonus Coins: ${wallet.bonusCoins}")
                         Text("Withdrawable Coins: ${wallet.withdrawableCoins}")
-                        Text("Locked Coins: ${wallet.lockedCoins}")
                     }
                 }
 
