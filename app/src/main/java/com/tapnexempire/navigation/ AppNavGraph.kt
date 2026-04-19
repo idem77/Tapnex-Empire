@@ -44,7 +44,6 @@ fun AppNavGraph(
 
         // 🔹 Wallet
         composable(Routes.WALLET) {
-            val walletViewModel: WalletViewModel = hiltViewModel()
             WalletScreen(
                 userId = "test_user_123",
                 onTransactionClick = { /* future */ }
