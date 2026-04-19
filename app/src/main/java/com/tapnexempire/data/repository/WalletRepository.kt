@@ -30,7 +30,15 @@ class WalletRepository @Inject constructor(
                     val data = snapshot.data
                     println("📦 RAW DATA 👉 $data")
 
-                    val wallet = snapshot.toObject(WalletModel::class.java)
+                    // 🔥 SAFE MANUAL PARSING (NO toObject())
+                    val wallet = WalletModel(
+                        userId = data?.get("userId") as? String ?: "",
+                        depositCoins = (data?.get("depositCoins") as? Long) ?: 0,
+                        bonusCoins = (data?.get("bonusCoins") as? Long) ?: 0,
+                        withdrawableCoins = (data?.get("withdrawableCoins") as? Long) ?: 0,
+                        dailyWithdrawnCoins = (data?.get("dailyWithdrawnCoins") as? Long) ?: 0,
+                        lastWithdrawDate = (data?.get("lastWithdrawDate") as? Long) ?: 0
+                    )
 
                     println("💰 PARSED WALLET 👉 $wallet")
 
