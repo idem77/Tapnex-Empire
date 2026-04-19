@@ -20,9 +20,13 @@ fun WalletScreen(
     val state by viewModel.walletState.collectAsState()
 
     // 🔥 START LISTENER + DEBUG LOG
-    LaunchedEffect(userId) {
-        println("🔥 USER ID 👉 $userId")
-        viewModel.startWalletListener(userId)
+    LaunchedEffect(Unit) {
+
+    val testUserId = "test_user_123"
+
+    println("🔥 FIXED USER ID 👉 $testUserId")
+
+    viewModel.startWalletListener(testUserId)
     }
 
     when (state) {
