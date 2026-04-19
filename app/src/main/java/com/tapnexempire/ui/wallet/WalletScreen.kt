@@ -12,21 +12,21 @@ import com.tapnexempire.data.model.WalletModel
 
 @Composable
 fun WalletScreen(
-    viewModel: WalletViewModel,
     userId: String,
-    onTransactionClick: () -> Unit
+    onTransactionClick: () -> Unit,
+    viewModel: WalletViewModel = androidx.hilt.navigation.compose.hiltViewModel()
 ) {
 
     val state by viewModel.walletState.collectAsState()
 
-    // 🔥 START LISTENER + DEBUG LOG
     LaunchedEffect(Unit) {
 
-    val testUserId = "test_user_123"
+        val testUserId = "test_user_123"
 
-    println("🔥 FIXED USER ID 👉 $testUserId")
+        println("🔥 WALLET SCREEN STARTED")
+        println("🔥 USER ID 👉 $testUserId")
 
-    viewModel.startWalletListener(testUserId)
+        viewModel.startWalletListener(testUserId)
     }
 
     when (state) {
@@ -52,6 +52,7 @@ fun WalletScreen(
         }
 
         is UiState.Success -> {
+
             val wallet = (state as UiState.Success<WalletModel>).data
 
             val total =
