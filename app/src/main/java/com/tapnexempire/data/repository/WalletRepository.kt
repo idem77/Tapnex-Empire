@@ -13,65 +13,33 @@ class WalletRepository @Inject constructor(
 
     // 👀 Real-time wallet listener
     fun listenToWallet(userId: String, onChange: (WalletModel?) -> Unit) {
-        walletRef.document(userId)
-            .addSnapshotListener { snapshot, _ ->
-                onChange(snapshot?.toObject(WalletModel::class.java))
-            }
-    }
 
-    // 💰 Add deposit coins
-    fun addDepositCoins(userId: String, coins: Long) {
-        walletRef.document(userId)
-            .update("depositCoins", FieldValue.increment(coins))
-    }
+    println("🔥 TRYING DOC ID 👉 [$userId]")
 
-    // 🏆 Deduct ONLY deposit coins (Tournament)
-    fun deductDepositCoins(
-        userId: String,
-        coins: Long,
-        onResult: (Boolean, String) -> Unit
-    ) {
-        val doc = walletRef.document(userId)
+    walletRef.document(userId)
+        .addSnapshotListener { snapshot, error ->
 
-        firestore.runTransaction { transaction ->
-            val snapshot = transaction.get(doc)
-            val wallet = snapshot.toObject(WalletModel::class.java)
-                ?: throw Exception("Wallet not found")
-
-            if (wallet.depositCoins < coins) {
-                throw Exception("Insufficient deposit coins")
+            if (error != null) {
+                println("❌ FIRESTORE ERROR 👉 ${error.message}")
+                onChange(null)
+                return@addSnapshotListener
             }
 
-            transaction.update(doc, "depositCoins", wallet.depositCoins - coins)
+            if (snapshot != null && snapshot.exists()) {
+                println("✅ DOCUMENT FOUND")
 
-        }.addOnSuccessListener {
-            onResult(true, "Success")
-        }.addOnFailureListener {
-            onResult(false, it.message ?: "Error")
+                val data = snapshot.data
+                println("📦 RAW DATA 👉 $data")
+
+                val wallet = snapshot.toObject(WalletModel::class.java)
+
+                println("💰 PARSED WALLET 👉 $wallet")
+
+                onChange(wallet)
+
+            } else {
+                println("❌ DOCUMENT NOT FOUND")
+                onChange(null)
+            }
         }
-    }
-
-    // 👑 Add withdrawable coins
-    fun addwithdrawableCoins(userId: String, coins: Long) {
-        walletRef.document(userId)
-            .update("winningCoins", FieldValue.increment(coins))
-    }
-
-    // 🎁 Add bonus coins
-    fun addBonusCoins(userId: String, coins: Long) {
-        walletRef.document(userId)
-            .update("bonusCoins", FieldValue.increment(coins))
-    }
-
-    // 🎁 Create withdraw request
-    fun createWithdrawRequest(userId: String, coins: Long) {
-        val request = hashMapOf(
-            "userId" to userId,
-            "coins" to coins,
-            "status" to "pending",
-            "createdAt" to System.currentTimeMillis()
-        )
-
-        firestore.collection("withdraw_requests").add(request)
-    }
-}
+     }
