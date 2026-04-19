@@ -42,4 +42,4 @@ class WalletRepository @Inject constructor(
                 onChange(null)
             }
         }
-     }
+    }
