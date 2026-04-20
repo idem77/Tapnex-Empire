@@ -13,57 +13,18 @@ import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
 fun OTPVerifyScreen(
-    verificationId: String,
-    onLoginSuccess: () -> Unit,
-    viewModel: AuthViewModel = hiltViewModel()
+    navController: NavHostController,
+    verificationId: String
 ) {
-    var otp by remember { mutableStateOf("") }
 
-    val authSuccess by viewModel.authSuccess.collectAsState()
+    Button(onClick = {
 
-    LaunchedEffect(authSuccess) {
-        if (authSuccess) {
-            onLoginSuccess()
+        // login success
+        navController.navigate("home") {
+            popUpTo("otp_login") { inclusive = true }
         }
-    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text("Enter OTP", style = MaterialTheme.typography.titleLarge)
-
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = otp,
-            onValueChange = {
-                if (it.length <= 6) otp = it
-            },
-            label = { Text("6-digit OTP") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                viewModel.verifyOtp(
-                    verificationId = verificationId,
-                    otp = otp
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = otp.length == 6
-        ) {
-            Text("Verify OTP")
-        }
+    }) {
+        Text("Verify OTP")
     }
 }
