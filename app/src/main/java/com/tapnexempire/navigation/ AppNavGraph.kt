@@ -54,7 +54,7 @@ fun AppNavGraph(
 
         // 🔐 OTP Login
         composable(Routes.OTP_LOGIN) {
-            OTPLoginScreen(navController)
+            OTPScreen(navController)
         }
 
         // 🔐 OTP Verify
