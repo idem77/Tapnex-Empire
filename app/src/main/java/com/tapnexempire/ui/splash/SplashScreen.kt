@@ -16,9 +16,7 @@ import com.tapnexempire.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(
-    onNavigateNext: (Boolean) -> Unit
-) {
+fun SplashScreen(navController: NavHostController) {
     val scale = remember { Animatable(0.8f) }
     val auth = FirebaseAuth.getInstance()
 
