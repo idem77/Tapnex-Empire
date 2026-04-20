@@ -14,7 +14,7 @@ import com.tapnexempire.viewmodel.AuthViewModel
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun OtpLoginScreen(
+fun OTPLoginScreen(
     onOtpSent: (verificationId: String) -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
