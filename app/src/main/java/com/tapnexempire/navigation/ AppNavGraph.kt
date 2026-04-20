@@ -8,7 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
-import com.tapnexempire.ui.auth.OTPScreen
+import com.tapnexempire.ui.auth.OTPLoginScreen
 import com.tapnexempire.ui.auth.OTPVerifyScreen
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.home.HomeScreen
@@ -54,7 +54,7 @@ fun AppNavGraph(
 
         // 🔐 OTP Login
         composable(Routes.OTP_LOGIN) {
-            OTPScreen(navController)
+            OTPLoginScreen(navController)
         }
 
         // 🔐 OTP Verify
