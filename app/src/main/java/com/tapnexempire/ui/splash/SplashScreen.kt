@@ -32,8 +32,6 @@ fun SplashScreen(navController: NavHostController) {
 
         delay(700) // Firebase ko saans lene do 😌
 
-        val isLoggedIn = auth.currentUser != null
-        onNavigate(isLoggedIn)
     }
 
     Box(
