@@ -69,11 +69,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
     implementation("androidx.activity:activity-compose:1.9.2")
 
-    // --- Firebase (via BoM) ---
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-analytics")
+    // 🔥 Firebase BoM
+implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+
+implementation("com.google.firebase:firebase-auth")
+implementation("com.google.firebase:firebase-firestore")
+implementation("com.google.firebase:firebase-analytics")
+
+// 🟢 Google Sign-In
+implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // --- Hilt ---
     implementation("com.google.dagger:hilt-android:2.51.1")
