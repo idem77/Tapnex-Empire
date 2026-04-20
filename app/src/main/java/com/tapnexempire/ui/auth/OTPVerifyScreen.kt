@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
-fun OtpVerifyScreen(
+fun OTPVerifyScreen(
     verificationId: String,
     onLoginSuccess: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
