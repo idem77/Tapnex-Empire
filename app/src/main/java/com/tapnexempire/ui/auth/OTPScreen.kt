@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun OTPLoginScreen(navController: NavHostController) {
+fun OTPScreen(navController: NavHostController) {
 
     Button(onClick = {
 
