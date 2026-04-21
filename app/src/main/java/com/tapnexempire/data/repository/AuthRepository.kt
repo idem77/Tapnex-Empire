@@ -1,77 +1,56 @@
 package com.tapnexempire.data.repository
 
-import android.app.Activity
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.FirebaseException
 import kotlinx.coroutines.tasks.await
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import com.tapnexempire.data.model.WalletModel
 
 class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ) {
 
-    fun sendOtp(
-        activity: Activity,
-        phoneNumber: String,
-        onCodeSent: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    suspend fun handleGoogleLogin(idToken: String): Boolean {
 
-                override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
+        val credential =
+            com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, null)
 
-                override fun onVerificationFailed(e: FirebaseException) {
-                    onFailure(e.message ?: "OTP failed")
-                }
-
-                override fun onCodeSent(
-                    verificationId: String,
-                    token: PhoneAuthProvider.ForceResendingToken
-                ) {
-                    onCodeSent(verificationId)
-                }
-            })
-            .build()
-
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    suspend fun verifyOtp(
-        verificationId: String,
-        otp: String
-    ): Boolean {
-
-        val credential = PhoneAuthProvider.getCredential(verificationId, otp)
         val result = auth.signInWithCredential(credential).await()
         val user = result.user ?: return false
-        val userId = user.uid
 
-        val userDoc = firestore.collection("users").document(userId)
-        if (!userDoc.get().await().exists()) {
-            userDoc.set(
+        val uid = user.uid
+
+        // 👤 USER CREATE
+        val userRef = firestore.collection("users").document(uid)
+
+        if (!userRef.get().await().exists()) {
+            userRef.set(
                 mapOf(
-                    "phone" to user.phoneNumber,
+                    "name" to (user.displayName ?: "User"),
+                    "email" to (user.email ?: ""),
                     "createdAt" to System.currentTimeMillis()
                 )
             ).await()
         }
 
-        val walletDoc = firestore.collection("wallets").document(userId)
-        if (!walletDoc.get().await().exists()) {
-            walletDoc.set(WalletModel(userId = userId)).await()
+        // 💰 WALLET CREATE
+        val walletRef = firestore.collection("wallets").document(uid)
+
+        if (!walletRef.get().await().exists()) {
+            walletRef.set(
+                mapOf(
+                    "userId" to uid,
+                    "depositCoins" to 0,
+                    "bonusCoins" to 500,
+                    "withdrawableCoins" to 0,
+                    "dailyWithdrawnCoins" to 0,
+                    "lastWithdrawDate" to 0
+                )
+            ).await()
         }
 
         return true
     }
 
     fun getCurrentUserId(): String? = auth.currentUser?.uid
-    fun signOut() = auth.signOut()
 }
