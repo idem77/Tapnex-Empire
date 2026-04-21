@@ -19,6 +19,7 @@ fun LoginScreen(navController: NavHostController) {
 
     val loginState by viewModel.loginState.collectAsState()
 
+    // 👑 Google Client
     val googleSignInClient = remember {
         GoogleSignIn.getClient(
             context,
@@ -29,6 +30,7 @@ fun LoginScreen(navController: NavHostController) {
         )
     }
 
+    // 👑 Launcher
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -40,13 +42,18 @@ fun LoginScreen(navController: NavHostController) {
 
             println("🔥 TOKEN 👉 ${account.idToken}")
 
-            viewModel.loginWithGoogle(account.idToken!!)
+            // 👑 SAFE TOKEN CHECK
+            account.idToken?.let { token ->
+                println("🔥 ViewModel called")
+                viewModel.loginWithGoogle(token)
+            } ?: println("❌ TOKEN NULL")
 
         } catch (e: Exception) {
             println("❌ LOGIN FAILED 👉 ${e.message}")
         }
     }
 
+    // 👑 Observe login success
     LaunchedEffect(loginState) {
         if (loginState) {
             println("🚀 NAVIGATING HOME")
@@ -56,10 +63,15 @@ fun LoginScreen(navController: NavHostController) {
         }
     }
 
+    // 👑 UI
     Button(
         onClick = {
             println("🔥 BUTTON CLICKED")
-            launcher.launch(googleSignInClient.signInIntent)
+
+            // 🔥 FINAL SAFE FIX (IMPORTANT)
+            googleSignInClient.signOut().addOnCompleteListener {
+                launcher.launch(googleSignInClient.signInIntent)
+            }
         }
     ) {
         Text("Continue with Google 🚀")
