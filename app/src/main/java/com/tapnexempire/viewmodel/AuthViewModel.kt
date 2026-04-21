@@ -20,8 +20,17 @@ class AuthViewModel @Inject constructor(
     fun loginWithGoogle(idToken: String) {
 
         viewModelScope.launch {
-            val success = repo.handleGoogleLogin(idToken)
-            _loginState.value = success
+
+            try {
+                val success = repo.handleGoogleLogin(idToken)
+                _loginState.value = success
+
+                println("🔥 LOGIN STATE 👉 $success")
+
+            } catch (e: Exception) {
+                println("❌ VIEWMODEL ERROR 👉 ${e.message}")
+                _loginState.value = false
+            }
         }
     }
 }
