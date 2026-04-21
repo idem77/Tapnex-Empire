@@ -8,8 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
-import com.tapnexempire.ui.auth.OTPScreen
-import com.tapnexempire.ui.auth.OTPVerifyScreen
+import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.task.TaskScreen
@@ -22,9 +21,7 @@ import com.tapnexempire.viewmodel.WalletViewModel
 
 object Routes {
     const val SPLASH = "splash"
-    const val OTP_LOGIN = "otp_login"
-    const val OTP_VERIFY = "otp_verify"
-
+    const val LOGIN = "login"
     const val HOME = "home"
     const val WALLET = "wallet"
     const val TASKS = "tasks"
@@ -52,26 +49,9 @@ fun AppNavGraph(
             SplashScreen(navController)
         }
 
-        // 🔐 OTP Login
-        composable(Routes.OTP_LOGIN) {
-            OTPScreen(navController)
-        }
-
-        // 🔐 OTP Verify
-        composable(
-            route = "${Routes.OTP_VERIFY}/{verificationId}",
-            arguments = listOf(
-                navArgument("verificationId") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-
-            val verificationId =
-                backStackEntry.arguments?.getString("verificationId") ?: ""
-
-            OTPVerifyScreen(
-                navController = navController,
-                verificationId = verificationId
-            )
+        // 🔐  Login
+        composable(Routes.LOGIN) {
+            LoginScreen(navController)
         }
 
         // 🔹 Home
