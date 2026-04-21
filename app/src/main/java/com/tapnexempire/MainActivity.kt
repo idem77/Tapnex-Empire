@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +37,10 @@ class MainActivity : ComponentActivity() {
 
                     bottomBar = {
 
+                        // 👑 Hide BottomNav on these screens
                         if (
+                            currentRoute != Routes.SPLASH &&
+                            currentRoute != Routes.LOGIN &&
                             currentRoute != Routes.WITHDRAW &&
                             !currentRoute.orEmpty().startsWith(Routes.TOURNAMENT_DETAIL)
                         ) {
