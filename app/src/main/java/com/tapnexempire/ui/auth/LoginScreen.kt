@@ -1,29 +1,30 @@
 package com.tapnexempire.ui.auth
 
-import android.app.Activity
-import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
     val context = LocalContext.current
+    val viewModel: AuthViewModel = hiltViewModel()
 
-    // 👑 Google Sign-In Client
+    val loginState by viewModel.loginState.collectAsState()
+
+    // 👑 Google Client
     val googleSignInClient = remember {
         GoogleSignIn.getClient(
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("564500505897-68ck0ml5ohc0muahct9oqccf7ilu0fiu")
+                .requestIdToken("PASTE_YOUR_CLIENT_ID.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
         )
@@ -39,22 +40,20 @@ fun LoginScreen(navController: NavHostController) {
         try {
             val account = task.getResult(ApiException::class.java)
 
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-
-            FirebaseAuth.getInstance()
-                .signInWithCredential(credential)
-                .addOnSuccessListener {
-
-                    val uid = FirebaseAuth.getInstance().currentUser?.uid
-                    println("✅ LOGIN SUCCESS UID 👉 $uid")
-
-                    navController.navigate("home") {
-                        popUpTo("otp_login") { inclusive = true }
-                    }
-                }
+            // 🔥 अब ViewModel call होगा
+            viewModel.loginWithGoogle(account.idToken!!)
 
         } catch (e: Exception) {
             println("❌ LOGIN FAILED 👉 ${e.message}")
+        }
+    }
+
+    // 👑 Observe login success
+    LaunchedEffect(loginState) {
+        if (loginState) {
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
+            }
         }
     }
 
