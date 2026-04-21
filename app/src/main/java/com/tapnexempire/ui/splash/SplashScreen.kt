@@ -18,10 +18,13 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
+
     val scale = remember { Animatable(0.8f) }
     val auth = FirebaseAuth.getInstance()
 
     LaunchedEffect(Unit) {
+
+        // 🔥 Animation
         scale.animateTo(
             targetValue = 1f,
             animationSpec = tween(
@@ -30,10 +33,25 @@ fun SplashScreen(navController: NavHostController) {
             )
         )
 
-        delay(700) // Firebase ko saans lene do 😌
+        delay(700)
 
+        // 👑 CHECK LOGIN
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            // ✅ Already logged in
+            navController.navigate("home") {
+                popUpTo("splash") { inclusive = true }
+            }
+        } else {
+            // ❌ Not logged in
+            navController.navigate("login") {
+                popUpTo("splash") { inclusive = true }
+            }
+        }
     }
 
+    // 👑 UI
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
