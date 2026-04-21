@@ -23,7 +23,7 @@ fun LoginScreen(navController: NavHostController) {
         GoogleSignIn.getClient(
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("PASTE_YOUR_CLIENT_ID_HERE")
+                .requestIdToken("564500505897-68ck0ml5ohc0muahct9oqccf7ilu0fiu")
                 .requestEmail()
                 .build()
         )
