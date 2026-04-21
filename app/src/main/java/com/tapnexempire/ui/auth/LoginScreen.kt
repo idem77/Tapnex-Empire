@@ -19,7 +19,6 @@ fun LoginScreen(navController: NavHostController) {
 
     val loginState by viewModel.loginState.collectAsState()
 
-    // 👑 Google Client
     val googleSignInClient = remember {
         GoogleSignIn.getClient(
             context,
@@ -30,7 +29,6 @@ fun LoginScreen(navController: NavHostController) {
         )
     }
 
-    // 👑 Launcher
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -40,7 +38,8 @@ fun LoginScreen(navController: NavHostController) {
         try {
             val account = task.getResult(ApiException::class.java)
 
-            // 🔥 अब ViewModel call होगा
+            println("🔥 TOKEN 👉 ${account.idToken}")
+
             viewModel.loginWithGoogle(account.idToken!!)
 
         } catch (e: Exception) {
@@ -48,18 +47,18 @@ fun LoginScreen(navController: NavHostController) {
         }
     }
 
-    // 👑 Observe login success
     LaunchedEffect(loginState) {
         if (loginState) {
+            println("🚀 NAVIGATING HOME")
             navController.navigate("home") {
                 popUpTo("login") { inclusive = true }
             }
         }
     }
 
-    // 👑 UI
     Button(
         onClick = {
+            println("🔥 BUTTON CLICKED")
             launcher.launch(googleSignInClient.signInIntent)
         }
     ) {
