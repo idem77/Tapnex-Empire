@@ -1,5 +1,6 @@
 package com.tapnexempire.ui.auth
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.*
@@ -19,7 +20,6 @@ fun LoginScreen(navController: NavHostController) {
 
     val loginState by viewModel.loginState.collectAsState()
 
-    // 👑 Google Client
     val googleSignInClient = remember {
         GoogleSignIn.getClient(
             context,
@@ -30,7 +30,6 @@ fun LoginScreen(navController: NavHostController) {
         )
     }
 
-    // 👑 Launcher
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -40,35 +39,35 @@ fun LoginScreen(navController: NavHostController) {
         try {
             val account = task.getResult(ApiException::class.java)
 
-            println("🔥 TOKEN 👉 ${account.idToken}")
+            val token = account.idToken
 
-            // 👑 SAFE TOKEN CHECK
-            account.idToken?.let { token ->
-                println("🔥 ViewModel called")
+            if (token == null) {
+                Toast.makeText(context, "❌ TOKEN NULL", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "✅ TOKEN OK", Toast.LENGTH_SHORT).show()
+
                 viewModel.loginWithGoogle(token)
-            } ?: println("❌ TOKEN NULL")
+            }
 
         } catch (e: Exception) {
-            println("❌ LOGIN FAILED 👉 ${e.message}")
+            Toast.makeText(context, "❌ LOGIN FAILED: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
-    // 👑 Observe login success
     LaunchedEffect(loginState) {
         if (loginState) {
-            println("🚀 NAVIGATING HOME")
+            Toast.makeText(context, "🚀 LOGIN SUCCESS", Toast.LENGTH_SHORT).show()
+
             navController.navigate("home") {
                 popUpTo("login") { inclusive = true }
             }
         }
     }
 
-    // 👑 UI
     Button(
         onClick = {
-            println("🔥 BUTTON CLICKED")
 
-            // 🔥 FINAL SAFE FIX (IMPORTANT)
+            // 🔥 Reset Google session (important)
             googleSignInClient.signOut().addOnCompleteListener {
                 launcher.launch(googleSignInClient.signInIntent)
             }
