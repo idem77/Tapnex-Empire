@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "564500505897",
+    "project_id": "tapnexempire-b5487",
+    "storage_bucket": "tapnexempire-b5487.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564500505897:android:99713babe24e7c5d1f0338",
+        "android_client_info": {
+          "package_name": "com.tapexempire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564500505897-cu01r3u1n9v4ic38ao76o221pae8e93a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPK1FB8fYqrc5Iv5HrE2a9Ju6ZoHFhNwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564500505897-68ck0ml5ohc0muahct9oqccf7ilu0fiu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
