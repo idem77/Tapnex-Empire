@@ -29,7 +29,7 @@ fun LoginScreen(navController: NavHostController) {
             .requestEmail()
             .build()
     )
-    }
+ }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
