@@ -21,14 +21,14 @@ fun LoginScreen(navController: NavHostController) {
 
     val loginState by viewModel.loginState.collectAsState()
 
-    val googleSignInClient = remember {
-        GoogleSignIn.getClient(
-            context,
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        )
+    val googleSignInClient = remember(context) {
+    GoogleSignIn.getClient(
+        context,
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+    )
     }
 
     val launcher = rememberLauncherForActivityResult(
