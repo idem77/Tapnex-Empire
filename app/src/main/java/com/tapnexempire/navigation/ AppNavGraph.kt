@@ -22,6 +22,7 @@ import com.tapnexempire.viewmodel.WalletViewModel
 object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
+    const val SIGNUP = "signup"
     const val HOME = "home"
     const val WALLET = "wallet"
     const val TASKS = "tasks"
@@ -45,19 +46,42 @@ fun AppNavGraph(
     ) {
 
         // 🔥 Splash
-        composable(Routes.SPLASH) {
-            SplashScreen(navController)
-        }
+    composable(Routes.SPLASH) {
+        SplashScreen(navController)
+    }
 
-        // 🔐  Login
-        composable(Routes.LOGIN) {
-            LoginScreen(navController)
-        }
+    // 🔐 Login
+    composable(Routes.LOGIN) {
+        LoginScreen(
+            onLoginSuccess = {
+                navController.navigate(Routes.HOME) {
+                    popUpTo(Routes.LOGIN) { inclusive = true }
+                }
+            },
+            goToSignup = {
+                navController.navigate(Routes.SIGNUP)
+            }
+        )
+    }
 
-        // 🔹 Home
-        composable(Routes.HOME) {
-            HomeScreen()
-        }
+    // 🆕 Signup (IMPORTANT ADD)
+    composable(Routes.SIGNUP) {
+        SignupScreen(
+            onSignupSuccess = {
+                navController.navigate(Routes.HOME) {
+                    popUpTo(Routes.SIGNUP) { inclusive = true }
+                }
+            },
+            goToLogin = {
+                navController.navigate(Routes.LOGIN)
+            }
+        )
+    }
+
+    // 🏠 Home
+    composable(Routes.HOME) {
+        HomeScreen()
+    }
 
         // 💰 Wallet (REAL USER ID)
         composable(Routes.WALLET) {
