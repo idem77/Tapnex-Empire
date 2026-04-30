@@ -1,79 +1,64 @@
 package com.tapnexempire.ui.auth
 
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
-import com.tapnexempire.R
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.gms.auth.api.signin.*
-import com.google.android.gms.common.api.ApiException
-import com.tapnexempire.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    onLoginSuccess: () -> Unit,
+    goToSignup: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
+) {
 
-    val context = LocalContext.current
-    val viewModel: AuthViewModel = hiltViewModel()
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
-    val loginState by viewModel.loginState.collectAsState()
+    val state by viewModel.authState.collectAsState()
 
-    val googleSignInClient = remember(context) {
-    GoogleSignIn.getClient(
-        context,
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-    )
- }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-
-        try {
-            val account = task.getResult(ApiException::class.java)
-
-            val token = account.idToken
-
-            if (token == null) {
-                Toast.makeText(context, "❌ TOKEN NULL", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(context, "✅ TOKEN OK", Toast.LENGTH_SHORT).show()
-
-                viewModel.loginWithGoogle(token)
-            }
-
-        } catch (e: Exception) {
-            Toast.makeText(context, "❌ LOGIN FAILED: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    LaunchedEffect(loginState) {
-        if (loginState) {
-            Toast.makeText(context, "🚀 LOGIN SUCCESS", Toast.LENGTH_SHORT).show()
-
-            navController.navigate("home") {
-                popUpTo("login") { inclusive = true }
-            }
-        }
-    }
-
-    Button(
-        onClick = {
-
-            // 🔥 Reset Google session (important)
-            googleSignInClient.signOut().addOnCompleteListener {
-                launcher.launch(googleSignInClient.signInIntent)
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center
     ) {
-        Text("Continue with Google 🚀")
+
+        Text("Login", style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Password") })
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            viewModel.login(email, password)
+        }) {
+            Text("Login")
+        }
+
+        TextButton(onClick = { goToSignup() }) {
+            Text("Create Account")
+        }
+
+        when (state) {
+            is AuthState.Loading -> CircularProgressIndicator()
+            is AuthState.Success -> {
+                LaunchedEffect(Unit) {
+                    onLoginSuccess()
+                }
+            }
+            is AuthState.Error -> {
+                Text((state as AuthState.Error).message, color = MaterialTheme.colorScheme.error)
+            }
+            else -> {}
+        }
     }
 }
