@@ -1,36 +1,54 @@
-package com.tapnexempire.viewmodel
+package com.tapnexempire.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tapnexempire.data.repository.AuthRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AuthViewModel @Inject constructor(
-    private val repo: AuthRepository
-) : ViewModel() {
+sealed class AuthState {
+    object Idle : AuthState()
+    object Loading : AuthState()
+    data class Success(val userId: String) : AuthState()
+    data class Error(val message: String) : AuthState()
+}
 
-    private val _loginState = MutableStateFlow(false)
-    val loginState: StateFlow<Boolean> = _loginState
+class AuthViewModel : ViewModel() {
 
-    fun loginWithGoogle(idToken: String) {
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-        viewModelScope.launch {
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
+    val authState: StateFlow<AuthState> = _authState
 
-            try {
-                val success = repo.handleGoogleLogin(idToken)
-                _loginState.value = success
+    fun register(email: String, password: String) {
+        _authState.value = AuthState.Loading
 
-                println("🔥 LOGIN STATE 👉 $success")
-
-            } catch (e: Exception) {
-                println("❌ VIEWMODEL ERROR 👉 ${e.message}")
-                _loginState.value = false
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _authState.value = AuthState.Success(auth.currentUser?.uid ?: "")
+                } else {
+                    _authState.value = AuthState.Error(task.exception?.message ?: "Signup failed")
+                }
             }
-        }
+    }
+
+    fun login(email: String, password: String) {
+        _authState.value = AuthState.Loading
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _authState.value = AuthState.Success(auth.currentUser?.uid ?: "")
+                } else {
+                    _authState.value = AuthState.Error(task.exception?.message ?: "Login failed")
+                }
+            }
+    }
+
+    fun logout() {
+        auth.signOut()
+        _authState.value = AuthState.Idle
     }
 }
