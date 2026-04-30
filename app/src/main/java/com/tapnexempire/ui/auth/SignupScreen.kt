@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
@@ -43,7 +44,8 @@ fun SignupScreen(
                 errorMessage = ""
             },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -56,7 +58,9 @@ fun SignupScreen(
                 errorMessage = ""
             },
             label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation(), // 🔥 hidden
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -69,7 +73,9 @@ fun SignupScreen(
                 errorMessage = ""
             },
             label = { Text("Confirm Password") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation(), // 🔥 hidden
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -79,7 +85,7 @@ fun SignupScreen(
             onClick = {
 
                 when {
-                    email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() -> {
+                    email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
                         errorMessage = "All fields are required"
                     }
 
@@ -111,7 +117,7 @@ fun SignupScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // ❌ Error from validation
+        // ❌ Local Validation Error
         if (errorMessage.isNotEmpty()) {
             Text(
                 text = errorMessage,
@@ -119,18 +125,12 @@ fun SignupScreen(
             )
         }
 
-        // 🔄 Firebase State Handling
+        // 🔄 Firebase State UI
         when (state) {
 
             is AuthState.Loading -> {
                 Spacer(modifier = Modifier.height(10.dp))
                 CircularProgressIndicator()
-            }
-
-            is AuthState.Success -> {
-                LaunchedEffect(Unit) {
-                    onSignupSuccess()
-                }
             }
 
             is AuthState.Error -> {
@@ -141,6 +141,13 @@ fun SignupScreen(
             }
 
             else -> {}
+        }
+    }
+
+    // ✅ Safe Navigation (VERY IMPORTANT)
+    LaunchedEffect(state) {
+        if (state is AuthState.Success) {
+            onSignupSuccess()
         }
     }
 }
