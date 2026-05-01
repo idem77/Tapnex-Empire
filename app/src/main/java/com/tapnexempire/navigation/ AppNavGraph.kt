@@ -30,6 +30,7 @@ object Routes {
     const val TOURNAMENTS = "tournaments"
     const val TOURNAMENT_DETAIL = "tournament_detail"
     const val WITHDRAW = "withdraw"
+    const val DEPOSIT= "deposit"
 }
 
 @Composable
@@ -127,6 +128,10 @@ fun AppNavGraph(
         // 💸 Withdraw
         composable(Routes.WITHDRAW) {
             WithdrawScreen()
+        }
+        //💰 Deposit 
+        composable(Routes.DEPOSIT) {
+    DepositScreen(navController)
         }
     }
 }
