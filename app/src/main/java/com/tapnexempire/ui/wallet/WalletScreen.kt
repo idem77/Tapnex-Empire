@@ -87,7 +87,27 @@ fun WalletScreen(
                         Text("Bonus Coins: ${wallet.bonusCoins}")
                         Text("Withdrawable Coins: ${wallet.withdrawableCoins}")
                     }
-                }
+                }  
+
+                  Button(
+    onClick = {
+        navController.navigate(Routes.DEPOSIT)
+    },
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text("Deposit")
+}
+
+Spacer(modifier = Modifier.height(10.dp))
+
+Button(
+    onClick = {
+        navController.navigate(Routes.WITHDRAW)
+    },
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text("Withdraw")
+}
 
                 Button(
                     onClick = onTransactionClick,
