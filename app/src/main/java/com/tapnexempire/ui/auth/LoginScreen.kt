@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -22,42 +23,79 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(20.dp),
         verticalArrangement = Arrangement.Center
     ) {
 
-        Text("Login", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Login",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+        // 📧 Email
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Password") })
+        // 🔐 Password
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(), // 🔥 hidden password
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = {
-            viewModel.login(email, password)
-        }) {
+        // 🔥 Login Button
+        Button(
+            onClick = {
+                viewModel.login(email.trim(), password.trim())
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Login")
         }
 
-        TextButton(onClick = { goToSignup() }) {
-            Text("Create Account")
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // 🔁 Signup Button
+        TextButton(
+            onClick = { goToSignup() }
+        ) {
+            Text("Don't have an account? Signup")
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // 🔄 State Handling
         when (state) {
-            is AuthState.Loading -> CircularProgressIndicator()
+
+            is AuthState.Loading -> {
+                CircularProgressIndicator()
+            }
+
             is AuthState.Success -> {
                 LaunchedEffect(Unit) {
                     onLoginSuccess()
                 }
             }
+
             is AuthState.Error -> {
-                Text((state as AuthState.Error).message, color = MaterialTheme.colorScheme.error)
+                Text(
+                    text = (state as AuthState.Error).message,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
+
             else -> {}
         }
     }
