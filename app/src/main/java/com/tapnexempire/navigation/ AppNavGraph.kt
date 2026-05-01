@@ -17,6 +17,7 @@ import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 
