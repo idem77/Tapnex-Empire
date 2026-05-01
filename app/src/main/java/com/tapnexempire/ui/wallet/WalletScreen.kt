@@ -7,6 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tapnexempire.utils.UiState
+import androidx.navigation.NavController
+import com.tapnexempire.navigation.Routes
 import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.data.model.WalletModel
 
