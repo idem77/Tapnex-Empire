@@ -24,11 +24,6 @@ fun WalletScreen(
 
     LaunchedEffect(Unit) {
 
-        val testUserId = "test_user_123"
-
-        println("🔥 WALLET SCREEN STARTED")
-        println("🔥 USER ID 👉 $testUserId")
-
         viewModel.startWalletListener(testUserId)
     }
 
