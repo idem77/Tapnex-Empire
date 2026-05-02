@@ -132,7 +132,17 @@ fun AppNavGraph(
         }
         //💰 Deposit 
         composable(Routes.DEPOSIT) {
-    DepositScreen(navController)
+    DepositScreen(
+
+        onBack = {
+            navController.popBackStack()
+        },
+
+        onProceed = { coins ->
+            // 🔥 अभी simple test
+            println("Coins: $coins")
+
+            // बाद में payment logic यहाँ आएगा
         }
-    }
-}
+    )
+        }
