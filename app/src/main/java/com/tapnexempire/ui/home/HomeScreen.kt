@@ -52,7 +52,7 @@ fun HomeScreen() {
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(120.dp),
+                    .height(12.dp),
                 elevation = CardDefaults.cardElevation(8.dp)
             ) {
                 Box(
@@ -71,7 +71,7 @@ fun HomeScreen() {
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(150.dp),
+                    .height(15.dp),
                 elevation = CardDefaults.cardElevation(6.dp)
             ) {
                 Box(
