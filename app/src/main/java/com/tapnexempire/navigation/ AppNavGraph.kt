@@ -145,4 +145,5 @@ fun AppNavGraph(
             // बाद में payment logic यहाँ आएगा
         }
     )
-        }
+     } 
+    }
