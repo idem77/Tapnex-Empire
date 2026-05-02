@@ -48,12 +48,12 @@ fun AppNavGraph(
         modifier = modifier
     ) {
 
-        // ðŸ”¥ Splash
+        // 🔥 Splash
     composable(Routes.SPLASH) {
         SplashScreen(navController)
     }
 
-    // ðŸ” Login
+    // 🔐 Login
     composable(Routes.LOGIN) {
         LoginScreen(
             onLoginSuccess = {
@@ -67,7 +67,7 @@ fun AppNavGraph(
         )
     }
 
-    // ðŸ†• Signup (IMPORTANT ADD)
+    // 🆕 Signup (IMPORTANT ADD)
     composable(Routes.SIGNUP) {
         SignupScreen(
             onSignupSuccess = {
@@ -81,12 +81,12 @@ fun AppNavGraph(
         )
     }
 
-    // ðŸ  Home
+    // 🏠 Home
     composable(Routes.HOME) {
         HomeScreen()
     }
 
-        // ðŸ’° Wallet (REAL USER ID)
+        // 💰 Wallet (REAL USER ID)
         composable(Routes.WALLET) {
             val walletViewModel: WalletViewModel = hiltViewModel()
 
@@ -97,12 +97,12 @@ fun AppNavGraph(
             )
         }
 
-        // ðŸ”¹ Tasks
+        // 🔹 Tasks
         composable(Routes.TASKS) {
             TaskScreen()
         }
 
-        // ðŸ† Tournament List
+        // 🏆 Tournament List
         composable(Routes.TOURNAMENTS) {
             val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
@@ -112,7 +112,7 @@ fun AppNavGraph(
             )
         }
 
-        // ðŸ”¹ Tournament Detail
+        // 🔹 Tournament Detail
         composable(
             route = "${Routes.TOURNAMENT_DETAIL}/{tournamentId}",
             arguments = listOf(
@@ -126,11 +126,11 @@ fun AppNavGraph(
             TournamentDetailScreen(tournamentId = tournamentId)
         }
 
-        // ðŸ’¸ Withdraw
+        // 💸 Withdraw
         composable(Routes.WITHDRAW) {
             WithdrawScreen()
         }
-        //ðŸ’° Deposit 
+        //💰 Deposit 
         composable(Routes.DEPOSIT) {
     DepositScreen(
 
@@ -139,12 +139,12 @@ fun AppNavGraph(
         },
 
         onProceed = { coins ->
-            // ðŸ”¥ à¤…à¤­à¥€ simple test
+            // 🔥 अभी simple test
             println("Coins: $coins")
 
-            // à¤¬à¤¾à¤¦ à¤®à¥‡à¤‚ payment logic à¤¯à¤¹à¤¾à¤ à¤†à¤à¤—à¤¾
+            // बाद में payment logic यहाँ आएगा
         }
     )
-       } 
-    }
+        } 
+     }
 }
