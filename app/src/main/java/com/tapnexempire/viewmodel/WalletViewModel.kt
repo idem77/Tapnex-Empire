@@ -61,4 +61,3 @@ class WalletViewModel @Inject constructor(
           }
        }
     }
- }
