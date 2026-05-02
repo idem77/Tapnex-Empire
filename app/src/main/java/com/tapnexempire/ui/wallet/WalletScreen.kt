@@ -15,8 +15,9 @@ import com.tapnexempire.data.model.WalletModel
 @Composable
 fun WalletScreen(
     userId: String,
+    navController: NavController,   // 👈 ADD THIS
     onTransactionClick: () -> Unit,
-    viewModel: WalletViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+    viewModel: WalletViewModel = hiltViewModel()
 ) {
 
     val state by viewModel.walletState.collectAsState()
