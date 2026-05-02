@@ -60,5 +60,5 @@ class WalletViewModel @Inject constructor(
             e.printStackTrace()
           }
        }
-   }
-}
+    }
+ }
