@@ -59,5 +59,7 @@ class WalletViewModel @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
           }
-       }
-    }
+        }
+     }
+   } 
+}
