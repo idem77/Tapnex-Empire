@@ -48,12 +48,12 @@ fun AppNavGraph(
         modifier = modifier
     ) {
 
-        // 🔥 Splash
+        // ðŸ”¥ Splash
     composable(Routes.SPLASH) {
         SplashScreen(navController)
     }
 
-    // 🔐 Login
+    // ðŸ” Login
     composable(Routes.LOGIN) {
         LoginScreen(
             onLoginSuccess = {
@@ -67,7 +67,7 @@ fun AppNavGraph(
         )
     }
 
-    // 🆕 Signup (IMPORTANT ADD)
+    // ðŸ†• Signup (IMPORTANT ADD)
     composable(Routes.SIGNUP) {
         SignupScreen(
             onSignupSuccess = {
@@ -81,4 +81,70 @@ fun AppNavGraph(
         )
     }
 
-    // 🏠 Home    
+    // ðŸ  Home
+    composable(Routes.HOME) {
+        HomeScreen()
+    }
+
+        // ðŸ’° Wallet (REAL USER ID)
+        composable(Routes.WALLET) {
+            val walletViewModel: WalletViewModel = hiltViewModel()
+
+            WalletScreen(
+                viewModel = walletViewModel,
+                userId = userId,
+                onTransactionClick = { }
+            )
+        }
+
+        // ðŸ”¹ Tasks
+        composable(Routes.TASKS) {
+            TaskScreen()
+        }
+
+        // ðŸ† Tournament List
+        composable(Routes.TOURNAMENTS) {
+            val tournamentViewModel: TournamentViewModel = hiltViewModel()
+
+            TournamentListScreen(
+                viewModel = tournamentViewModel,
+                userId = userId
+            )
+        }
+
+        // ðŸ”¹ Tournament Detail
+        composable(
+            route = "${Routes.TOURNAMENT_DETAIL}/{tournamentId}",
+            arguments = listOf(
+                navArgument("tournamentId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+
+            val tournamentId =
+                backStackEntry.arguments?.getString("tournamentId") ?: ""
+
+            TournamentDetailScreen(tournamentId = tournamentId)
+        }
+
+        // ðŸ’¸ Withdraw
+        composable(Routes.WITHDRAW) {
+            WithdrawScreen()
+        }
+        //ðŸ’° Deposit 
+        composable(Routes.DEPOSIT) {
+    DepositScreen(
+
+        onBack = {
+            navController.popBackStack()
+        },
+
+        onProceed = { coins ->
+            // ðŸ”¥ à¤…à¤­à¥€ simple test
+            println("Coins: $coins")
+
+            // à¤¬à¤¾à¤¦ à¤®à¥‡à¤‚ payment logic à¤¯à¤¹à¤¾à¤ à¤†à¤à¤—à¤¾
+        }
+    )
+       } 
+    }
+}
