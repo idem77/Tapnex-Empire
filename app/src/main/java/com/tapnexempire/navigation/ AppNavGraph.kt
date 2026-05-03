@@ -131,8 +131,10 @@ fun AppNavGraph(
         composable(Routes.WITHDRAW) {
             WithdrawScreen()
         }
-        //💰 Deposit 
-        composable(Routes.DEPOSIT) {
+        // 💰 Deposit
+composable(Routes.DEPOSIT) {
+
+    val viewModel: WalletViewModel = hiltViewModel()   // 👈 ADD THIS
 
     DepositScreen(
 
@@ -142,9 +144,9 @@ fun AppNavGraph(
 
         onProceed = { coins ->
 
-            viewModel.addCoins(userId, coins)   // 🔥 MAIN LINE
+            viewModel.addCoins(userId, coins)   // ✅ अब काम करेगा
 
-            navController.popBackStack()        // वापस Wallet
+            navController.popBackStack()
         }
     )
         }
