@@ -91,7 +91,7 @@ fun AppNavGraph(
             val walletViewModel: WalletViewModel = hiltViewModel()
 
             WalletScreen(
-                viewModel = walletViewModel,
+                viewmodel = walletViewModel,
                 userId = userId,
                 navController = navController,   // 👈 ADD THIS
                 onTransactionClick = { }
@@ -108,7 +108,7 @@ fun AppNavGraph(
             val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
             TournamentListScreen(
-                viewModel = tournamentViewModel,
+                viewmodel = tournamentViewModel,
                 userId = userId
             )
         }
@@ -142,7 +142,7 @@ fun AppNavGraph(
 
         onProceed = { coins ->
 
-            viewModel.addCoins(userId, coins)   // 🔥 MAIN LINE
+            viewmodel.addCoins(userId, coins)   // 🔥 MAIN LINE
 
             navController.popBackStack()        // वापस Wallet
         }
