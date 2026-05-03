@@ -93,6 +93,7 @@ fun AppNavGraph(
             WalletScreen(
                 viewModel = walletViewModel,
                 userId = userId,
+                navController = navController,   // 👈 ADD THIS
                 onTransactionClick = { }
             )
         }
