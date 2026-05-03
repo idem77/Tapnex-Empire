@@ -3,9 +3,7 @@ package com.tapnexempire.ui.wallet
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.tapnexempire.viewmodel.WalletViewModel
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -13,13 +11,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DepositScreen(
     onBack: () -> Unit,
-    onProceed: (Int) -> Unit,
-    val viewModel: WalletViewModel = hiltViewModel()
+    onProceed: (Int) -> Unit
 ) {
+
     var amount by remember { mutableStateOf("") }
 
     val rupees = amount.toIntOrNull() ?: 0
-    val coins = rupees * 10   // 🔥 ₹1 = 10 coins (changeable later)
+    val coins = rupees * 10
 
     Column(
         modifier = Modifier
