@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DepositScreen(
     onBack: () -> Unit,
-    onProceed: (Int) -> Unit
+    onProceed: (Int) -> Unit,
     val viewModel: WalletViewModel = hiltViewModel()
 ) {
     var amount by remember { mutableStateOf("") }
