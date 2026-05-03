@@ -91,7 +91,7 @@ fun AppNavGraph(
             val walletViewModel: WalletViewModel = hiltViewModel()
 
             WalletScreen(
-                viewmodel = walletViewModel,
+                viewModel = walletViewModel,
                 userId = userId,
                 navController = navController,   // 👈 ADD THIS
                 onTransactionClick = { }
@@ -108,7 +108,7 @@ fun AppNavGraph(
             val tournamentViewModel: TournamentViewModel = hiltViewModel()
 
             TournamentListScreen(
-                viewmodel = tournamentViewModel,
+                viewModel = tournamentViewModel,
                 userId = userId
             )
         }
