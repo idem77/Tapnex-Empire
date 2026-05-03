@@ -25,7 +25,7 @@ fun WalletScreen(
 
     LaunchedEffect(Unit) {
 
-        viewModel.startWalletListener(UserId)
+        viewModel.startWalletListener(userId)
     }
 
     when (state) {
