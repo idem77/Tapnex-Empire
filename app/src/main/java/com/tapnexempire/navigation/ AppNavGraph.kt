@@ -142,7 +142,7 @@ fun AppNavGraph(
 
         onProceed = { coins ->
 
-            viewmodel.addCoins(userId, coins)   // 🔥 MAIN LINE
+            viewModel.addCoins(userId, coins)   // 🔥 MAIN LINE
 
             navController.popBackStack()        // वापस Wallet
         }
