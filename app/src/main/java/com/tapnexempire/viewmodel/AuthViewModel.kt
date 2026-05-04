@@ -1,11 +1,10 @@
 package com.tapnexempire.ui.auth
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -17,6 +16,7 @@ sealed class AuthState {
 class AuthViewModel : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
@@ -27,9 +27,34 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _authState.value = AuthState.Success(auth.currentUser?.uid ?: "")
+
+                    val uid = auth.currentUser?.uid ?: ""
+
+                    // 🔥 USER SAVE
+                    val userMap = mapOf(
+                        "email" to email
+                    )
+
+                    db.collection("users")
+                        .document(uid)
+                        .set(userMap)
+
+                    // 🔥 WALLET CREATE (IMPORTANT)
+                    val walletMap = mapOf(
+                        "depositCoins" to 0,
+                        "bonusCoins" to 500, // 🎁 welcome bonus
+                        "withdrawableCoins" to 0
+                    )
+
+                    db.collection("wallets")
+                        .document(uid)
+                        .set(walletMap)
+
+                    _authState.value = AuthState.Success(uid)
+
                 } else {
-                    _authState.value = AuthState.Error(task.exception?.message ?: "Signup failed")
+                    _authState.value =
+                        AuthState.Error(task.exception?.message ?: "Signup failed")
                 }
             }
     }
@@ -40,9 +65,34 @@ class AuthViewModel : ViewModel() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _authState.value = AuthState.Success(auth.currentUser?.uid ?: "")
+
+                    val uid = auth.currentUser?.uid ?: ""
+
+                    // 🔥 CHECK WALLET EXISTS
+                    db.collection("wallets")
+                        .document(uid)
+                        .get()
+                        .addOnSuccessListener { doc ->
+
+                            if (!doc.exists()) {
+
+                                val walletMap = mapOf(
+                                    "depositCoins" to 0,
+                                    "bonusCoins" to 500,
+                                    "withdrawableCoins" to 0
+                                )
+
+                                db.collection("wallets")
+                                    .document(uid)
+                                    .set(walletMap)
+                            }
+
+                            _authState.value = AuthState.Success(uid)
+                        }
+
                 } else {
-                    _authState.value = AuthState.Error(task.exception?.message ?: "Login failed")
+                    _authState.value =
+                        AuthState.Error(task.exception?.message ?: "Login failed")
                 }
             }
     }
