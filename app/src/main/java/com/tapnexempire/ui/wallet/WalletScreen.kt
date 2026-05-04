@@ -6,25 +6,36 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.utils.UiState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tapnexempire.navigation.Routes
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.data.model.WalletModel
+import com.tapnexempire.utils.UiState
 
 @Composable
 fun WalletScreen(
     userId: String,
-    navController: NavController,   // 👈 ADD THIS
+    navController: NavController,
     onTransactionClick: () -> Unit,
     viewModel: WalletViewModel = hiltViewModel()
 ) {
 
+    // ✅ SAFETY CHECK
+    if (userId.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("User not logged in ❌")
+        }
+        return
+    }
+
     val state by viewModel.walletState.collectAsState()
 
-    LaunchedEffect(Unit) {
-
+    // ✅ FIXED LISTENER
+    LaunchedEffect(userId) {
         viewModel.startWalletListener(userId)
     }
 
@@ -86,28 +97,29 @@ fun WalletScreen(
                         Text("Bonus Coins: ${wallet.bonusCoins}")
                         Text("Withdrawable Coins: ${wallet.withdrawableCoins}")
                     }
-                }  
+                }
 
-                  Button(
-    onClick = {
-        navController.navigate(Routes.DEPOSIT)
-    },
-    modifier = Modifier.fillMaxWidth()
-) {
-    Text("Deposit")
-}
+                // 💰 Deposit Button
+                Button(
+                    onClick = {
+                        navController.navigate(Routes.DEPOSIT)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Deposit")
+                }
 
-Spacer(modifier = Modifier.height(10.dp))
+                // 💸 Withdraw Button
+                Button(
+                    onClick = {
+                        navController.navigate(Routes.WITHDRAW)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Withdraw")
+                }
 
-Button(
-    onClick = {
-        navController.navigate(Routes.WITHDRAW)
-    },
-    modifier = Modifier.fillMaxWidth()
-) {
-    Text("Withdraw")
-}
-
+                // 📜 Transactions
                 Button(
                     onClick = onTransactionClick,
                     modifier = Modifier.fillMaxWidth()
