@@ -107,4 +107,4 @@ class WalletViewModel @Inject constructor(
             println("❌ Add Coins Failed")
         }
     }
-}
+ }
