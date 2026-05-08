@@ -119,14 +119,13 @@ fun WalletScreen(
                     Text("Withdraw")
                 }
 
-                // 📜 Transactions
-composable(Routes.TRANSACTIONS) {
-
-    TransactionHistoryScreen(
-        userId = userId
-    )
-               }
-            }
-        }
-    }
+                // 📜 Transactions  
+            Button(  
+                onClick = onTransactionClick,  
+                modifier = Modifier.fillMaxWidth()  
+            ) {  
+                Text("View Transactions 📜")  
+            }  
+        }  
+    }  
 }
