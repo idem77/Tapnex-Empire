@@ -120,12 +120,12 @@ fun WalletScreen(
                 }
 
                 // 📜 Transactions
-                Button(
-                    onClick = onTransactionClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("View Transactions 📜")
-                }
+composable(Routes.TRANSACTIONS) {
+
+    TransactionHistoryScreen(
+        userId = userId
+    )
+               }
             }
         }
     }
