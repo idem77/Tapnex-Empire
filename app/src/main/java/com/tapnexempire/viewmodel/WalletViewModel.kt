@@ -37,36 +37,74 @@ class WalletViewModel @Inject constructor(
     // ✅ ADD COINS FUNCTION (ALAG)
     fun addCoins(userId: String, coins: Int) {
 
-        viewModelScope.launch {
+    viewModelScope.launch {
 
-            try {
-                val db = FirebaseFirestore.getInstance()
-                val docRef = db.collection("wallets").document(userId)
+        try {
 
-                db.runTransaction { transaction ->
+            val db = FirebaseFirestore.getInstance()
 
-                    val snapshot = transaction.get(docRef)
+            val walletRef =
+                db.collection("wallets").document(userId)
 
-                    val currentDeposit =
-                        snapshot.getLong("depositCoins") ?: 0
-                    val currentWithdrawable =
-                        snapshot.getLong("withdrawableCoins") ?: 0
+            val transactionRef =
+                db.collection("transactions")
+                    .document(userId)
+                    .collection("history")
+                    .document()
 
-                    val newDeposit = currentDeposit + coins
-                    val newWithdrawable = currentWithdrawable + coins
+            db.runTransaction { transaction ->
 
-                    transaction.update(
-                        docRef,
-                        mapOf(
-                            "depositCoins" to newDeposit,
-                            "withdrawableCoins" to newWithdrawable
-                        )
+                val snapshot = transaction.get(walletRef)
+
+                val currentDeposit =
+                    snapshot.getLong("depositCoins") ?: 0
+
+                // 🔥 Deposit coins only
+                val newDeposit = currentDeposit + coins
+
+                // ✅ Wallet Update
+                transaction.update(
+                    walletRef,
+                    mapOf(
+                        "depositCoins" to newDeposit
                     )
-                }
+                )
 
-            } catch (e: Exception) {
-                e.printStackTrace()
+                // ✅ Transaction Save
+                val transactionData = hashMapOf(
+
+                    "id" to transactionRef.id,
+
+                    "userId" to userId,
+
+                    "type" to "DEPOSIT",
+
+                    "amount" to (coins / 10),
+
+                    "coins" to coins,
+
+                    "status" to "SUCCESS",
+
+                    "description" to
+                        "Coins deposited successfully",
+
+                    "createdAt" to
+                        System.currentTimeMillis()
+                )
+
+                transaction.set(
+                    transactionRef,
+                    transactionData
+                )
             }
+
+            println("✅ Coins Added Successfully")
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+            println("❌ Add Coins Failed")
         }
     }
 }
