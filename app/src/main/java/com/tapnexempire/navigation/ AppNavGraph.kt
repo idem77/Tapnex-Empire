@@ -18,6 +18,7 @@ import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
 import com.tapnexempire.ui.wallet.DepositScreen
+import com.tapnexempire ui wallet.TransactionHistoryScreen
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 
@@ -32,6 +33,7 @@ object Routes {
     const val TOURNAMENT_DETAIL = "tournament_detail"
     const val WITHDRAW = "withdraw"
     const val DEPOSIT= "deposit"
+    const val TRANSACTION="transactions"
 }
 
 @Composable
@@ -126,6 +128,14 @@ fun AppNavGraph(
 
             TournamentDetailScreen(tournamentId = tournamentId)
         }
+        
+         // 📜 Transactions
+composable(Routes.TRANSACTIONS) {
+
+    TransactionHistoryScreen(
+        userId = userId
+    )
+} 
 
         // 💸 Withdraw
         composable(Routes.WITHDRAW) {
