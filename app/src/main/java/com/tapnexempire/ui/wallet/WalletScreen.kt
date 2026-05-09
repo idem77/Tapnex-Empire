@@ -13,7 +13,7 @@ import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.data.model.WalletModel
 import com.tapnexempire.utils.UiState
 
-@Composable
+   @Composable
 fun WalletScreen(
     userId: String,
     navController: NavController,
@@ -23,18 +23,20 @@ fun WalletScreen(
 
     // ✅ SAFETY CHECK
     if (userId.isEmpty()) {
+
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Text("User not logged in ❌")
         }
+
         return
     }
 
     val state by viewModel.walletState.collectAsState()
 
-    // ✅ FIXED LISTENER
+    // ✅ START LISTENER
     LaunchedEffect(userId) {
         viewModel.startWalletListener(userId)
     }
@@ -42,6 +44,7 @@ fun WalletScreen(
     when (state) {
 
         is UiState.Loading -> {
+
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -51,6 +54,7 @@ fun WalletScreen(
         }
 
         is UiState.Error -> {
+
             val message = (state as UiState.Error).message
 
             Box(
@@ -63,7 +67,8 @@ fun WalletScreen(
 
         is UiState.Success -> {
 
-            val wallet = (state as UiState.Success<WalletModel>).data
+            val wallet =
+                (state as UiState.Success<WalletModel>).data
 
             val total =
                 wallet.depositCoins +
@@ -74,6 +79,7 @@ fun WalletScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
+
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
@@ -85,6 +91,7 @@ fun WalletScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
@@ -94,12 +101,14 @@ fun WalletScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text("Deposit Coins: ${wallet.depositCoins}")
+
                         Text("Bonus Coins: ${wallet.bonusCoins}")
+
                         Text("Withdrawable Coins: ${wallet.withdrawableCoins}")
                     }
                 }
 
-                // 💰 Deposit Button
+                // 💰 Deposit
                 Button(
                     onClick = {
                         navController.navigate(Routes.DEPOSIT)
@@ -109,7 +118,7 @@ fun WalletScreen(
                     Text("Deposit")
                 }
 
-                // 💸 Withdraw Button
+                // 💸 Withdraw
                 Button(
                     onClick = {
                         navController.navigate(Routes.WITHDRAW)
@@ -119,13 +128,14 @@ fun WalletScreen(
                     Text("Withdraw")
                 }
 
-                // 📜 Transactions  
-            Button(  
-                onClick = onTransactionClick,  
-                modifier = Modifier.fillMaxWidth()  
-            ) {  
-                Text("View Transactions 📜")  
-            }  
-        }  
-    }  
+                // 📜 Transactions
+                Button(
+                    onClick = onTransactionClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("View Transactions 📜")
+                }
+            }
+        }
+    }
 }
