@@ -33,7 +33,7 @@ object Routes {
     const val TOURNAMENT_DETAIL = "tournament_detail"
     const val WITHDRAW = "withdraw"
     const val DEPOSIT= "deposit"
-    const val TRANSACTION="transactions"
+    const val TRANSACTIONS="transactions"
 }
 
 @Composable
@@ -96,7 +96,9 @@ fun AppNavGraph(
                 viewModel = walletViewModel,
                 userId = userId,
                 navController = navController,   // 👈 ADD THIS
-                onTransactionClick = { }
+                onTransactionClick = {
+    navController.navigate(Routes.TRANSACTIONS)
+                }
             )
         }
 
@@ -141,24 +143,25 @@ composable(Routes.TRANSACTIONS) {
         composable(Routes.WITHDRAW) {
             WithdrawScreen()
         }
+
         // 💰 Deposit
-composable(Routes.DEPOSIT) {
+        composable(Routes.DEPOSIT) {
 
-    val viewModel: WalletViewModel = hiltViewModel()   // 👈 ADD THIS
+            val viewModel: WalletViewModel = hiltViewModel()
 
-    DepositScreen(
+            DepositScreen(
 
-        onBack = {
-            navController.popBackStack()
-        },
+                onBack = {
+                    navController.popBackStack()
+                },
 
-        onProceed = { coins ->
+                onProceed = { coins ->
 
-            viewModel.addCoins(userId, coins)   // ✅ अब काम करेगा
+                    viewModel.addCoins(userId, coins)
 
-            navController.popBackStack()
+                    navController.popBackStack()
+                }
+            )
         }
-    )
-        }
-     }
+    }
 }
