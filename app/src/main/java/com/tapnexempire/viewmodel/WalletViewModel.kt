@@ -79,6 +79,7 @@ class WalletViewModel @Inject constructor(
                         walletRef,
                         mapOf(
                             "depositCoins" to newDeposit
+                            "withdrawableCoins" to newDeposit
                         )
                     )
 
