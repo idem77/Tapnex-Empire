@@ -19,92 +19,105 @@ class WalletViewModel @Inject constructor(
 
     private val _walletState =
         MutableStateFlow<UiState<WalletModel>>(UiState.Loading)
-    val walletState: StateFlow<UiState<WalletModel>> = _walletState
 
-    // ✅ LISTENER FUNCTION
+    val walletState: StateFlow<UiState<WalletModel>> =
+        _walletState
+
+    // ✅ WALLET LISTENER
     fun startWalletListener(userId: String) {
+
         _walletState.value = UiState.Loading
 
         repo.listenToWallet(userId) { wallet ->
+
             if (wallet != null) {
-                _walletState.value = UiState.Success(wallet)
+
+                _walletState.value =
+                    UiState.Success(wallet)
+
             } else {
-                _walletState.value = UiState.Error("Wallet not found")
+
+                _walletState.value =
+                    UiState.Error("Wallet not found")
             }
         }
     }
 
-    // ✅ ADD COINS FUNCTION (ALAG)
+    // ✅ ADD COINS + SAVE TRANSACTION
     fun addCoins(userId: String, coins: Int) {
 
-    viewModelScope.launch {
+        viewModelScope.launch {
 
-        try {
+            try {
 
-            val db = FirebaseFirestore.getInstance()
+                val db = FirebaseFirestore.getInstance()
 
-            val walletRef =
-                db.collection("wallets").document(userId)
+                val walletRef =
+                    db.collection("wallets")
+                        .document(userId)
 
-            val transactionRef =
-                db.collection("transactions")
-                    .document(userId)
-                    .collection("history")
-                    .document()
+                val transactionRef =
+                    db.collection("transactions")
+                        .document(userId)
+                        .collection("history")
+                        .document()
 
-            db.runTransaction { transaction ->
+                db.runTransaction { transaction ->
 
-                val snapshot = transaction.get(walletRef)
+                    val snapshot =
+                        transaction.get(walletRef)
 
-                val currentDeposit =
-                    snapshot.getLong("depositCoins") ?: 0
+                    val currentDeposit =
+                        snapshot.getLong("depositCoins") ?: 0
 
-                // 🔥 Deposit coins only
-                val newDeposit = currentDeposit + coins
+                    // 🔥 NEW VALUE
+                    val newDeposit =
+                        currentDeposit + coins
 
-                // ✅ Wallet Update
-                transaction.update(
-                    walletRef,
-                    mapOf(
-                        "depositCoins" to newDeposit
+                    // ✅ UPDATE WALLET
+                    transaction.update(
+                        walletRef,
+                        mapOf(
+                            "depositCoins" to newDeposit
+                        )
                     )
-                )
 
-                // ✅ Transaction Save
-                val transactionData = hashMapOf(
+                    // ✅ SAVE TRANSACTION
+                    val transactionData = hashMapOf(
 
-                    "id" to transactionRef.id,
+                        "id" to transactionRef.id,
 
-                    "userId" to userId,
+                        "userId" to userId,
 
-                    "type" to "DEPOSIT",
+                        "type" to "DEPOSIT",
 
-                    "amount" to (coins / 10),
+                        "amount" to (coins / 10),
 
-                    "coins" to coins,
+                        "coins" to coins,
 
-                    "status" to "SUCCESS",
+                        "status" to "SUCCESS",
 
-                    "description" to
-                        "Coins deposited successfully",
+                        "description" to
+                            "Coins deposited successfully",
 
-                    "createdAt" to
-                        System.currentTimeMillis()
-                )
+                        "createdAt" to
+                            System.currentTimeMillis()
+                    )
 
-                transaction.set(
-                    transactionRef,
-                    transactionData
-                )
+                    transaction.set(
+                        transactionRef,
+                        transactionData
+                    )
+                }
+
+                println("✅ Coins Added Successfully")
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+
+                println("❌ Add Coins Failed")
             }
-
-            println("✅ Coins Added Successfully")
-
-        } catch (e: Exception) {
-
-            e.printStackTrace()
-
-            println("❌ Add Coins Failed")
         }
     }
- }
+}
