@@ -14,15 +14,15 @@ data class TransactionModel(
 
     val userId: String = "",
 
-    val type: TransactionType = TransactionType.BONUS,
+    val type: String = "",
 
-    val amount: Long = 0,
+    val amount: Int = 0,
 
-    val coins: Long = 0,
+    val coins: Int = 0,
 
-    val status: String = "SUCCESS",
+    val status: String = "",
 
     val description: String = "",
 
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = 0
 )
