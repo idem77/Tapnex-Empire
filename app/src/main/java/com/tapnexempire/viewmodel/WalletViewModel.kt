@@ -49,6 +49,7 @@ class WalletViewModel @Inject constructor(
     fun addCoins(userId: String, coins: Int) {
 
         if (userId.isEmpty()) {
+
             println("❌ USER ID EMPTY")
             return
         }
@@ -95,15 +96,22 @@ class WalletViewModel @Inject constructor(
 
                     // ✅ UPDATE WALLET
                     transaction.set(
+
                         walletRef,
 
                         mapOf(
+
+                            "userId" to userId,
 
                             "depositCoins" to newDeposit,
 
                             "withdrawableCoins" to newWithdrawable,
 
-                            "bonusCoins" to currentBonus
+                            "bonusCoins" to currentBonus,
+
+                            "dailyWithdrawnCoins" to 0,
+
+                            "lastWithdrawDate" to 0
                         ),
 
                         SetOptions.merge()
@@ -144,6 +152,8 @@ class WalletViewModel @Inject constructor(
                 e.printStackTrace()
 
                 println("❌ Add Coins Failed")
+
+                println(e.message)
             }
         }
     }
