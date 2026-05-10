@@ -95,7 +95,7 @@ class TournamentRepository @Inject constructor(
                 TransactionModel(
                     id = txnRef.id,
                     userId = userId,
-                    type = TransactionType.ENTRY_FEE,
+                    type = TransactionType.String,
                     amount = entryFee,
                     description = "Tournament Entry"
                 )
