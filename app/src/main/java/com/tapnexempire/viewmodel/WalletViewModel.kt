@@ -72,12 +72,12 @@ class WalletViewModel @Inject constructor(
                         .collection("history")
                         .document()
 
+                // ✅ WALLET UPDATE ONLY
                 db.runTransaction { transaction ->
 
                     val snapshot =
                         transaction.get(walletRef)
 
-                    // ✅ CURRENT VALUES
                     val currentDeposit =
                         snapshot.getLong("depositCoins") ?: 0
 
@@ -116,34 +116,31 @@ class WalletViewModel @Inject constructor(
 
                         SetOptions.merge()
                     )
-
-                    // ✅ SAVE TRANSACTION
-                    val transactionData = hashMapOf(
-
-                        "id" to transactionRef.id,
-
-                        "userId" to userId,
-
-                        "type" to "DEPOSIT",
-
-                        "amount" to (coins / 10),
-
-                        "coins" to coins,
-
-                        "status" to "SUCCESS",
-
-                        "description" to
-                            "Coins deposited successfully",
-
-                        "createdAt" to
-                            System.currentTimeMillis()
-                    )
-
-                    transaction.set(
-                        transactionRef,
-                        transactionData
-                    )
                 }
+
+                // ✅ SAVE TRANSACTION SEPARATELY
+                val transactionData = hashMapOf(
+
+                    "id" to transactionRef.id,
+
+                    "userId" to userId,
+
+                    "type" to "DEPOSIT",
+
+                    "amount" to (coins / 10),
+
+                    "coins" to coins,
+
+                    "status" to "SUCCESS",
+
+                    "description" to
+                        "Coins deposited successfully",
+
+                    "createdAt" to
+                        System.currentTimeMillis()
+                )
+
+                transactionRef.set(transactionData)
 
                 println("✅ Coins Added Successfully")
 
@@ -152,8 +149,6 @@ class WalletViewModel @Inject constructor(
                 e.printStackTrace()
 
                 println("❌ Add Coins Failed")
-
-                println(e.message)
             }
         }
     }
