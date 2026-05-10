@@ -75,13 +75,15 @@ class WalletViewModel @Inject constructor(
                         currentDeposit + coins
 
                     // ✅ UPDATE WALLET
-                    transaction.update(
-                        walletRef,
-                        mapOf(
-                            "depositCoins" to newDeposit
-                            "withdrawableCoins" to newDeposit
-                        )
-                    )
+                    transaction.set(
+    walletRef,
+    mapOf(
+        "depositCoins" to newDeposit,
+        "withdrawableCoins" to newDeposit,
+        "bonusCoins" to 0
+    ),
+    com.google.firebase.firestore.SetOptions.merge()
+)
 
                     // ✅ SAVE TRANSACTION
                     val transactionData = hashMapOf(
