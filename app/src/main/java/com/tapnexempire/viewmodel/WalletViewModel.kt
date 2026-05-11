@@ -137,7 +137,8 @@ class WalletViewModel @Inject constructor(
                         "Coins deposited successfully",
 
                     "createdAt" to
-                        System.currentTimeMillis()
+                       com.google.firebase.Timestamp.now()
+                        
                 )
 
                 transactionRef.set(transactionData)
