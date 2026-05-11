@@ -3,108 +3,69 @@ package com.tapnexempire.ui.wallet
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.tapnexempire.data.model.TransactionModel
-import kotlinx.coroutines.tasks.await
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tapnexempire.viewmodel.TransactionViewModel
 
 @Composable
 fun TransactionHistoryScreen(
-    userId: String
+
+    userId: String,
+
+    viewModel: TransactionViewModel = hiltViewModel()
 ) {
 
-    var transactions by remember {
-        mutableStateOf<List<TransactionModel>>(emptyList())
+    val transactions by
+        viewModel.transactions.collectAsState()
+
+    LaunchedEffect(userId) {
+
+        viewModel.startTransactionListener(userId)
     }
 
-    var isLoading by remember {
-        mutableStateOf(true)
-    }
+    LazyColumn(
 
-    LaunchedEffect(Unit) {
-
-        try {
-
-            val snapshot = FirebaseFirestore.getInstance()
-                .collection("transactions")
-                .document(userId)
-                .collection("history")
-                .orderBy("createdAt")
-                .get()
-                .await()
-
-            transactions =
-                snapshot.toObjects(TransactionModel::class.java)
-                    .reversed()
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        isLoading = false
-    }
-
-    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+
+        verticalArrangement =
+            Arrangement.spacedBy(12.dp)
     ) {
 
-        Text(
-            text = "Transaction History 📜",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        items(transactions) { transaction ->
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (isLoading) {
-
-            CircularProgressIndicator()
-
-        } else if (transactions.isEmpty()) {
-
-            Text("No transactions found")
-
-        } else {
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            Card(
+                modifier = Modifier.fillMaxWidth()
             ) {
 
-                items(transactions) { transaction ->
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
 
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                    Text(
+                        text = transaction.type.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
+                    Spacer(modifier = Modifier.height(6.dp))
 
-                            Text(
-                                text = "Type: ${transaction.type}"
-                            )
+                    Text(
+                        text = "Amount: ₹${transaction.amount}"
+                    )
 
-                            Text(
-                                text = "Coins: ${transaction.coins}"
-                            )
+                    Text(
+                        text = transaction.description
+                    )
 
-                            Text(
-                                text = "Amount: ₹${transaction.amount}"
-                            )
-
-                            Text(
-                                text = "Status: ${transaction.status}"
-                            )
-
-                            Text(
-                                text = transaction.description
-                            )
-                        }
-                    }
+                    Text(
+                        text = "User: ${transaction.userId}"
+                    )
                 }
             }
         }
