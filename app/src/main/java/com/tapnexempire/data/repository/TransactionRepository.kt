@@ -39,13 +39,12 @@ class TransactionRepository @Inject constructor(
                                 doc.getString("userId") ?: "",
 
                             type =
-                                TransactionType.valueOf(
-                                    doc.getString("type")
-                                        ?: "DEPOSIT"
-                                ),
+                                doc.getString("type")  ?: "DEPOSIT",
+                                
 
                             amount =
-                                doc.getLong("amount") ?: 0,
+                                (doc.getLong("amount") ?: 0).toInt(),
+                                
 
                             description =
                                 doc.getString("description") ?: "",
