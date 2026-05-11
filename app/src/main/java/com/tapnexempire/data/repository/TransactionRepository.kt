@@ -2,7 +2,6 @@ package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.model.TransactionModel
-import com.tapnexempire.data.model.TransactionType
 import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
@@ -22,6 +21,8 @@ class TransactionRepository @Inject constructor(
 
                 if (error != null || snapshot == null) {
 
+                    println("❌ Transaction Listener Error")
+
                     onChange(emptyList())
                     return@addSnapshotListener
                 }
@@ -39,25 +40,34 @@ class TransactionRepository @Inject constructor(
                                 doc.getString("userId") ?: "",
 
                             type =
-                                doc.getString("type")  ?: "DEPOSIT",
-                                
+                                doc.getString("type") ?: "",
 
                             amount =
                                 (doc.getLong("amount") ?: 0).toInt(),
-                                
+
+                            coins =
+                                (doc.getLong("coins") ?: 0).toInt(),
+
+                            status =
+                                doc.getString("status") ?: "",
 
                             description =
                                 doc.getString("description") ?: "",
 
                             createdAt =
-                                doc.getLong("createdAt") ?: 0
+                                doc.getTimestamp("createdAt")
+                                    ?.toDate()
+                                    ?.time ?: 0
                         )
 
                     } catch (e: Exception) {
 
+                        e.printStackTrace()
                         null
                     }
                 }
+
+                println("✅ Transactions Loaded: ${transactions.size}")
 
                 onChange(transactions)
             }
