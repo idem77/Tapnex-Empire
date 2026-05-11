@@ -49,7 +49,7 @@ fun TransactionHistoryScreen(
                 ) {
 
                     Text(
-                        text = transaction.type.name,
+                        text = transaction.type.
                         style = MaterialTheme.typography.titleMedium
                     )
 
