@@ -46,7 +46,7 @@ class WalletViewModel @Inject constructor(
     }
 
     // ✅ ADD COINS + SAVE TRANSACTION
-    fun addCoins(userId: String, coins: Int) {
+    fun addCoins(coins: Int) {
 
         if (userId.isEmpty()) {
 
