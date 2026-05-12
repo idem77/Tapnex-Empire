@@ -2,8 +2,10 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.Timestamp
 import com.tapnexempire.data.model.WalletModel
 import com.tapnexempire.data.repository.WalletRepository
 import com.tapnexempire.utils.UiState
@@ -48,11 +50,10 @@ class WalletViewModel @Inject constructor(
     // ✅ ADD COINS + SAVE TRANSACTION
     fun addCoins(coins: Int) {
 
-        if (userId.isEmpty()) {
-
-            println("❌ USER ID EMPTY")
-            return
-        }
+        val userId =
+            FirebaseAuth.getInstance()
+                .currentUser
+                ?.uid ?: return
 
         viewModelScope.launch {
 
@@ -72,7 +73,7 @@ class WalletViewModel @Inject constructor(
                         .collection("history")
                         .document()
 
-                // ✅ WALLET UPDATE ONLY
+                // ✅ WALLET UPDATE
                 db.runTransaction { transaction ->
 
                     val snapshot =
@@ -118,7 +119,7 @@ class WalletViewModel @Inject constructor(
                     )
                 }
 
-                // ✅ SAVE TRANSACTION SEPARATELY
+                // ✅ SAVE TRANSACTION
                 val transactionData = hashMapOf(
 
                     "id" to transactionRef.id,
@@ -137,8 +138,7 @@ class WalletViewModel @Inject constructor(
                         "Coins deposited successfully",
 
                     "createdAt" to
-                       com.google.firebase.Timestamp.now()
-                        
+                        Timestamp.now()
                 )
 
                 transactionRef.set(transactionData)
