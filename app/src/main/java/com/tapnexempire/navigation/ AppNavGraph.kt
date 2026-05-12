@@ -231,15 +231,7 @@ fun AppNavGraph(
 
                 onProceed = { coins ->
 
-                    viewModel.addCoins(
-
-                        FirebaseAuth
-                            .getInstance()
-                            .currentUser
-                            ?.uid ?: "",
-
-                        coins
-                    )
+                    viewModel.addCoins(coins)                                            
 
                     navController.popBackStack()
                 }
