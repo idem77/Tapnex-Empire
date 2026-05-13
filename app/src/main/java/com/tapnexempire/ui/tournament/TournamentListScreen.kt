@@ -7,12 +7,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.tapnexempire.navigation.Routes
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.data.model.TournamentModel
 
 @Composable
 fun TournamentListScreen(
+
+    navController: NavController,
+
     viewModel: TournamentViewModel,
+
     userId: String
 ) {
 
@@ -21,13 +27,16 @@ fun TournamentListScreen(
     }
 
     LaunchedEffect(Unit) {
+
         viewModel.listenTournaments { list ->
-            // ✅ DIRECT USE (NO MAP)
+
             tournaments = list
         }
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
         items(tournaments) { tournament ->
 
@@ -36,22 +45,48 @@ fun TournamentListScreen(
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
 
-                    Text(text = tournament.name)
-                    Text(text = "Entry: ${tournament.entryFee} coins")
-                    Text(text = "Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}")
-                    Text(text = "Prize: ${tournament.prizePool} coins")
-                    Text(text = "Status: ${tournament.status}") 
-                    
-                    Button(onClick = {
-                        viewModel.joinTournament(
-                            tournamentId = tournament.id,
-                            userId = userId,
-                            entryFee = tournament.entryFee
-                        ) { _, _ -> }
-                    }) {
-                        Text("Join")
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+
+                    Text(
+                        text = tournament.title,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Entry Fee: ${tournament.entryFee} coins"
+                    )
+
+                    Text(
+                        text = "Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}"
+                    )
+
+                    Text(
+                        text = "Prize Pool: ${tournament.prizePool} coins"
+                    )
+
+                    Text(
+                        text = "Status: ${tournament.status}"
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Button(
+
+                        onClick = {
+
+                            navController.navigate(
+                                "${Routes.TOURNAMENT_DETAIL}/${tournament.id}"
+                            )
+                        }
+
+                    ) {
+
+                        Text("View Tournament")
                     }
                 }
             }
