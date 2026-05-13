@@ -224,26 +224,34 @@ composable(
             WithdrawScreen()
         }
 
-        // 💰 Deposit
-        composable(Routes.DEPOSIT) {
+       // 💰 Deposit
+composable(Routes.DEPOSIT) {
 
-            val viewModel: WalletViewModel =
-                hiltViewModel()
+    val viewModel: WalletViewModel =
+        hiltViewModel()
 
-            DepositScreen(
+    DepositScreen(
 
-                onBack = {
+        onBack = {
 
-                    navController.popBackStack()
-                },
+            navController.popBackStack()
+        },
 
-                onProceed = { coins ->
+        onProceed = { coins ->
 
-                    viewModel.addCoins(coins)                                            
+            viewModel.addCoins(
 
-                    navController.popBackStack()
-                }
+                FirebaseAuth
+                    .getInstance()
+                    .currentUser
+                    ?.uid ?: "",
+
+                coins
             )
+
+            navController.popBackStack()
         }
+    )
+      }         
     }
 }
