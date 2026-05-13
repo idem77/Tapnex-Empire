@@ -2,7 +2,7 @@ package com.tapnexempire.data.model
 
 data class TournamentModel(
     val id: String = "",
-    val name: String = "",
+    val title: String = "",
     val entryFee: Long = 0,
     val prizePool: Long = 0,
     val maxPlayers: Long = 0,
