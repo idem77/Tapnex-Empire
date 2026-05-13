@@ -204,7 +204,7 @@ composable(
             .currentUser
             ?.uid ?: "",
 
-        entryFee = 0
+        entryFee = 240
     )
 }
 
