@@ -16,7 +16,7 @@ fun TournamentDetailScreen(
 
     userId: String,
 
-    entryFee:Long,
+    entryFee: Long,
     
     viewModel: TournamentViewModel = hiltViewModel()
 ) {
