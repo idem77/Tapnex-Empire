@@ -27,7 +27,7 @@ class TournamentDetailViewModel @Inject constructor(
             try {
                 val tournament = TournamentModel(
                     id = id,
-                    name = "Demo Tournament",
+                    title = "",
                     entryFee = 0,
                     maxPlayers = 0,
                     joinedPlayers = 0,
