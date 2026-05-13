@@ -154,49 +154,57 @@ fun AppNavGraph(
         }
 
         // 🏆 Tournament List
-        composable(Routes.TOURNAMENTS) {
+composable(Routes.TOURNAMENTS) {
 
-            val tournamentViewModel:
-                    TournamentViewModel =
-                hiltViewModel()
+    val tournamentViewModel:
+            TournamentViewModel =
+        hiltViewModel()
 
-            TournamentListScreen(
+    TournamentListScreen(
 
-                viewModel = tournamentViewModel,
+        navController = navController,
 
-                userId = FirebaseAuth
-                    .getInstance()
-                    .currentUser
-                    ?.uid ?: ""
-            )
+        viewModel = tournamentViewModel,
+
+        userId = FirebaseAuth
+            .getInstance()
+            .currentUser
+            ?.uid ?: ""
+    )
+}
+
+// 🔹 Tournament Detail
+composable(
+
+    route =
+        "${Routes.TOURNAMENT_DETAIL}/{tournamentId}",
+
+    arguments = listOf(
+
+        navArgument("tournamentId") {
+
+            type = NavType.StringType
         }
+    )
 
-        // 🔹 Tournament Detail
-        composable(
+) { backStackEntry ->
 
-            route =
-                "${Routes.TOURNAMENT_DETAIL}/{tournamentId}",
+    val tournamentId =
 
-            arguments = listOf(
+        backStackEntry
+            .arguments
+            ?.getString("tournamentId") ?: ""
 
-                navArgument("tournamentId") {
+    TournamentDetailScreen(
 
-                    type = NavType.StringType
-                }
-            )
+        tournamentId = tournamentId,
 
-        ) { backStackEntry ->
-
-            val tournamentId =
-
-                backStackEntry
-                    .arguments
-                    ?.getString("tournamentId") ?: ""
-
-            TournamentDetailScreen(
-                tournamentId = tournamentId
-            )
-        }
+        userId = FirebaseAuth
+            .getInstance()
+            .currentUser
+            ?.uid ?: ""
+    )
+}
 
         // 📜 Transactions
         composable(Routes.TRANSACTIONS) {
