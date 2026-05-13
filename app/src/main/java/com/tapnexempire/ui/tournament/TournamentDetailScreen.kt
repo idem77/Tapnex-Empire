@@ -17,12 +17,16 @@ fun TournamentDetailScreen(
     userId: String,
 
     entryFee: Long,
-    
+
     viewModel: TournamentViewModel = hiltViewModel()
 ) {
 
     var loading by remember {
         mutableStateOf(false)
+    }
+
+    var resultMessage by remember {
+        mutableStateOf("")
     }
 
     Box(
@@ -53,23 +57,23 @@ fun TournamentDetailScreen(
                 onClick = {
 
                     loading = true
-         
- viewModel.joinTournament(
 
-      tournamentId = tournamentId,
+                    viewModel.joinTournament(
 
-        userId = userId,
+                        tournamentId = tournamentId,
 
-         entryFee = entryFee,
+                        userId = userId,
 
-          onResult = { success, message ->
+                        entryFee = entryFee,
 
-           loading = false
+                        onResult = { success, message ->
 
-         println(message)
-      }
-   )                 
-}
+                            loading = false
+
+                            resultMessage = message
+                        }
+                    )
+                }
 
             ) {
 
@@ -81,6 +85,12 @@ fun TournamentDetailScreen(
                         "Join Tournament"
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = resultMessage
+            )
         }
     }
 }
