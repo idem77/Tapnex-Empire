@@ -54,21 +54,21 @@ fun TournamentDetailScreen(
 
                     loading = true
          
-                  viewModel.joinTournament(
+ viewModel.joinTournament(
 
-    tournamentId = tournamentId,
+      tournamentId = tournamentId,
 
-    userId = userId,
+        userId = userId,
 
-    entryFee = entryFee,
+         entryFee = entryFee,
 
-    onResult = { success, message ->
+          onResult = { success, message ->
 
-        loading = false
+           loading = false
 
-        println(message)
+         println(message)
       }
-  )                 
+   )                 
 }
 
             ) {
