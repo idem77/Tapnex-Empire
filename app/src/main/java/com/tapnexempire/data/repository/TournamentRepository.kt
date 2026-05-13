@@ -29,82 +29,79 @@ class TournamentRepository @Inject constructor(
     }
 
     // 🏆 Join Tournament (ONLY deposit coins)
-    fun joinTournament(
-        tournamentId: String,
-        userId: String,
-        entryFee: Long,
-        onResult: (Boolean, String) -> Unit
-    ) {
+     fun joinTournament(
 
-        val tournamentDoc = tournamentRef.document(tournamentId)
-        val walletDoc = walletRef.document(userId)
-        val participantDoc =
-            tournamentDoc.collection("participants").document(userId)
+    tournamentId: String,
 
-        firestore.runTransaction { transaction ->
+    userId: String,
 
-            val walletSnap = transaction.get(walletDoc)
-            val wallet = walletSnap.toObject(WalletModel::class.java)
-                ?: throw Exception("Wallet not found")
+    onResult: (Boolean, String) -> Unit
+) {
 
-            if (wallet.depositCoins < entryFee) {
-                throw Exception("Insufficient deposit coins")
-            }
+    val db = FirebaseFirestore.getInstance()
 
-            val participantSnap = transaction.get(participantDoc)
-            if (participantSnap.exists()) {
-                throw Exception("Already joined")
-            }
+    val tournamentRef =
+        db.collection("tournaments")
+            .document(tournamentId)
 
-            val tournamentSnap = transaction.get(tournamentDoc)
-            val maxPlayers = tournamentSnap.getLong("maxPlayers") ?: 0
-            val joined = tournamentSnap.getLong("joinedPlayers") ?: 0
+    val playerRef =
+        db.collection("tournament_players")
+            .document(tournamentId)
+            .collection("players")
+            .document(userId)
 
-            if (joined >= maxPlayers) {
-                throw Exception("Tournament full")
-            }
+    db.runTransaction { transaction ->
 
-            // 💰 Deduct deposit coins
-            transaction.update(
-                walletDoc,
-                "depositCoins",
-                wallet.depositCoins - entryFee
-            )
+        val tournamentSnapshot =
+            transaction.get(tournamentRef)
 
-            // ➕ Increase players
-            transaction.update(
-                tournamentDoc,
-                "joinedPlayers",
-                FieldValue.increment(1)
-            )
+        val joinedPlayers =
+            tournamentSnapshot.getLong("joinedPlayers") ?: 0
 
-            // 👤 Add participant
-            transaction.set(
-                participantDoc,
-                mapOf(
-                    "userId" to userId,
-                    "score" to 0,
-                    "joinedAt" to System.currentTimeMillis()
-                )
-            )
+        val maxPlayers =
+            tournamentSnapshot.getLong("maxPlayers") ?: 0
 
-            // 🧾 Transaction log
-            val txnRef = firestore.collection("transactions").document()
-            transaction.set(
-                txnRef,
-                TransactionModel(
-                    id = txnRef.id,
-                    userId = userId,
-                    type = "ENTRY_FEE",
-                    amount = entryFee.toInt(),
-                    description = "Tournament Entry"
-                )
-            )
+        if (joinedPlayers >= maxPlayers) {
 
-        }.addOnSuccessListener {
-            onResult(true, "Joined Successfully")
-        }.addOnFailureListener {
-            onResult(false, it.message ?: "Error")
+            throw Exception("Tournament Full")
         }
-    }
-}
+
+        val playerSnapshot =
+            transaction.get(playerRef)
+
+        if (playerSnapshot.exists()) {
+
+            throw Exception("Already Joined")
+        }
+
+        transaction.update(
+
+            tournamentRef,
+
+            "joinedPlayers",
+
+            joinedPlayers + 1
+        )
+
+        transaction.set(
+
+            playerRef,
+
+            mapOf(
+
+                "userId" to userId,
+
+                "joinedAt" to
+                    System.currentTimeMillis()
+            )
+        )
+
+    }.addOnSuccessListener {
+
+        onResult(true, "Joined Successfully")
+
+    }.addOnFailureListener {
+
+        onResult(false, it.message ?: "Join Failed")
+      }
+  } 
