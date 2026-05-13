@@ -3,105 +3,197 @@ package com.tapnexempire.data.repository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.model.TransactionModel
-import com.tapnexempire.data.model.TransactionType
-import com.tapnexempire.data.model.WalletModel
 import com.tapnexempire.data.model.TournamentModel
+import com.tapnexempire.data.model.WalletModel
 import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
-    private val tournamentRef = firestore.collection("tournaments")
-    private val walletRef = firestore.collection("wallets")
+    private val tournamentRef =
+        firestore.collection("tournaments")
+
+    private val walletRef =
+        firestore.collection("wallets")
 
     // 👀 Listen tournaments
-    fun listenToTournaments(onChange: (List<TournamentModel>) -> Unit) {
-        tournamentRef.addSnapshotListener { snapshot, _ ->
+    fun listenToTournaments(
 
-            val list: List<TournamentModel> =
-                snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(TournamentModel::class.java)?.copy(id = doc.id)
-                } ?: emptyList()
+        onChange: (List<TournamentModel>) -> Unit
+    ) {
 
-            onChange(list)
-        }
+        tournamentRef
+            .addSnapshotListener { snapshot, _ ->
+
+                val list: List<TournamentModel> =
+
+                    snapshot?.documents?.mapNotNull { doc ->
+
+                        doc.toObject(
+                            TournamentModel::class.java
+                        )?.copy(id = doc.id)
+
+                    } ?: emptyList()
+
+                onChange(list)
+            }
     }
 
-    // 🏆 Join Tournament (ONLY deposit coins)
-     fun joinTournament(
+    // 🏆 Join Tournament
+    fun joinTournament(
 
-    tournamentId: String,
+        tournamentId: String,
 
-    userId: String,
+        userId: String,
 
-    onResult: (Boolean, String) -> Unit
-) {
+        entryFee: Long,
 
-    val db = FirebaseFirestore.getInstance()
+        onResult: (Boolean, String) -> Unit
+    ) {
 
-    val tournamentRef =
-        db.collection("tournaments")
-            .document(tournamentId)
+        val tournamentDoc =
+            tournamentRef.document(tournamentId)
 
-    val playerRef =
-        db.collection("tournament_players")
-            .document(tournamentId)
-            .collection("players")
+        val walletDoc =
+            walletRef.document(userId)
+
+        val participantDoc =
+
+            tournamentDoc
+                .collection("participants")
+                .document(userId)
+
+        // ✅ FIXED TRANSACTION PATH
+        val txnRef = firestore
+            .collection("transactions")
             .document(userId)
+            .collection("history")
+            .document()
 
-    db.runTransaction { transaction ->
+        firestore.runTransaction { transaction ->
 
-        val tournamentSnapshot =
-            transaction.get(tournamentRef)
+            // 💰 WALLET
+            val walletSnap =
+                transaction.get(walletDoc)
 
-        val joinedPlayers =
-            tournamentSnapshot.getLong("joinedPlayers") ?: 0
+            val wallet =
+                walletSnap.toObject(
+                    WalletModel::class.java
+                )
+                    ?: throw Exception("Wallet not found")
 
-        val maxPlayers =
-            tournamentSnapshot.getLong("maxPlayers") ?: 0
+            // ❌ INSUFFICIENT BALANCE
+            if (wallet.depositCoins < entryFee) {
 
-        if (joinedPlayers >= maxPlayers) {
+                throw Exception(
+                    "Insufficient deposit coins"
+                )
+            }
 
-            throw Exception("Tournament Full")
-        }
+            // 👤 ALREADY JOINED
+            val participantSnap =
+                transaction.get(participantDoc)
 
-        val playerSnapshot =
-            transaction.get(playerRef)
+            if (participantSnap.exists()) {
 
-        if (playerSnapshot.exists()) {
+                throw Exception("Already joined")
+            }
 
-            throw Exception("Already Joined")
-        }
+            // 🏆 TOURNAMENT
+            val tournamentSnap =
+                transaction.get(tournamentDoc)
 
-        transaction.update(
+            val maxPlayers =
+                tournamentSnap.getLong("maxPlayers") ?: 0
 
-            tournamentRef,
+            val joinedPlayers =
+                tournamentSnap.getLong("joinedPlayers") ?: 0
 
-            "joinedPlayers",
+            // ❌ FULL
+            if (joinedPlayers >= maxPlayers) {
 
-            joinedPlayers + 1
-        )
+                throw Exception("Tournament Full")
+            }
 
-        transaction.set(
+            // 💸 DEDUCT COINS
+            transaction.update(
 
-            playerRef,
+                walletDoc,
 
-            mapOf(
+                "depositCoins",
 
-                "userId" to userId,
-
-                "joinedAt" to
-                    System.currentTimeMillis()
+                wallet.depositCoins - entryFee
             )
-        )
 
-    }.addOnSuccessListener {
+            // ➕ INCREASE PLAYERS
+            transaction.update(
 
-        onResult(true, "Joined Successfully")
+                tournamentDoc,
 
-    }.addOnFailureListener {
+                "joinedPlayers",
 
-        onResult(false, it.message ?: "Join Failed")
-      }
-  } 
+                FieldValue.increment(1)
+            )
+
+            // 👤 SAVE PARTICIPANT
+            transaction.set(
+
+                participantDoc,
+
+                mapOf(
+
+                    "userId" to userId,
+
+                    "score" to 0,
+
+                    "joinedAt" to
+                        System.currentTimeMillis()
+                )
+            )
+
+            // 🧾 SAVE TRANSACTION
+            transaction.set(
+
+                txnRef,
+
+                TransactionModel(
+
+                    id = txnRef.id,
+
+                    userId = userId,
+
+                    type = "ENTRY_FEE",
+
+                    amount = entryFee.toInt(),
+
+                    coins = entryFee.toInt(),
+
+                    status = "SUCCESS",
+
+                    description =
+                        "Tournament Entry",
+
+                    createdAt =
+                        System.currentTimeMillis()
+                )
+            )
+        }
+
+            .addOnSuccessListener {
+
+                onResult(
+                    true,
+                    "Joined Successfully"
+                )
+            }
+
+            .addOnFailureListener {
+
+                onResult(
+                    false,
+                    it.message ?: "Join Failed"
+                )
+            }
+    }
+}
