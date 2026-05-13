@@ -169,9 +169,7 @@ composable(Routes.TOURNAMENTS) {
         userId = FirebaseAuth
             .getInstance()
             .currentUser
-            ?.uid ?: "",
-
-        entryFee = 0
+            ?.uid ?: ""
     )
 }
 
@@ -204,7 +202,9 @@ composable(
         userId = FirebaseAuth
             .getInstance()
             .currentUser
-            ?.uid ?: ""
+            ?.uid ?: "",
+
+        entryFee = 0
     )
 }
 
