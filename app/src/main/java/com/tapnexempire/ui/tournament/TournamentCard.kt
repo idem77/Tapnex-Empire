@@ -14,7 +14,7 @@ fun TournamentCard(
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(tournament.name, style = MaterialTheme.typography.titleMedium)
+            Text(tournament.title, style = MaterialTheme.typography.titleMedium)
             Text("Entry Fee: ${tournament.entryFee}")
             Text("Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}")
             Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) { Text("View / Join") }
