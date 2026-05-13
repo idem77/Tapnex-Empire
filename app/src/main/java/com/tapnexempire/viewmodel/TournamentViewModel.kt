@@ -17,12 +17,22 @@ fun listenTournaments(onChange: (List<TournamentModel>) -> Unit) {
     }
 }
 
-    fun joinTournament(
-        tournamentId: String,
-        userId: String,
-        entryFee: Long,
-        onResult: (Boolean, String) -> Unit
-    ) {
-        repo.joinTournament(tournamentId, userId, entryFee, onResult)
+ fun joinTournament(
+
+    tournamentId: String,
+
+    userId: String,
+
+    onResult: (Boolean, String) -> Unit
+) {
+
+    repo.joinTournament(
+
+        tournamentId = tournamentId,
+
+        userId = userId,
+
+        onResult = onResult
+    ) 
     }
 }
