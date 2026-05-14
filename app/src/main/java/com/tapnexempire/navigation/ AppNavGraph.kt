@@ -15,6 +15,7 @@ import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.game.GameScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
@@ -46,6 +47,7 @@ object Routes {
     const val DEPOSIT = "deposit"
 
     const val TRANSACTIONS = "transactions"
+    const val GAME = "game"
 }
 
 @Composable
@@ -207,6 +209,21 @@ composable(
         entryFee = 240
     )
 }
+          //🎮Game
+            composable("${Routes.GAME}/{gameUrl}") {
+
+    backStackEntry ->
+
+    val gameUrl =
+
+        backStackEntry
+            .arguments
+            ?.getString("gameUrl") ?: ""
+
+    GameScreen(
+        gameUrl = gameUrl
+    )
+            }
 
         // 📜 Transactions
         composable(Routes.TRANSACTIONS) {
