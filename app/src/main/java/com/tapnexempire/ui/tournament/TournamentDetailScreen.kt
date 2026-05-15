@@ -7,10 +7,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.tapnexempire.navigation.Routes
 import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
 fun TournamentDetailScreen(
+
+    navController: NavController,
 
     tournamentId: String,
 
@@ -71,6 +75,14 @@ fun TournamentDetailScreen(
                             loading = false
 
                             resultMessage = message
+
+                            if (success) {
+
+                                navController.navigate(
+
+                                    "${Routes.GAME}/https://plays.org/game/flappy-bird/"
+                                )
+                            }
                         }
                     )
                 }
