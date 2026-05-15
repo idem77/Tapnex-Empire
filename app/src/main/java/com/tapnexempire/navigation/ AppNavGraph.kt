@@ -199,6 +199,8 @@ composable(
 
     TournamentDetailScreen(
 
+        navController = navController,
+        
         tournamentId = tournamentId,
 
         userId = FirebaseAuth
