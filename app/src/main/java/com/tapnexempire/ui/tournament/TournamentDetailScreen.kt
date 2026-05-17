@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import android.net.Uri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tapnexempire.navigation.Routes
@@ -78,10 +79,13 @@ fun TournamentDetailScreen(
 
                             if (success) {
 
-                                navController.navigate(
+                                val encodedUrl = Uri.encode(
+                            "https://plays.org/game/flappy-bird/"
+                           )
 
-                                    "${Routes.GAME}/https://plays.org/game/flappy-bird/"
-                                )
+                         navController.navigate(
+                                 "${Routes.GAME}/$encodedUrl"
+                              )
                             }
                         }
                     )
