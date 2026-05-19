@@ -5,36 +5,55 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.ui.theme.ButtonBackground
-import com.tapnexempire.ui.theme.ButtonTextColor
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun AppButton(
+
     text: String,
+
     onClick: () -> Unit,
+
     modifier: Modifier = Modifier,
-    enabled: Boolean = true // ✅ new parameter added
+
+    enabled: Boolean = true
 ) {
+
     Button(
+
         onClick = onClick,
-        enabled = enabled, // ✅ used here
-        colors = ButtonDefaults.buttonColors(
-            containerColor = ButtonBackground,
-            contentColor = ButtonTextColor
-        ),
+
+        enabled = enabled,
+
         modifier = modifier
             .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(12.dp)
+            .height(58.dp),
+
+        shape = RoundedCornerShape(18.dp),
+
+        colors = ButtonDefaults.buttonColors(
+
+            containerColor =
+                Color(0xFFFFC107),
+
+            contentColor =
+                Color.Black,
+
+            disabledContainerColor =
+                Color.Gray
+        )
     ) {
+
         Text(
+
             text = text,
-            style = MaterialTheme.typography.bodyLarge
+
+            fontSize = 16.sp
         )
     }
 }
