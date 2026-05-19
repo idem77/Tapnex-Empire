@@ -2,22 +2,44 @@ package com.tapnexempire.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Primary Colors
+// ============================
+// 👑 EMPIRE COLORS 😏🔥
+// ============================
+
+// GOLD SYSTEM
+val EmpireGold = Color(0xFFFFC107)
+val EmpireGoldDark = Color(0xFFFFA000)
+
+// DARK BACKGROUNDS
+val EmpireBlack = Color(0xFF0F1115)
+val EmpireDark = Color(0xFF16181D)
+val EmpireCard = Color(0xFF1D2128)
+
+// TEXT COLORS
+val EmpireWhite = Color(0xFFF5F5F5)
+val EmpireGray = Color(0xFF9E9E9E)
+
+// ACCENTS
+val EmpireBlue = Color(0xFF64B5F6)
+val EmpireGreen = Color(0xFF81C784)
+val EmpireRed = Color(0xFFE57373)
+
+// OLD SUPPORT COLORS
 val PinkPeachLight = Color(0xFFFFE0E0)
 val PinkPeachDark = Color(0xFFFFC1C1)
 
-// Accent Colors
-val Gold = Color(0xFFFFD700)
-val SoftSkyBlue = Color(0xFF87CEFA) // updated accent color
+val Gold = EmpireGold
 
-// Background
-val LightCream = Color(0xFFFFFBF5)
+val SoftSkyBlue = EmpireBlue
 
-// Text Colors
-val CharcoalBlack = Color(0xFF333333)
-val SoftGray = Color(0xFF666666)
+val LightCream = EmpireBlack
 
-// Optional / Cards / Buttons
-val CardBackground = Color(0xFFFFF1F1)
-val ButtonBackground = Gold
-val ButtonTextColor = CharcoalBlack
+val CharcoalBlack = EmpireWhite
+
+val SoftGray = EmpireGray
+
+val CardBackground = EmpireCard
+
+val ButtonBackground = EmpireGold
+
+val ButtonTextColor = Color.Black
