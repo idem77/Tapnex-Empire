@@ -34,7 +34,7 @@ fun HomeScreen() {
             painter = painterResource(id = R.drawable.empire_bg),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         // 👑 CONTENT
