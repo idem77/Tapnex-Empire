@@ -31,11 +31,13 @@ fun HomeScreen() {
 
         // 👑 BACKGROUND
         Image(
-            painter = painterResource(id = R.drawable.empire_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
-        )
+    painter = painterResource(id = R.drawable.empire_bg),
+    contentDescription = null,
+    modifier = Modifier.fillMaxSize(),
+    contentScale = ContentScale.FillHeight,
+    alignment = Alignment.Center
+)
+        
 
         // 👑 CONTENT
         Column(
