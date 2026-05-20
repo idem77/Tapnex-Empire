@@ -89,20 +89,22 @@ fun HomeScreen() {
             // 🏆 FEATURED TOURNAMENT
             EmpireTournamentCard(
 
-                title = "Ludo Battle",
+               title = "Ludo Battle",
 
-                entryCoins = 240,
+                 entryFee = 240,
 
-                prizeCoins = 5000,
+                   prizePool = 5000,
 
-                players = "1/100",
+    joinedPlayers = 1,
 
-                status = "LIVE",
+    maxPlayers = 100,
 
-                onJoinClick = {
+    status = "LIVE",
 
-                }
-            )
+    onJoin = {
+
+    }
+)
 
             Spacer(modifier = Modifier.height(24.dp))
 
