@@ -31,7 +31,7 @@ fun HomeScreen() {
 
         // 👑 BACKGROUND
         Image(
-            painter = painterResource(id = R.drawable.home_bg),
+            painter = painterResource(id = R.drawable.empire_bg),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
