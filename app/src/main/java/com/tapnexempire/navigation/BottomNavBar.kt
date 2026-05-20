@@ -134,10 +134,10 @@ fun BottomNavBar(
                     NavigationBarItemDefaults.colors(
 
                         selectedIconColor =
-                            Color(0xFFFFD54F),
+                            Color(0xFF00D1FF),
 
                         selectedTextColor =
-                            Color(0xFFFFD54F),
+                            Color(0xFF00D1FF),
 
                         unselectedIconColor =
                             Color.LightGray,
@@ -146,7 +146,7 @@ fun BottomNavBar(
                             Color.LightGray,
 
                         indicatorColor =
-                            Color(0x33FFD54F)
+                            Color(0x2200D1FF)
                     )
             )
         }
