@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Task
 import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -73,13 +74,14 @@ fun BottomNavBar(
     NavigationBar(
 
         modifier = Modifier
-            .height(80.dp)
-            .clip(
-                RoundedCornerShape(
-                    topStart = 28.dp,
-                    topEnd = 28.dp
-                )
-            ),
+    .height(80.dp)
+    .navigationBarsPadding()
+    .clip(
+        RoundedCornerShape(
+            topStart = 28.dp,
+            topEnd = 28.dp
+        )
+    ),
 
         containerColor =
             Color(0xFF12141A),
