@@ -1,16 +1,26 @@
 package com.tapnexempire.ui.tournament
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.tapnexempire.navigation.Routes
-import com.tapnexempire.viewmodel.TournamentViewModel
+import com.tapnexempire.R
 import com.tapnexempire.data.model.TournamentModel
+import com.tapnexempire.navigation.Routes
+import com.tapnexempire.ui.components.EmpireTournamentCard
+import com.tapnexempire.ui.theme.EmpireGold
+import com.tapnexempire.ui.theme.EmpireWhite
+import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
 fun TournamentListScreen(
@@ -23,6 +33,7 @@ fun TournamentListScreen(
 ) {
 
     var tournaments by remember {
+
         mutableStateOf<List<TournamentModel>>(emptyList())
     }
 
@@ -34,60 +45,87 @@ fun TournamentListScreen(
         }
     }
 
-    LazyColumn(
+    Box(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        items(tournaments) { tournament ->
+        // 👑 BACKGROUND
+        Image(
+            painter = painterResource(id = R.drawable.empire_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
+        )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+        Column(
+
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 18.dp)
+                .padding(top = 50.dp)
+        ) {
+
+            // 👑 TITLE
+            Text(
+
+                text = "🏆 Empire Tournaments",
+
+                style = MaterialTheme.typography.headlineLarge,
+
+                color = EmpireWhite
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+
+                text = "Compete • Win • Dominate",
+
+                color = EmpireGold,
+
+                fontSize = 16.sp
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            LazyColumn(
+
+                verticalArrangement =
+                    Arrangement.spacedBy(16.dp),
+
+                contentPadding =
+                    PaddingValues(bottom = 100.dp)
             ) {
 
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
+                items(tournaments) { tournament ->
 
-                    Text(
-                        text = tournament.title,
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    EmpireTournamentCard(
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                        title = tournament.title,
 
-                    Text(
-                        text = "Entry Fee: ${tournament.entryFee} coins"
-                    )
+                        entryFee =
+                            tournament.entryFee,
 
-                    Text(
-                        text = "Players: ${tournament.joinedPlayers}/${tournament.maxPlayers}"
-                    )
+                        prizePool =
+                            tournament.prizePool,
 
-                    Text(
-                        text = "Prize Pool: ${tournament.prizePool} coins"
-                    )
+                        joinedPlayers =
+                            tournament.joinedPlayers,
 
-                    Text(
-                        text = "Status: ${tournament.status}"
-                    )
+                        maxPlayers =
+                            tournament.maxPlayers,
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        status =
+                            tournament.status,
 
-                    Button(
-
-                        onClick = {
+                        onJoin = {
 
                             navController.navigate(
+
                                 "${Routes.TOURNAMENT_DETAIL}/${tournament.id}"
                             )
                         }
-
-                    ) {
-
-                        Text("View Tournament")
-                    }
+                    )
                 }
             }
         }
