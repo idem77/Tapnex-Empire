@@ -1,58 +1,151 @@
 package com.tapnexempire.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Task
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 data class BottomNavItem(
+
     val route: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+
+    val icon:
+        androidx.compose.ui.graphics.vector.ImageVector,
+
     val label: String
 )
 
 @Composable
-fun BottomNavBar(navController: NavController) {
+fun BottomNavBar(
+    navController: NavController
+) {
 
     val items = listOf(
-        BottomNavItem(Routes.HOME, Icons.Default.Home, "Home"),
-        BottomNavItem(Routes.TOURNAMENTS, Icons.Default.EmojiEvents, "Tournaments"),
-        BottomNavItem(Routes.TASKS, Icons.Default.Task, "Tasks"),
-        BottomNavItem(Routes.WALLET, Icons.Default.AccountBalanceWallet, "Wallet")
+
+        BottomNavItem(
+            Routes.HOME,
+            Icons.Default.Home,
+            "Home"
+        ),
+
+        BottomNavItem(
+            Routes.TOURNAMENTS,
+            Icons.Default.EmojiEvents,
+            "Battle"
+        ),
+
+        BottomNavItem(
+            Routes.TASKS,
+            Icons.Default.Task,
+            "Tasks"
+        ),
+
+        BottomNavItem(
+            Routes.WALLET,
+            Icons.Default.AccountBalanceWallet,
+            "Wallet"
+        )
     )
 
-    val navBackStackEntry = navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry.value?.destination?.route
+    val navBackStackEntry by
+        navController.currentBackStackEntryAsState()
 
-    NavigationBar {
+    val currentRoute =
+        navBackStackEntry?.destination?.route
+
+    NavigationBar(
+
+        modifier = Modifier
+            .height(80.dp)
+            .clip(
+                RoundedCornerShape(
+                    topStart = 28.dp,
+                    topEnd = 28.dp
+                )
+            ),
+
+        containerColor =
+            Color(0xFF12141A),
+
+        tonalElevation = 12.dp
+    ) {
 
         items.forEach { item ->
 
+            val selected =
+                currentRoute == item.route
+
             NavigationBarItem(
-                selected = currentRoute == item.route,
+
+                selected = selected,
+
                 onClick = {
+
                     if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
+
+                        navController.navigate(
+                            item.route
+                        ) {
+
                             popUpTo(Routes.HOME)
+
                             launchSingleTop = true
                         }
                     }
                 },
+
                 icon = {
+
                     Icon(
+
                         imageVector = item.icon,
+
                         contentDescription = item.label
                     )
                 },
+
                 label = {
-                    Text(text = item.label)
-                }
+
+                    Text(
+                        text = item.label
+                    )
+                },
+
+                colors =
+                    NavigationBarItemDefaults.colors(
+
+                        selectedIconColor =
+                            Color(0xFFFFD54F),
+
+                        selectedTextColor =
+                            Color(0xFFFFD54F),
+
+                        unselectedIconColor =
+                            Color.LightGray,
+
+                        unselectedTextColor =
+                            Color.LightGray,
+
+                        indicatorColor =
+                            Color(0x33FFD54F)
+                    )
             )
         }
     }
