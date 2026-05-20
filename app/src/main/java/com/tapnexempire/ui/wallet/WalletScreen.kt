@@ -1,34 +1,51 @@
 package com.tapnexempire.ui.wallet
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.tapnexempire.navigation.Routes
-import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.R
 import com.tapnexempire.data.model.WalletModel
+import com.tapnexempire.navigation.Routes
+import com.tapnexempire.ui.components.EmpireWalletCard
+import com.tapnexempire.ui.theme.EmpireGold
+import com.tapnexempire.ui.theme.EmpireWhite
 import com.tapnexempire.utils.UiState
+import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.components.AppButton
 
-   @Composable
+@Composable
 fun WalletScreen(
+
     userId: String,
+
     navController: NavController,
+
     onTransactionClick: () -> Unit,
+
     viewModel: WalletViewModel = hiltViewModel()
 ) {
 
-    // ✅ SAFETY CHECK
     if (userId.isEmpty()) {
 
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text("User not logged in ❌")
+
+            Text(
+                text = "User not logged in ❌",
+                color = EmpireWhite
+            )
         }
 
         return
@@ -36,104 +53,131 @@ fun WalletScreen(
 
     val state by viewModel.walletState.collectAsState()
 
-    // ✅ START LISTENER
     LaunchedEffect(userId) {
+
         viewModel.startWalletListener(userId)
     }
 
-    when (state) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
-        is UiState.Loading -> {
+        // 👑 BACKGROUND
+        Image(
+            painter = painterResource(id = R.drawable.wallet_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
+        )
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+        when (state) {
+
+            is UiState.Loading -> {
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    CircularProgressIndicator(
+                        color = EmpireGold
+                    )
+                }
             }
-        }
 
-        is UiState.Error -> {
+            is UiState.Error -> {
 
-            val message = (state as UiState.Error).message
+                val message =
+                    (state as UiState.Error).message
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("❌ $message")
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Text(
+                        text = "❌ $message",
+                        color = EmpireWhite
+                    )
+                }
             }
-        }
 
-        is UiState.Success -> {
+            is UiState.Success -> {
 
-            val wallet =
-                (state as UiState.Success<WalletModel>).data
+                val wallet =
+                    (state as UiState.Success<WalletModel>).data
 
-            val total =
-                wallet.depositCoins +
-                wallet.bonusCoins +
-                wallet.withdrawableCoins
+                Column(
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 18.dp)
+                        .padding(top = 50.dp)
+                        .verticalScroll(rememberScrollState()),
 
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-
-                Text(
-                    text = "My Wallet 💰",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-
-                Card(
-                    modifier = Modifier.fillMaxWidth()
+                    verticalArrangement =
+                        Arrangement.spacedBy(20.dp)
                 ) {
 
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
+                    // 👑 TITLE
+                    Text(
 
-                        Text("Total Coins: $total")
+                        text = "👑 Empire Wallet",
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        style =
+                            MaterialTheme.typography.headlineLarge,
 
-                        Text("Deposit Coins: ${wallet.depositCoins}")
+                        color = EmpireWhite
+                    )
 
-                        Text("Bonus Coins: ${wallet.bonusCoins}")
+                    // 💰 WALLET CARD
+                    EmpireWalletCard(
 
-                        Text("Withdrawable Coins: ${wallet.withdrawableCoins}")
-                    }
-                }
+                        depositCoins =
+                            wallet.depositCoins,
 
-                // 💰 Deposit
-                Button(
-                    onClick = {
-                        navController.navigate(Routes.DEPOSIT)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Deposit")
-                }
+                        withdrawableCoins =
+                            wallet.withdrawableCoins,
 
-                // 💸 Withdraw
-                Button(
-                    onClick = {
-                        navController.navigate(Routes.WITHDRAW)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Withdraw")
-                }
+                        bonusCoins =
+                            wallet.bonusCoins
+                    )
 
-                // 📜 Transactions
-                Button(
-                    onClick = onTransactionClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("View Transactions 📜")
+                    // 💰 DEPOSIT BUTTON
+                    AppButton(
+
+                        text = "💰 Deposit Coins",
+
+                        onClick = {
+
+                            navController.navigate(
+                                Routes.DEPOSIT
+                            )
+                        }
+                    )
+
+                    // 💸 WITHDRAW BUTTON
+                    AppButton(
+
+                        text = "💸 Withdraw Coins",
+
+                        onClick = {
+
+                            navController.navigate(
+                                Routes.WITHDRAW
+                            )
+                        }
+                    )
+
+                    // 📜 TRANSACTION BUTTON
+                    AppButton(
+
+                        text = "📜 Transaction History",
+
+                        onClick = onTransactionClick
+                    )
+
+                    Spacer(modifier = Modifier.height(30.dp))
                 }
             }
         }
