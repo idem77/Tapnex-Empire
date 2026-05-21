@@ -16,6 +16,7 @@ import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.game.GameScreen
+import com.tapnexempire.ui.equipment.EquipmentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
@@ -47,7 +48,10 @@ object Routes {
     const val DEPOSIT = "deposit"
 
     const val TRANSACTIONS = "transactions"
+    
     const val GAME = "game"
+
+    const val EQUIPMENT = "equipment"
 }
 
 @Composable
@@ -154,6 +158,14 @@ fun AppNavGraph(
 
             TaskScreen()
         }
+
+          //🧸Equipment screen 
+            composable(
+    Routes.EQUIPMENT
+) {
+
+    EquipmentScreen()
+            }
 
         // 🏆 Tournament List
 composable(Routes.TOURNAMENTS) {
