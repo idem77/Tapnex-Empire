@@ -122,13 +122,12 @@ fun AppNavGraph(
         }
 
         // 🏠 Home
-        composable(Routes.HOME) {
+composable(Routes.HOME) {
 
-          HomeScreen(
-    navController: NavController
-)
-        }
-
+    HomeScreen(
+        navController = navController
+    )
+}
         // 💰 Wallet
         composable(Routes.WALLET) {
 
