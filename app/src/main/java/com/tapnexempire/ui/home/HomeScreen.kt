@@ -10,6 +10,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -18,16 +19,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tapnexempire.R
 import com.tapnexempire.navigation.Routes
 import com.tapnexempire.ui.theme.EmpireGold
 import com.tapnexempire.ui.theme.EmpireWhite
+import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+
+    navController: NavController,
+
+    characterViewModel: CharacterViewModel =
+        hiltViewModel()
 ) {
+
+    val characterState =
+        characterViewModel.characterState
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -35,6 +45,7 @@ fun HomeScreen(
 
         // 👑 BACKGROUND
         Image(
+
             painter = painterResource(
                 id = R.drawable.empire_bg
             ),
@@ -93,27 +104,83 @@ fun HomeScreen(
             )
 
             Spacer(
-                modifier = Modifier.height(20.dp)
+                modifier = Modifier.height(12.dp)
             )
 
             // 👑 CHARACTER
             Image(
 
                 painter = painterResource(
-                    id = R.drawable.character
+
+                    id =
+                        R.drawable.character
                 ),
 
                 contentDescription = null,
 
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(420.dp),
+                    .height(500.dp)
+                    .padding(top = 10.dp),
 
                 contentScale = ContentScale.Fit
             )
 
             Spacer(
-                modifier = Modifier.height(20.dp)
+                modifier = Modifier.height(10.dp)
+            )
+
+            // 💎 CURRENT BUNDLE
+            Card(
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(85.dp),
+
+                colors = CardDefaults.cardColors(
+
+                    containerColor =
+                        Color(0xCC15171D)
+                )
+            ) {
+
+                Column(
+
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+
+                    verticalArrangement =
+                        Arrangement.Center
+                ) {
+
+                    Text(
+
+                        text = "💎 Active Bundle",
+
+                        color = EmpireGold,
+
+                        style =
+                            MaterialTheme.typography.titleMedium
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(4.dp)
+                    )
+
+                    Text(
+
+                        text =
+                            characterState.selectedBundle?.title
+                                ?: "No Bundle Equipped",
+
+                        color = Color.White
+                    )
+                }
+            }
+
+            Spacer(
+                modifier = Modifier.height(18.dp)
             )
 
             // ⚔ EQUIPMENT CARD
