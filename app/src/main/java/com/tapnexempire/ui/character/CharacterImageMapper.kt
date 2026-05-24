@@ -1,8 +1,8 @@
 package com.tapnexempire.ui.character
 
 import com.tapnexempire.R
-import com.tapnexempire.model.CharacterPose
-import com.tapnexempire.model.EquipmentType
+import com.tapnexempire.data.model.CharacterPose
+import com.tapnexempire.data.model.EquipmentType
 
 object CharacterImageMapper {
 
