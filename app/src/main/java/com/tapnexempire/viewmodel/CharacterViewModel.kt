@@ -1,30 +1,32 @@
 package com.tapnexempire.viewmodel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.tapnexempire.data.model.*
 
 class CharacterViewModel : ViewModel() {
 
-    var characterState =
-        mutableStateOf(
+    var characterState by mutableStateOf(
 
-            CharacterModel(
-                id = "empire_king",
+        CharacterModel(
 
-                name = "Empire Warrior"
-            )
+            id = "empire_king",
+
+            name = "Empire Warrior"
         )
+    )
 
-        private set
+    private set
 
     // 👑 CHANGE POSE
     fun changePose(
         pose: CharacterPose
     ) {
 
-        characterState.value =
-            characterState.value.copy(
+        characterState =
+            characterState.copy(
 
                 currentPose = pose
             )
@@ -35,8 +37,8 @@ class CharacterViewModel : ViewModel() {
         bundle: BundleModel
     ) {
 
-        characterState.value =
-            characterState.value.copy(
+        characterState =
+            characterState.copy(
 
                 selectedBundle = bundle
             )
@@ -47,8 +49,8 @@ class CharacterViewModel : ViewModel() {
         equipment: EquipmentModel
     ) {
 
-        characterState.value =
-            characterState.value.copy(
+        characterState =
+            characterState.copy(
 
                 equippedItems = equipment
             )
@@ -59,8 +61,8 @@ class CharacterViewModel : ViewModel() {
         rank: String
     ) {
 
-        characterState.value =
-            characterState.value.copy(
+        characterState =
+            characterState.copy(
                 rank = rank
             )
     }
