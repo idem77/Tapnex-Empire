@@ -69,24 +69,11 @@ Box(
         contentScale = ContentScale.Fit
     )
 
-    // 👑 CHARACTER
-    Image(
-
-        painter = painterResource(
-
-            id = CharacterImageMapper
-                .getPoseImage(
-                    character.currentPose
-                )
-        ),
-
-        contentDescription = null,
-
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        contentScale = ContentScale.Fit
-    )
+    // 👑 LIVE CHARACTER
+CharacterRenderer(
+viewModel = characterViewModel
+)
+    
 
     // 👑 WEAPON
     Image(
