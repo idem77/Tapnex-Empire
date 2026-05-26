@@ -25,6 +25,7 @@ import com.tapnexempire.R
 import com.tapnexempire.navigation.Routes
 import com.tapnexempire.ui.theme.EmpireGold
 import com.tapnexempire.ui.theme.EmpireWhite
+import com.tapnexempire.ui.character.CharacterRenderer
 import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
