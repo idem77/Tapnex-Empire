@@ -24,6 +24,13 @@ import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.ui.admin.DepositRequestScreen
+import com.tapnexempire.ui.admin.WithdrawRequestScreen
+import com.tapnexempire.ui.admin.TournamentControlScreen
+import com.tapnexempire.ui.admin.BundleControlScreen
+import com.tapnexempire.ui.admin.CharacterControlScreen
+import com.tapnexempire.ui.admin.EventControlScreen
+import com.tapnexempire.ui.admin.UserManagementScreen
 
 object Routes {
 
@@ -52,6 +59,30 @@ object Routes {
     const val GAME = "game"
 
     const val EQUIPMENT = "equipment"
+
+    const val ADMIN = "admin"
+
+const val DEPOSIT_REQUESTS =
+"deposit_requests"
+
+const val WITHDRAW_REQUESTS =
+"withdraw_requests"
+
+const val TOURNAMENT_CONTROL =
+"tournament_control"
+
+const val BUNDLE_CONTROL =
+"bundle_control"
+
+const val CHARACTER_CONTROL =
+"character_control"
+
+const val EVENT_CONTROL =
+"event_control"
+
+const val USER_MANAGEMENT =
+"user_management"
+    
 }
 
 @Composable
@@ -167,6 +198,49 @@ composable(Routes.HOME) {
 
     EquipmentScreen()
             }
+
+        //🤴 admin
+        composable(Routes.DEPOSIT_REQUESTS) {
+
+DepositRequestScreen()
+
+}
+
+composable(Routes.WITHDRAW_REQUESTS) {
+
+WithdrawRequestScreen()
+
+}
+
+composable(Routes.TOURNAMENT_CONTROL) {
+
+TournamentControlScreen()
+
+}
+
+composable(Routes.BUNDLE_CONTROL) {
+
+BundleControlScreen()
+
+}
+
+composable(Routes.CHARACTER_CONTROL) {
+
+CharacterControlScreen()
+
+}
+
+composable(Routes.EVENT_CONTROL) {
+
+EventControlScreen()
+
+}
+
+composable(Routes.USER_MANAGEMENT) {
+
+UserManagementScreen()
+
+}
 
         // 🏆 Tournament List
 composable(Routes.TOURNAMENTS) {
