@@ -2,80 +2,88 @@ package com.tapnexempire.ui.character
 
 import com.tapnexempire.R
 import com.tapnexempire.data.model.CharacterPose
-import com.tapnexempire.data.model.EquipmentType
 
 object CharacterImageMapper {
 
-    fun getPoseImage(
-        pose: CharacterPose
-    ): Int {
+// 👑 CHARACTER POSE IMAGE
+fun getPoseImage(
+    pose: CharacterPose
+): Int {
 
-        return when (pose) {
+    return when (pose) {
 
-            CharacterPose.STANDING ->
-                R.drawable.pose_standing
+        CharacterPose.STANDING ->
+            R.drawable.pose_standing
 
-            CharacterPose.SWORD_READY ->
-                R.drawable.pose_sword_ready
+        CharacterPose.BATTLE ->
+            R.drawable.pose_battle
 
-            CharacterPose.BATTLE ->
-                R.drawable.pose_battle
+        CharacterPose.MAGIC ->
+            R.drawable.pose_magic
 
-            CharacterPose.MAGIC ->
-                R.drawable.pose_magic
+        CharacterPose.THRONE ->
+            R.drawable.pose_throne
 
-            CharacterPose.THRONE ->
-                R.drawable.pose_throne
-
-            CharacterPose.VICTORY ->
-                R.drawable.pose_victory
-
-            CharacterPose.GUARD ->
-                R.drawable.pose_guard
-
-            CharacterPose.DARK_AURA ->
-                R.drawable.pose_dark_aura
-
-            CharacterPose.WINGS ->
-                R.drawable.pose_wings
-
-            CharacterPose.POWERUP ->
-                R.drawable.pose_powerup
-
-            CharacterPose.LOOK_LEFT ->
-                R.drawable.pose_look_left
-
-            CharacterPose.LOOK_RIGHT ->
-                R.drawable.pose_look_right
-        }
+        else ->
+            R.drawable.pose_standing
     }
+}
 
-    fun getEquipmentImage(
-        equipment: EquipmentType
-    ): Int {
+// 👑 AURA IMAGE
+fun getAuraImage(
+    aura: String
+): Int {
 
-        return when (equipment) {
+    return when (aura) {
 
-            EquipmentType.ROYAL_SWORD ->
-                R.drawable.weapon_royal_sword
+        "FIRE" ->
+            R.drawable.aura_fire
 
-            EquipmentType.SHADOW_BLADE ->
-                R.drawable.weapon_shadow_blade
+        "ICE" ->
+            R.drawable.aura_ice
 
-            EquipmentType.FIRE_SWORD ->
-                R.drawable.weapon_fire_sword
+        "DARK" ->
+            R.drawable.aura_dark
 
-            EquipmentType.ICE_SWORD ->
-                R.drawable.weapon_ice_sword
-
-            EquipmentType.LIGHTNING_SWORD ->
-                R.drawable.weapon_lightning_sword
-
-            EquipmentType.DRAGON_SWORD ->
-                R.drawable.weapon_dragon_sword
-
-            EquipmentType.DIVINE_SPEAR ->
-                R.drawable.weapon_divine_spear
-        }
+        else ->
+            R.drawable.aura_none
     }
+}
+
+// 👑 WEAPON IMAGE
+fun getWeaponImage(
+    weapon: String
+): Int {
+
+    return when (weapon) {
+
+        "ROYAL_SWORD" ->
+            R.drawable.weapon_royal_sword
+
+        "SHADOW_BLADE" ->
+            R.drawable.weapon_shadow_blade
+
+        else ->
+            R.drawable.weapon_none
+    }
+}
+
+// 👑 WINGS IMAGE
+fun getWingsImage(
+    wings: String
+): Int {
+
+    return when (wings) {
+
+        "ANGEL" ->
+            R.drawable.wings_angel
+
+        "DARK" ->
+            R.drawable.wings_dark
+
+        else ->
+            R.drawable.wings_none
+    }
+}
+
 }
