@@ -108,24 +108,10 @@ fun HomeScreen(
                 modifier = Modifier.height(12.dp)
             )
 
-            // 👑 CHARACTER
-            Image(
-
-                painter = painterResource(
-
-                    id =
-                        R.drawable.character
-                ),
-
-                contentDescription = null,
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp)
-                    .padding(top = 10.dp),
-
-                contentScale = ContentScale.Fit
-            )
+            // 👑 LIVE CHARACTER
+CharacterRenderer(
+viewModel = characterViewModel
+)
 
             Spacer(
                 modifier = Modifier.height(10.dp)
