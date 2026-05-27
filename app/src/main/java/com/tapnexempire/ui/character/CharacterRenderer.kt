@@ -69,10 +69,18 @@ Box(
         contentScale = ContentScale.Fit
     )
 
-    // 👑 LIVE CHARACTER
-CharacterRenderer(
-viewModel = characterViewModel
-)
+   // 👑 CHARACTER
+Image(
+
+painter = painterResource(
+
+    id = CharacterImageMapper
+        .getPoseImage(
+            character.currentPose
+        )
+),
+
+) 
     
 
     // 👑 WEAPON
