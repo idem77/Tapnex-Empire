@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.R
 import com.tapnexempire.data.model.CharacterPose
+import com.tapnexempire.ui.character.CharacterRenderer
 import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
@@ -25,7 +26,7 @@ fun EquipmentScreen(
 ) {
 
     val character =
-        viewModel.characterState.value
+        viewModel.characterState
 
     val poses = listOf(
 
