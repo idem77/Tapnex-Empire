@@ -18,4 +18,11 @@ data class CharacterModel(
 
     val selectedBundle:
         BundleModel = BundleModel()
+
+    val selectedAura: String = "none",
+
+     val selectedWings: String = "none",
+
+     val selectedWeapon: String = "none"
+    
 )
