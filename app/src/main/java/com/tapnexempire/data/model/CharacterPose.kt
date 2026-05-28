@@ -9,4 +9,9 @@ package com.tapnexempire.data.model
     MAGIC,
     WINGS,
     LEGENDARY
+    IDLE,
+    BATTLE,
+    VICTORY,
+    MEDITATION
+    
 }
