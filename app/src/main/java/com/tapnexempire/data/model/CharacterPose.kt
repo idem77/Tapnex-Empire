@@ -1,15 +1,13 @@
 package com.tapnexempire.data.model
 
-  enum class CharacterPose {
+enum class CharacterPose {
 
-    STANDING,
-    THRONE,
-    BATTLE,
-    AURA,
-    MAGIC,
-    WINGS,
-    LEGENDARY
-    IDLE,   
-    VICTORY,
-    MEDITATION, 
-}
+IDLE,
+BATTLE,
+AURA,
+DIVINE,
+THRONE,
+VICTORY,
+MEDITATION
+
+} 
