@@ -12,12 +12,27 @@ fun getPoseImage(
 
     return when (pose) {
 
-        CharacterPose.DIVINE ->
-            R.drawable.pose_divine
+    CharacterPose.IDLE ->
+        R.drawable.pose_idle
 
-        CharacterPose.THRONE ->
-            R.drawable.pose_throne
-    }
+    CharacterPose.BATTLE ->
+        R.drawable.pose_battle
+
+    CharacterPose.AURA ->
+        R.drawable.pose_aura
+
+    CharacterPose.DIVINE ->
+        R.drawable.pose_divine
+
+    CharacterPose.THRONE ->
+        R.drawable.pose_throne
+
+    CharacterPose.VICTORY ->
+        R.drawable.pose_victory
+
+    CharacterPose.MEDITATION ->
+        R.drawable.pose_meditation
+ }
 }
 
 // 👑 BUNDLE IMAGES
