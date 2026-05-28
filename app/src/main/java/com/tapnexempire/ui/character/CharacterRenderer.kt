@@ -22,7 +22,7 @@ viewModel: CharacterViewModel
 ) {
 
 val characterState by
-viewModel.characterState
+viewModel.characterState.value
 
 Box(
 
