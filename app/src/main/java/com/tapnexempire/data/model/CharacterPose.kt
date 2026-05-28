@@ -11,5 +11,5 @@ package com.tapnexempire.data.model
     LEGENDARY
     IDLE,   
     VICTORY,
-    MEDITATION    
+    MEDITATION, 
 }
