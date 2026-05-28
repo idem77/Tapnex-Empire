@@ -1,6 +1,7 @@
 package com.tapnexempire.ui.character
 
 import com.tapnexempire.R
+import com.tapnexempire.data.model.BundleModel
 import com.tapnexempire.data.model.CharacterPose
 
 object CharacterImageMapper {
@@ -37,7 +38,7 @@ fun getPoseImage(
 
 // 👑 BUNDLE IMAGES
 fun getBundleImage(
-    bundleId: String
+    bundleId: BundleModel
 ): Int {
 
     return when (bundleId) {
