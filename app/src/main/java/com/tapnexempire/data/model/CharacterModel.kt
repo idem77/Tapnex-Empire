@@ -11,7 +11,7 @@ data class CharacterModel(
     val rank: String = "Beginner",
 
     val currentPose:
-        CharacterPose = CharacterPose.STANDING,
+        CharacterPose = CharacterPose.IDLE,
 
     val equippedItems:
         EquipmentModel = EquipmentModel(),
