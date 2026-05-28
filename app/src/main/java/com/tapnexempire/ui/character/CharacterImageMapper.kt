@@ -5,84 +5,84 @@ import com.tapnexempire.data.model.CharacterPose
 
 object CharacterImageMapper {
 
-// 👑 CHARACTER POSE IMAGE
+// 👑 POSE IMAGES
 fun getPoseImage(
     pose: CharacterPose
 ): Int {
 
     return when (pose) {
 
-        CharacterPose.STANDING ->
-            R.drawable.pose_standing
-
-        CharacterPose.BATTLE ->
-            R.drawable.pose_battle
-
-        CharacterPose.MAGIC ->
-            R.drawable.pose_magic
+        CharacterPose.DIVINE ->
+            R.drawable.pose_divine
 
         CharacterPose.THRONE ->
             R.drawable.pose_throne
-
-        else ->
-            R.drawable.pose_standing
     }
 }
 
-// 👑 AURA IMAGE
+// 👑 BUNDLE IMAGES
+fun getBundleImage(
+    bundleId: String
+): Int {
+
+    return when (bundleId) {
+
+        "lightbringer" ->
+            R.drawable.bundle_lightbringer
+
+        "celestial_divine" ->
+            R.drawable.bundle_celestial_divine
+
+        else ->
+            R.drawable.bundle_shadow_reaper
+    }
+}
+
+// 👑 AURA IMAGES
 fun getAuraImage(
-    aura: String
+    auraId: String
 ): Int {
 
-    return when (aura) {
+    return when (auraId) {
 
-        "FIRE" ->
-            R.drawable.aura_fire
-
-        "ICE" ->
-            R.drawable.aura_ice
-
-        "DARK" ->
-            R.drawable.aura_dark
+        "light_aura" ->
+            R.drawable.aura_light
 
         else ->
-            R.drawable.aura_none
+            R.drawable.aura_light
     }
 }
 
-// 👑 WEAPON IMAGE
+// 👑 WEAPON IMAGES
 fun getWeaponImage(
-    weapon: String
+    weaponId: String
 ): Int {
 
-    return when (weapon) {
+    return when (weaponId) {
 
-        "ROYAL_SWORD" ->
-            R.drawable.weapon_royal_sword
-
-        "SHADOW_BLADE" ->
-            R.drawable.weapon_shadow_blade
+        "ember_blade" ->
+            R.drawable.weapon_ember_blade
 
         else ->
-            R.drawable.weapon_none
+            R.drawable.weapon_light_sword
     }
 }
 
-// 👑 WINGS IMAGE
+// 👑 WINGS IMAGES
 fun getWingsImage(
-    wings: String
+    wingsId: String
 ): Int {
 
-    return when (wings) {
+    return when (wingsId) {
 
-        "ANGEL" ->
+        "angel_wings" ->
             R.drawable.wings_angel
 
-        "DARK" ->
-            R.drawable.wings_dark
+        "celestial_wings" ->
+            R.drawable.celestial_wings
 
         else ->
-            R.drawable.wings_none
+            R.drawable.wings_shadow
     }
 }
 
