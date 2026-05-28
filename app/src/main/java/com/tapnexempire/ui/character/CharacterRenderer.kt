@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
@@ -19,36 +21,18 @@ viewModel: CharacterViewModel
 
 ) {
 
-val character =
-    viewModel.characterState.value
+val characterState by
+viewModel.characterState
 
 Box(
 
     modifier = Modifier
         .fillMaxWidth()
-        .height(420.dp),
+        .height(520.dp),
 
-    contentAlignment = Alignment.Center
+    contentAlignment =
+        Alignment.Center
 ) {
-
-    // 👑 WINGS
-    Image(
-
-        painter = painterResource(
-
-            id = CharacterImageMapper
-                .getWingsImage(
-                    character.currentWings
-                )
-        ),
-
-        contentDescription = null,
-
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        contentScale = ContentScale.Fit
-    )
 
     // 👑 AURA
     Image(
@@ -57,7 +41,9 @@ Box(
 
             id = CharacterImageMapper
                 .getAuraImage(
-                    character.currentAura
+
+                    characterState
+                        .selectedAura
                 )
         ),
 
@@ -66,22 +52,53 @@ Box(
         modifier = Modifier
             .fillMaxWidth(),
 
-        contentScale = ContentScale.Fit
+        contentScale =
+            ContentScale.Fit
     )
 
-   // 👑 CHARACTER
-Image(
+    // 👑 WINGS
+    Image(
 
-painter = painterResource(
+        painter = painterResource(
 
-    id = CharacterImageMapper
-        .getPoseImage(
-            character.currentPose
-        )
-),
+            id = CharacterImageMapper
+                .getWingsImage(
 
-) 
-    
+                    characterState
+                        .selectedWings
+                )
+        ),
+
+        contentDescription = null,
+
+        modifier = Modifier
+            .fillMaxWidth(),
+
+        contentScale =
+            ContentScale.Fit
+    )
+
+    // 👑 BUNDLE / CHARACTER
+    Image(
+
+        painter = painterResource(
+
+            id = CharacterImageMapper
+                .getBundleImage(
+
+                    characterState
+                        .selectedBundle
+                )
+        ),
+
+        contentDescription = null,
+
+        modifier = Modifier
+            .fillMaxWidth(),
+
+        contentScale =
+            ContentScale.Fit
+    )
 
     // 👑 WEAPON
     Image(
@@ -90,7 +107,9 @@ painter = painterResource(
 
             id = CharacterImageMapper
                 .getWeaponImage(
-                    character.equippedItems.weapon
+
+                    characterState
+                        .selectedWeapon
                 )
         ),
 
@@ -99,7 +118,8 @@ painter = painterResource(
         modifier = Modifier
             .fillMaxWidth(),
 
-        contentScale = ContentScale.Fit
+        contentScale =
+            ContentScale.Fit
     )
 }
 
