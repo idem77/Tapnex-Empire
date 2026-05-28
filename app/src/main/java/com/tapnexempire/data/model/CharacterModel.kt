@@ -24,5 +24,4 @@ data class CharacterModel(
      val selectedWings: String = "none",
 
      val selectedWeapon: String = "none"
-    
-)
+    )
