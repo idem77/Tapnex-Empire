@@ -29,14 +29,21 @@ fun EquipmentScreen(
 
     val poses = listOf(
 
-        CharacterPose.STANDING,
+CharacterPose.IDLE,
 
-        CharacterPose.BATTLE,
+CharacterPose.BATTLE,
 
-        CharacterPose.AURA,
+CharacterPose.AURA,
 
-        CharacterPose.MAGIC
-    )
+CharacterPose.DIVINE,
+
+CharacterPose.THRONE,
+
+CharacterPose.VICTORY,
+
+CharacterPose.MEDITATION
+
+)
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -79,24 +86,10 @@ fun EquipmentScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 👑 CHARACTER
-            Image(
-
-                painter =
-                    painterResource(
-                        id = R.drawable.character
-                    ),
-
-                contentDescription = null,
-
-                modifier =
-                    Modifier
-                        .height(320.dp)
-                        .fillMaxWidth(),
-
-                contentScale =
-                    ContentScale.Fit
-            )
+           //👑 CHARACTER Image
+            CharacterRenderer(
+                viewModel = viewModel
+)
 
             Spacer(modifier = Modifier.height(20.dp))
 
