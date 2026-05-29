@@ -38,7 +38,7 @@ fun getPoseImage(
 
 // 👑 BUNDLE IMAGES
 fun getBundleImage(
-    bundleId: BundleModel
+    bundle: BundleModel
 ): Int {
 
     return when (bundle.id) {
