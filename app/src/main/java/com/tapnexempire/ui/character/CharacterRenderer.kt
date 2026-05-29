@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.tapnexempire.ui.character.CharacterRenderer
+import com.tapnexempire.data.model.BundelModle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tapnexempire.viewmodel.CharacterViewModel
 
