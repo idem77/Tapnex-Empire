@@ -10,7 +10,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -31,262 +30,322 @@ import com.tapnexempire.viewmodel.CharacterViewModel
 @Composable
 fun HomeScreen(
 
-    navController: NavController,
+navController: NavController,
 
-    characterViewModel: CharacterViewModel =
-        hiltViewModel()
+characterViewModel: CharacterViewModel =
+    hiltViewModel()
+
 ) {
 
-    val characterState =
-        characterViewModel.characterState
+val characterState =
+    characterViewModel.characterState
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+Box(
+    modifier = Modifier.fillMaxSize()
+) {
 
-        // 👑 BACKGROUND
-        Image(
+    // 👑 BACKGROUND
+    Image(
 
-            painter = painterResource(
-                id = R.drawable.empire_bg
+        painter = painterResource(
+            id = R.drawable.empire_bg
+        ),
+
+        contentDescription = null,
+
+        modifier = Modifier.fillMaxSize(),
+
+        contentScale = ContentScale.FillHeight,
+
+        alignment = Alignment.Center
+    )
+
+    // 👑 CONTENT
+    Column(
+
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 90.dp)
+            .verticalScroll(
+                rememberScrollState()
             ),
 
-            contentDescription = null,
+        horizontalAlignment =
+            Alignment.CenterHorizontally
+    ) {
 
-            modifier = Modifier.fillMaxSize(),
-
-            contentScale = ContentScale.FillHeight,
-
-            alignment = Alignment.Center
+        Spacer(
+            modifier = Modifier.height(45.dp)
         )
 
-        // 👑 CONTENT
-        Column(
+        // 👑 TITLE
+        Text(
+
+            text = "👑 Tapnex Empire",
+
+            style =
+                MaterialTheme.typography.headlineLarge,
+
+            color = EmpireWhite
+        )
+
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+        Text(
+
+            text =
+                "Rise Through The Empire 😏🔥",
+
+            color = EmpireGold,
+
+            fontSize = 16.sp
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        // 👑 LIVE CHARACTER
+        CharacterRenderer(
+            viewModel = characterViewModel
+        )
+
+        Spacer(
+            modifier = Modifier.height(10.dp)
+        )
+
+        // 💎 CURRENT BUNDLE
+        Card(
 
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 90.dp)
-                .verticalScroll(
-                    rememberScrollState()
-                ),
+                .fillMaxWidth()
+                .height(85.dp),
 
-            horizontalAlignment =
-                Alignment.CenterHorizontally
+            colors = CardDefaults.cardColors(
+
+                containerColor =
+                    Color(0xCC15171D)
+            )
         ) {
 
-            Spacer(
-                modifier = Modifier.height(45.dp)
-            )
-
-            // 👑 TITLE
-            Text(
-
-                text = "👑 Tapnex Empire",
-
-                style =
-                    MaterialTheme.typography.headlineLarge,
-
-                color = EmpireWhite
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-
-                text =
-                    "Rise Through The Empire 😏🔥",
-
-                color = EmpireGold,
-
-                fontSize = 16.sp
-            )
-
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-
-            // 👑 LIVE CHARACTER
-CharacterRenderer(
-viewModel = characterViewModel
-)
-
-            Spacer(
-                modifier = Modifier.height(10.dp)
-            )
-
-            // 💎 CURRENT BUNDLE
-            Card(
+            Column(
 
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(85.dp),
+                    .fillMaxSize()
+                    .padding(16.dp),
 
-                colors = CardDefaults.cardColors(
-
-                    containerColor =
-                        Color(0xCC15171D)
-                )
+                verticalArrangement =
+                    Arrangement.Center
             ) {
 
-                Column(
+                Text(
 
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
+                    text = "💎 Active Bundle",
 
-                    verticalArrangement =
-                        Arrangement.Center
-                ) {
+                    color = EmpireGold,
 
-                    Text(
-
-                        text = "💎 Active Bundle",
-
-                        color = EmpireGold,
-
-                        style =
-                            MaterialTheme.typography.titleMedium
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
-
-                    Text(
-
-                        text =
-                            characterState.selectedBundle?.title
-                                ?: "No Bundle Equipped",
-
-                        color = Color.White
-                    )
-                }
-            }
-
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
-
-            // ⚔ EQUIPMENT CARD
-            Card(
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(95.dp)
-                    .shadow(12.dp)
-                    .clickable {
-
-                        navController.navigate(
-                            Routes.EQUIPMENT
-                        )
-                    },
-
-                colors = CardDefaults.cardColors(
-
-                    containerColor =
-                        Color(0xCC1A1C22)
+                    style =
+                        MaterialTheme.typography.titleMedium
                 )
-            ) {
 
-                Column(
-
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(18.dp),
-
-                    verticalArrangement =
-                        Arrangement.Center
-                ) {
-
-                    Text(
-
-                        text = "⚔ Equipment",
-
-                        style =
-                            MaterialTheme.typography.titleLarge,
-
-                        color = Color.White
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
-
-                    Text(
-
-                        text =
-                            "Upgrade your warrior & unlock legendary power 😏🔥",
-
-                        color = Color.LightGray
-                    )
-                }
-            }
-
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
-
-            // 🏆 TOURNAMENT CARD
-            Card(
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(95.dp)
-                    .shadow(12.dp)
-                    .clickable {
-
-                        navController.navigate(
-                            Routes.TOURNAMENTS
-                        )
-                    },
-
-                colors = CardDefaults.cardColors(
-
-                    containerColor =
-                        Color(0xCC1A1C22)
+                Spacer(
+                    modifier = Modifier.height(4.dp)
                 )
-            ) {
 
-                Column(
+                Text(
 
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(18.dp),
+                    text =
+                        characterState.selectedBundle.title,
 
-                    verticalArrangement =
-                        Arrangement.Center
-                ) {
-
-                    Text(
-
-                        text = "🏆 Battle Arena",
-
-                        style =
-                            MaterialTheme.typography.titleLarge,
-
-                        color = Color.White
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
-
-                    Text(
-
-                        text =
-                            "Enter tournaments & dominate the empire 😏🔥",
-
-                        color = Color.LightGray
-                    )
-                }
+                    color = Color.White
+                )
             }
-
-            Spacer(
-                modifier = Modifier.height(30.dp)
-            )
         }
+
+        Spacer(
+            modifier = Modifier.height(18.dp)
+        )
+
+        // ⚔ EQUIPMENT CARD
+        Card(
+
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(95.dp)
+                .shadow(12.dp)
+                .clickable {
+
+                    navController.navigate(
+                        Routes.EQUIPMENT
+                    )
+                },
+
+            colors = CardDefaults.cardColors(
+
+                containerColor =
+                    Color(0xCC1A1C22)
+            )
+        ) {
+
+            Column(
+
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(18.dp),
+
+                verticalArrangement =
+                    Arrangement.Center
+            ) {
+
+                Text(
+
+                    text = "⚔ Equipment",
+
+                    style =
+                        MaterialTheme.typography.titleLarge,
+
+                    color = Color.White
+                )
+
+                Spacer(
+                    modifier = Modifier.height(4.dp)
+                )
+
+                Text(
+
+                    text =
+                        "Upgrade your warrior & unlock legendary power 😏🔥",
+
+                    color = Color.LightGray
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(18.dp)
+        )
+
+        // 🏆 TOURNAMENT CARD
+        Card(
+
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(95.dp)
+                .shadow(12.dp)
+                .clickable {
+
+                    navController.navigate(
+                        Routes.TOURNAMENTS
+                    )
+                },
+
+            colors = CardDefaults.cardColors(
+
+                containerColor =
+                    Color(0xCC1A1C22)
+            )
+        ) {
+
+            Column(
+
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(18.dp),
+
+                verticalArrangement =
+                    Arrangement.Center
+            ) {
+
+                Text(
+
+                    text = "🏆 Battle Arena",
+
+                    style =
+                        MaterialTheme.typography.titleLarge,
+
+                    color = Color.White
+                )
+
+                Spacer(
+                    modifier = Modifier.height(4.dp)
+                )
+
+                Text(
+
+                    text =
+                        "Enter tournaments & dominate the empire 😏🔥",
+
+                    color = Color.LightGray
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(18.dp)
+        )
+
+        // 👑 ADMIN PANEL
+        Card(
+
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(95.dp)
+                .shadow(12.dp)
+                .clickable {
+
+                    navController.navigate(
+                        "admin_dashboard"
+                    )
+                },
+
+            colors = CardDefaults.cardColors(
+
+                containerColor =
+                    Color(0xCC2A1822)
+            )
+        ) {
+
+            Column(
+
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(18.dp),
+
+                verticalArrangement =
+                    Arrangement.Center
+            ) {
+
+                Text(
+
+                    text = "👑 Empire Admin",
+
+                    style =
+                        MaterialTheme.typography.titleLarge,
+
+                    color = Color.White
+                )
+
+                Spacer(
+                    modifier = Modifier.height(4.dp)
+                )
+
+                Text(
+
+                    text =
+                        "Control tournaments, deposits & empire systems 😏🔥",
+
+                    color = Color.LightGray
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(30.dp)
+        )
     }
+}
+
 }
