@@ -24,6 +24,7 @@ import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
+import com.tapnexempire.ui.admin.AdminDashboardScreen
 import com.tapnexempire.ui.admin.DepositRequestScreen
 import com.tapnexempire.ui.admin.WithdrawRequestScreen
 import com.tapnexempire.ui.admin.TournamentControlScreen
@@ -198,6 +199,15 @@ composable(Routes.HOME) {
 
     EquipmentScreen()
             }
+
+        // 🤴king admin 
+          composable(
+route = "admin_dashboard"
+) {
+
+AdminDashboardScreen()
+
+          }
 
         //🤴 admin
         composable(Routes.DEPOSIT_REQUESTS) {
