@@ -41,7 +41,7 @@ fun getBundleImage(
     bundleId: BundleModel
 ): Int {
 
-    return when (bundle.Id) {
+    return when (bundle.id) {
 
         "lightbringer" ->
             R.drawable.bundle_lightbringer
