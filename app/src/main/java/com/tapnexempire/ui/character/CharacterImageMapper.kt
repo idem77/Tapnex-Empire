@@ -3,6 +3,7 @@ package com.tapnexempire.ui.character
 import com.tapnexempire.R
 import com.tapnexempire.data.model.BundleModel
 import com.tapnexempire.data.model.CharacterPose
+import com.tapnexempire.data.model.CharacterModel
 
 object CharacterImageMapper {
 
