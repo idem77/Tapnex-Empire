@@ -30,7 +30,19 @@ class CharacterViewModel : ViewModel() {
 
                 currentPose = pose
             )
-    }
+    }   
+
+          //🫅🏻 Change Aura
+          fun changeAura(
+    aura: String
+) {
+
+    characterState =
+        characterState.copy(
+
+            selectedAura = aura
+        )
+          }
 
     // 👑 EQUIP BUNDLE
     fun equipBundle(
