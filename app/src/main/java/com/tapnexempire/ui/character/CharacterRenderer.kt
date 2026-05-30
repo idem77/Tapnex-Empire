@@ -5,124 +5,73 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.ui.character.CharacterRenderer
-import com.tapnexempire.data.model.BundleModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
 fun CharacterRenderer(
 
-viewModel: CharacterViewModel
+    viewModel: CharacterViewModel
 
 ) {
 
-val characterState =
-viewModel.characterState
+    val characterState =
+        viewModel.characterState
 
-Box(
-
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(520.dp),
-
-    contentAlignment =
-        Alignment.Center
-) {
-
-    // 👑 AURA
-    Image(
-
-        painter = painterResource(
-
-            id = CharacterImageMapper
-                .getAuraImage(
-
-                    characterState
-                        .selectedAura
-                )
-        ),
-
-        contentDescription = null,
+    Box(
 
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(520.dp),
 
-        contentScale =
-            ContentScale.Fit
-    )
+        contentAlignment =
+            Alignment.Center
+    ) {
 
-    // 👑 WINGS
-    Image(
+        // 👑 AURA
+        Image(
 
-        painter = painterResource(
+            painter = painterResource(
 
-            id = CharacterImageMapper
-                .getWingsImage(
+                id = CharacterImageMapper
+                    .getAuraImage(
 
-                    characterState
-                        .selectedWings
-                )
-        ),
+                        characterState.selectedAura
+                    )
+            ),
 
-        contentDescription = null,
+            contentDescription = null,
 
-        modifier = Modifier
-            .fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
 
-        contentScale =
-            ContentScale.Fit
-    )
+            contentScale =
+                ContentScale.Fit
+        )
 
-    // 👑 BUNDLE / CHARACTER
-    Image(
+        // 👑 BUNDLE CHARACTER
+        Image(
 
-        painter = painterResource(
+            painter = painterResource(
 
-            id = CharacterImageMapper
-                .getBundleImage(
+                id = CharacterImageMapper
+                    .getBundleImage(
 
-                    characterState
-                        .selectedBundle
-                )
-        ),
+                        characterState.selectedBundle
+                    )
+            ),
 
-        contentDescription = null,
+            contentDescription = null,
 
-        modifier = Modifier
-            .fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
 
-        contentScale =
-            ContentScale.Fit
-    )
-
-    // 👑 WEAPON
-    Image(
-
-        painter = painterResource(
-
-            id = CharacterImageMapper
-                .getWeaponImage(
-
-                    characterState
-                        .selectedWeapon
-                )
-        ),
-
-        contentDescription = null,
-
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        contentScale =
-            ContentScale.Fit
-    )
-}
-
+            contentScale =
+                ContentScale.Fit
+        )
+    }
 }
