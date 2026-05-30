@@ -108,10 +108,10 @@ Box(
             modifier = Modifier.height(12.dp)
         )
 
-        // 👑 LIVE CHARACTER
-        CharacterRenderer(
-            viewModel = characterViewModel
-        )
+        // 👑 
+         Text(
+    text = "Character Test"
+)
 
         Spacer(
             modifier = Modifier.height(10.dp)
