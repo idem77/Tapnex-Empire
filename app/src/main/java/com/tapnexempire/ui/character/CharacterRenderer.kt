@@ -53,6 +53,27 @@ fun CharacterRenderer(
                 ContentScale.Fit
         )
 
+          // 👑 CHARACTER
+Image(
+
+    painter = painterResource(
+
+        id = CharacterImageMapper
+            .getPoseImage(
+
+                characterState.currentPose
+            )
+    ),
+
+    contentDescription = null,
+
+    modifier = Modifier
+        .fillMaxWidth(),
+
+    contentScale =
+        ContentScale.Fit
+)
+
         // 👑 BUNDLE CHARACTER
         Image(
 
