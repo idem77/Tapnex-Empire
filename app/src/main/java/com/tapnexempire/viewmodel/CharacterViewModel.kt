@@ -44,18 +44,6 @@ class CharacterViewModel : ViewModel() {
             )
     }
 
-    // 👑 UPDATE EQUIPMENT
-    fun updateEquipment(
-        equipment: EquipmentModel
-    ) {
-
-        characterState =
-            characterState.copy(
-
-                equippedItems = equipment
-            )
-    }
-
     // 👑 CHANGE RANK
     fun updateRank(
         rank: String
