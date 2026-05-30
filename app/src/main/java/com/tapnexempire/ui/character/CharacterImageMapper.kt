@@ -67,39 +67,6 @@ fun getAuraImage(
         else ->
             R.drawable.aura_light
     }
+  }
 }
 
-// 👑 WEAPON IMAGES
-fun getWeaponImage(
-    weaponId: String
-): Int {
-
-    return when (weaponId) {
-
-        "ember_blade" ->
-            R.drawable.weapon_ember_blade
-
-        else ->
-            R.drawable.weapon_light_sword
-    }
-}
-
-// 👑 WINGS IMAGES
-fun getWingsImage(
-    wingsId: String
-): Int {
-
-    return when (wingsId) {
-
-        "angel_wings" ->
-            R.drawable.wings_angel
-
-        "celestial_wings" ->
-            R.drawable.celestial_wings
-
-        else ->
-            R.drawable.wings_shadow
-    }
-}
-
-}
