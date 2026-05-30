@@ -73,26 +73,5 @@ Image(
     contentScale =
         ContentScale.Fit
 )
-
-        // 👑 BUNDLE CHARACTER
-        Image(
-
-            painter = painterResource(
-
-                id = CharacterImageMapper
-                    .getBundleImage(
-
-                        characterState.selectedBundle
-                    )
-            ),
-
-            contentDescription = null,
-
-            modifier = Modifier
-                .fillMaxWidth(),
-
-            contentScale =
-                ContentScale.Fit
-        )
     }
 }
