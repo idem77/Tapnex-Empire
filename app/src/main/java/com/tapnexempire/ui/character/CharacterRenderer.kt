@@ -58,10 +58,7 @@ Image(
 
     painter = painterResource(
 
-        id = CharacterImageMapper
-            .getPoseImage(
-
-                characterState.currentPose
+        id = R.drawable.pose_idle
             )
     ),
 
