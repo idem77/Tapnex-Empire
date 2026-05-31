@@ -52,19 +52,24 @@ fun CharacterRenderer(
             contentScale = ContentScale.Fit
         )
 
-        // 👑 CHARACTER TEST
-        Image(
+        // 👑 CHARACTER
+Image(
 
-            painter = painterResource(
-                id = R.drawable.pose_idle
-            ),
+    painter = painterResource(
 
-            contentDescription = null,
+        id = CharacterImageMapper
+            .getPoseImage(
 
-            modifier = Modifier
-                .fillMaxWidth(),
+                characterState.currentPose
+            )
+    ),
 
-            contentScale = ContentScale.Fit
-        )
+    contentDescription = null,
+
+    modifier = Modifier
+        .fillMaxWidth(),
+
+    contentScale = ContentScale.Fit
+)
     }
 }
