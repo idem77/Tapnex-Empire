@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.tapnexempire.R
 import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
@@ -39,35 +40,31 @@ fun CharacterRenderer(
 
                 id = CharacterImageMapper
                     .getAuraImage(
-
                         characterState.selectedAura
-                  )
-                    ),
-                )
+                    )
+            ),
+
             contentDescription = null,
 
             modifier = Modifier
                 .fillMaxWidth(),
 
-            contentScale =
-                ContentScale.Fit
+            contentScale = ContentScale.Fit
         )
 
-          // 👑 CHARACTER
-Image(
+        // 👑 CHARACTER TEST
+        Image(
 
-    painter = painterResource(
+            painter = painterResource(
+                id = R.drawable.pose_idle
+            ),
 
-        id = R.drawable.pose_idle
-            )
+            contentDescription = null,
 
-    contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth(),
 
-    modifier = Modifier
-        .fillMaxWidth(),
-
-    contentScale =
-        ContentScale.Fit
-)
+            contentScale = ContentScale.Fit
+        )
     }
 }
