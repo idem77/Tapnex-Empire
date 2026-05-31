@@ -87,10 +87,8 @@ CharacterPose.MEDITATION
 
             Spacer(modifier = Modifier.height(20.dp))
 
-           //👑 CHARACTER Image
-            CharacterRenderer(
-                viewModel = viewModel
-)
+           //👑  TEST CHARACTER Image
+                  Text("Equipment Test")
 
             Spacer(modifier = Modifier.height(20.dp))
 
