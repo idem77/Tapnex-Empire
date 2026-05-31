@@ -42,7 +42,8 @@ fun CharacterRenderer(
 
                         characterState.selectedAura
                   )
-                    
+                    ),
+                )
             contentDescription = null,
 
             modifier = Modifier
@@ -59,7 +60,6 @@ Image(
 
         id = R.drawable.pose_idle
             )
-    ),
 
     contentDescription = null,
 
