@@ -41,9 +41,8 @@ fun CharacterRenderer(
                     .getAuraImage(
 
                         characterState.selectedAura
-                    )
-            ),
-
+                  )
+                    
             contentDescription = null,
 
             modifier = Modifier
