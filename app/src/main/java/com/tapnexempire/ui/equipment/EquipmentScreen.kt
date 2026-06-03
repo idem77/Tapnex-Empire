@@ -161,6 +161,12 @@ val bundles = listOf(
 
             Text("🔥 Magic Effects")
              Text("⚔ Bundles")
+       }
+    }
+}
+
+Spacer(modifier = Modifier.height(16.dp))
+
 
             Text("👑 Auras")
 
