@@ -54,7 +54,19 @@ class CharacterViewModel : ViewModel() {
 
                 selectedBundle = bundle
             )
-    }
+    }    
+
+     // 🔮MAGIC EFFECT
+       fun changeMagic(
+    magic: String
+) {
+
+    characterState =
+        characterState.copy(
+
+            selectedMagic = magic
+        )
+       }
 
     // 👑 CHANGE RANK
     fun updateRank(
