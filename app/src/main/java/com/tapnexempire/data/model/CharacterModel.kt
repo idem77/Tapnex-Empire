@@ -18,4 +18,7 @@ data class CharacterModel(
 
     val selectedAura: String =
         "light_aura"
+    
+    val selectedMagic: String =
+    "none"
 )
