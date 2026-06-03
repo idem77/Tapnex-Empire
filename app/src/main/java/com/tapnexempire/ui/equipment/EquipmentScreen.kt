@@ -46,6 +46,32 @@ CharacterPose.MEDITATION
 
 )
 
+     // 👑 AURAS
+val auras = listOf(
+    "light_aura",
+    "void_aura",
+    "flame_aura",
+    "ice_aura"
+)
+
+// 👑 MAGIC EFFECTS
+val magicEffects = listOf(
+    "dark_flame",
+    "void_rune",
+    "spirit_energy",
+    "shadow_orb",
+    "lightning_orb"
+)
+
+// 👑 BUNDLES
+val bundles = listOf(
+    "shadow_reaper",
+    "lightbringer",
+    "celestial_divine",
+    "void_monarch",
+    "ancient_cultivator"
+) 
+     
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -133,13 +159,20 @@ CharacterPose.MEDITATION
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
+            Text("🔥 Magic Effects")
+             Text("⚔ Bundles")
 
-                text =
-                    "Future Equipment & Bundles 😏🔥",
+            Text("👑 Auras")
 
-                fontSize = 16.sp
-            )
+LazyRow {
+    items(auras) { aura ->
+
+        Button(
+            onClick = {
+                viewModel.changeAura(aura)
+            }
+        ) {
+            Text(aura)
         }
     }
 }
