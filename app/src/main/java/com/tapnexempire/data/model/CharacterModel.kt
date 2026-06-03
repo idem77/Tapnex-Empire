@@ -20,5 +20,5 @@ data class CharacterModel(
         "light_aura"
     
     val selectedMagic: String =
-    "none"
+    "none",
 )
