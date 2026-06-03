@@ -88,10 +88,19 @@ fun getAuraImage(
     auraId: String
 ): Int {
 
-    return when (auraId) {
+    return when(auraId){
 
-        "light_aura" ->
-            R.drawable.aura_light
+        "shadow_aura" ->
+            R.drawable.aura_shadow
+
+        "void_aura" ->
+            R.drawable.aura_void
+
+        "divine_aura" ->
+            R.drawable.aura_divine
+
+        "lightning_aura" ->
+            R.drawable.aura_lightning
 
         else ->
             R.drawable.aura_light
