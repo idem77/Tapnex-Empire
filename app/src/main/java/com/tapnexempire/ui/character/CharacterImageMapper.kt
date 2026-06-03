@@ -44,13 +44,13 @@ fun getBundleImage(
     return when (bundle.id) {
 
         "lightbringer" ->
-            R.drawable.bundle_lightbringer
+            R.drawable.bundle_light_bringer
 
         "celestial_divine" ->
             R.drawable.bundle_celestial_divine
 
         else ->
-            R.drawable.bundle_shadow_reaper
+            R.drawable.bundle_void_monarch
     }
 }
 
@@ -90,20 +90,16 @@ fun getAuraImage(
 
     return when(auraId){
 
-        "shadow_aura" ->
-            R.drawable.aura_shadow
 
         "void_aura" ->
-            R.drawable.aura_void
+            R.drawable.void_rune
 
-        "divine_aura" ->
-            R.drawable.aura_divine
 
         "lightning_aura" ->
-            R.drawable.aura_lightning
+            R.drawable.
 
         else ->
-            R.drawable.aura_light
+            R.drawable.divine_rune
     }
   }
 }
