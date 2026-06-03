@@ -52,6 +52,35 @@ fun CharacterRenderer(
             contentScale = ContentScale.Fit
         )
 
+          //🔮 MAGIC EFFECT
+             // 👑 MAGIC EFFECT
+
+if (
+    characterState.selectedMagic != "none"
+) {
+
+    Image(
+
+        painter = painterResource(
+
+            id = CharacterImageMapper
+                .getMagicImage(
+
+                    characterState
+                        .selectedMagic
+                )
+        ),
+
+        contentDescription = null,
+
+        modifier = Modifier
+            .fillMaxWidth(),
+
+        contentScale =
+            ContentScale.Fit
+    )
+}
+
         // 👑 CHARACTER
 Image(
 
