@@ -96,7 +96,7 @@ fun getAuraImage(
 
 
         "lightning_aura" ->
-            R.drawable.
+            R.drawable.blood_rune
 
         else ->
             R.drawable.divine_rune
