@@ -17,8 +17,8 @@ data class CharacterModel(
         BundleModel = BundleModel(),
 
     val selectedAura: String =
-        "light_aura"
+        "light_aura",
     
     val selectedMagic: String =
-    "none",
+    "none"
 )
