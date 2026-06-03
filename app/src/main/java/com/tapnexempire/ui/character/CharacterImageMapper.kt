@@ -54,6 +54,35 @@ fun getBundleImage(
     }
 }
 
+ // 🔮 MAGIC EFFECT IMAGES
+   // 👑 MAGIC EFFECTS
+
+fun getMagicImage(
+    magicId: String
+): Int {
+
+    return when (magicId) {
+
+        "void_flame" ->
+            R.drawable.void_flame
+
+        "dark_flame" ->
+            R.drawable.dark_flame
+
+        "divine_rune" ->
+            R.drawable.divine_rune
+
+        "lightning_orb" ->
+            R.drawable.lightning_orb
+
+        "spirit_energy" ->
+            R.drawable.spirit_energy
+
+        else ->
+            0
+    }
+}
+
 // 👑 AURA IMAGES
 fun getAuraImage(
     auraId: String
