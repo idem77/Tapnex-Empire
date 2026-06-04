@@ -40,7 +40,7 @@ fun CharacterRenderer(
 
                 id = CharacterImageMapper
                     .getAuraImage(
-                        characterState.selectedAura
+                        characterState.selectedRune
                     )
             ),
 
