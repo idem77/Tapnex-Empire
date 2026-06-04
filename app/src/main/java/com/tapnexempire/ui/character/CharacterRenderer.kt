@@ -27,7 +27,7 @@ fun CharacterRenderer(
 
         modifier = Modifier
             .fillMaxWidth()
-            .height(520.dp),
+            .height(420.dp),
 
         contentAlignment =
             Alignment.Center
