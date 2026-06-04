@@ -97,7 +97,7 @@ fun EquipmentScreen(
             rememberScrollState()
         )
         .padding(20.dp)
-        )
+        
 
             Text(
 
