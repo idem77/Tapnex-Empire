@@ -10,7 +10,7 @@ val rarity: String = "",
 
 val bundleImage: String = "",
 
-val defaultAura: String = "",
+val defaultRune: String = "",
 
 val defaultMagic: String = "",
 
