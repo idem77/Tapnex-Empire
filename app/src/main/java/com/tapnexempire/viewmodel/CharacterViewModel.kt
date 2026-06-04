@@ -32,7 +32,7 @@ class CharacterViewModel : ViewModel() {
             )
     }   
 
-          //🫅🏻 Change Aura
+          //🫅🏻 Change Rune
           fun changeRune(
     rune: String
 ) {
