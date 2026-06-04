@@ -101,7 +101,7 @@ fun EquipmentScreen(
         horizontalAlignment =
         Alignment.CenterHorizontally
 
-)
+) {
         
             Text(
 
