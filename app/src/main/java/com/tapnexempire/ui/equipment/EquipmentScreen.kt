@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.R
 import com.tapnexempire.data.model.CharacterPose
+import com.tapnexempire.data.model.bundle
 import com.tapnexempire.ui.character.CharacterRenderer
 import com.tapnexempire.viewmodel.CharacterViewModel
 
@@ -23,6 +24,7 @@ fun EquipmentScreen(
 
     viewModel: CharacterViewModel =
         hiltViewModel()
+
 ) {
 
     val character =
@@ -30,65 +32,46 @@ fun EquipmentScreen(
 
     val poses = listOf(
 
-CharacterPose.IDLE,
+        CharacterPose.IDLE,
+        CharacterPose.BATTLE,
+        CharacterPose.AURA,
+        CharacterPose.DIVINE,
+        CharacterPose.THRONE,
+        CharacterPose.VICTORY,
+        CharacterPose.MEDITATION
+    )
 
-CharacterPose.BATTLE,
+    val runes = listOf(
 
-CharacterPose.AURA,
+        "light_rune",
+        "void_rune",
+        "divine_rune"
+    )
 
-CharacterPose.DIVINE,
+    val magicEffects = listOf(
 
-CharacterPose.THRONE,
+        "dark_flame",
+        "shadow_orb",
+        "spirit_energy",
+        "lightning_orb"
+    )
 
-CharacterPose.VICTORY,
-
-CharacterPose.MEDITATION
-
-)
-
-     // 👑 AURAS
-val auras = listOf(
-    "light_aura",
-    "void_aura",
-    "flame_aura",
-    "ice_aura"
-)
-
-// 👑 MAGIC EFFECTS
-val magicEffects = listOf(
-    "dark_flame",
-    "void_rune",
-    "spirit_energy",
-    "shadow_orb",
-    "lightning_orb"
-)
-
-// 👑 BUNDLES
-val bundles = listOf(
-    "shadow_reaper",
-    "lightbringer",
-    "celestial_divine",
-    "void_monarch",
-    "ancient_cultivator"
-) 
-     
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        // 👑 BACKGROUND
         Image(
 
-            painter =
-                painterResource(
-                    id = R.drawable.empire_bg
-                ),
+            painter = painterResource(
+                id = R.drawable.empire_bg
+            ),
 
             contentDescription = null,
 
             modifier = Modifier.fillMaxSize(),
 
-            contentScale = ContentScale.FillHeight
+            contentScale =
+                ContentScale.FillHeight
         )
 
         Column(
@@ -101,24 +84,31 @@ val bundles = listOf(
                 Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(
+                modifier = Modifier.height(40.dp)
+            )
 
             Text(
 
                 text = "⚔ Equipment",
 
                 style =
-                    MaterialTheme.typography.headlineLarge
+                    MaterialTheme
+                        .typography
+                        .headlineLarge
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
 
-           //👑  CHARACTER Image
-                  CharacterRenderer(
-    viewModel = viewModel
-)
+            CharacterRenderer(
+                viewModel = viewModel
+            )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
 
             Text(
 
@@ -128,13 +118,19 @@ val bundles = listOf(
                 fontSize = 18.sp
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
 
-            // 👑 POSE SWITCHER
+            // 👑 POSES
+
+            Text("👑 Poses")
+
             LazyRow(
 
                 horizontalArrangement =
                     Arrangement.spacedBy(12.dp)
+
             ) {
 
                 items(poses) { pose ->
@@ -147,38 +143,112 @@ val bundles = listOf(
                                 pose
                             )
                         }
-
                     ) {
 
                         Text(
-                            text = pose.name
+                            pose.name
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
 
-            Text("🔥 Magic Effects")
-             Text("⚔ Bundles")
-       }
-    }
-}
+            // 👑 RUNES
 
-Spacer(modifier = Modifier.height(16.dp))
+            Text("👑 Runes")
 
+            LazyRow(
 
-            Text("👑 Auras")
+                horizontalArrangement =
+                    Arrangement.spacedBy(12.dp)
 
-LazyRow {
-    items(auras) { aura ->
+            ) {
 
-        Button(
-            onClick = {
-                viewModel.changeAura(aura)
+                items(runes) { rune ->
+
+                    Button(
+
+                        onClick = {
+
+                            viewModel.changeAura(
+                                rune
+                            )
+                        }
+                    ) {
+
+                        Text(rune)
+                    }
+                }
             }
-        ) {
-            Text(aura)
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            // 🔮 MAGIC
+
+            Text("🔮 Magic")
+
+            LazyRow(
+
+                horizontalArrangement =
+                    Arrangement.spacedBy(12.dp)
+
+            ) {
+
+                items(magicEffects) { effect ->
+
+                    Button(
+
+                        onClick = {
+
+                            viewModel.changeMagic(
+                                effect
+                            )
+                        }
+                    ) {
+
+                        Text(effect)
+                    }
+                }
+            }
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            // ⚔ BUNDLES
+
+            Text("⚔ Bundles")
+
+            LazyRow(
+
+                horizontalArrangement =
+                    Arrangement.spacedBy(12.dp)
+
+            ) {
+
+                items(bundles) { bundle ->
+
+                    Button(
+
+                        onClick = {
+
+                            viewModel.equipBundle(
+                                bundle
+                            )
+                        }
+                    ) {
+
+                        Text(
+                            bundle.title
+                        )
+                    }
+                }
+            }
         }
     }
 }
