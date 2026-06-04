@@ -32,8 +32,8 @@ class CharacterViewModel : ViewModel() {
             )
     }   
 
-          //🫅🏻 Change Rune
-          fun changeRune(
+          //🫅🏻 Change AURA
+          fun changeAura(
     rune: String
 ) {
 
