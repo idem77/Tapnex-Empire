@@ -40,7 +40,7 @@ class CharacterViewModel : ViewModel() {
     characterState =
         characterState.copy(
 
-            selectedAura = aura
+            selectedRune = aura
         )
           }
 
