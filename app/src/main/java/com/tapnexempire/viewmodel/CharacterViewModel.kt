@@ -46,16 +46,23 @@ class CharacterViewModel : ViewModel() {
 
     // 👑 EQUIP BUNDLE
     fun equipBundle(
-        bundle: BundleModel
-    ) {
+bundle: BundleModel
+) {
 
-        characterState =
-            characterState.copy(
+characterState =
+    characterState.copy(
 
-                selectedBundle = bundle
-            )
-    }    
+        selectedBundle = bundle,
 
+        selectedAura =
+            bundle.defaultAura,
+
+        selectedMagic =
+            bundle.defaultMagic
+    )
+
+    }
+    
      // 🔮MAGIC EFFECT
        fun changeMagic(
     magic: String
