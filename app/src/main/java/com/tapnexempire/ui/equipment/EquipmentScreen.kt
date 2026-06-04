@@ -12,6 +12,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.R
 import com.tapnexempire.data.model.CharacterPose
@@ -87,6 +89,14 @@ fun EquipmentScreen(
             Spacer(
                 modifier = Modifier.height(40.dp)
             )
+
+             Column(
+    modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(
+            rememberScrollState()
+        )
+        .padding(20.dp), 
 
             Text(
 
