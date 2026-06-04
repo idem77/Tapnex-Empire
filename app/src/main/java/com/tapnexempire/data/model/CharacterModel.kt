@@ -17,7 +17,7 @@ data class CharacterModel(
         BundleModel = BundleModel(),
 
     val selectedAura: String =
-        "light_aura",
+        "void_rune",
     
     val selectedMagic: String =
     "dark_flame"
