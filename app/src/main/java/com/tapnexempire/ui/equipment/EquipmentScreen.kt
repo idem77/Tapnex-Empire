@@ -96,9 +96,13 @@ fun EquipmentScreen(
         .verticalScroll(
             rememberScrollState()
         )
-        .padding(20.dp)
-        
+        .padding(20.dp),
 
+        horizontalAlignment =
+        Alignment.CenterHorizontally
+
+)
+        
             Text(
 
                 text = "⚔ Equipment",
