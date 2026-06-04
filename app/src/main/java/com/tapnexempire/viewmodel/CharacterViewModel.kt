@@ -55,7 +55,7 @@ characterState =
         selectedBundle = bundle,
 
         selectedAura =
-            bundle.defaultAura,
+            bundle.defaultRune,
 
         selectedMagic =
             bundle.defaultMagic
