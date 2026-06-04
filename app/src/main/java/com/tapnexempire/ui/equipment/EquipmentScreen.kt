@@ -80,6 +80,9 @@ fun EquipmentScreen(
 
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(
+        rememberScrollState()
+    )
                 .padding(20.dp),
 
             horizontalAlignment =
@@ -90,18 +93,6 @@ fun EquipmentScreen(
                 modifier = Modifier.height(40.dp)
             )
 
-             Column(
-    modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(
-            rememberScrollState()
-        )
-        .padding(20.dp),
-
-        horizontalAlignment =
-        Alignment.CenterHorizontally
-
-) {
         
             Text(
 
