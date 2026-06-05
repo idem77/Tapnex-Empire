@@ -69,8 +69,6 @@ fun getMagicImage(
         "dark_flame" ->
             R.drawable.dark_flame
 
-        "divine_rune" ->
-            R.drawable.divine_rune
 
         "lightning_orb" ->
             R.drawable.lightning_orb
@@ -79,7 +77,7 @@ fun getMagicImage(
             R.drawable.spirit_energy
 
         else ->
-            0
+               R.drawable.spirit_energy
     }
 }
 
@@ -91,11 +89,11 @@ fun getAuraImage(
     return when(auraId){
 
 
-        "void_aura" ->
+        "void_rune" ->
             R.drawable.void_rune
 
 
-        "lightning_aura" ->
+        "lightning_rune" ->
             R.drawable.blood_rune
 
         else ->
