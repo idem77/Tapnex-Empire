@@ -8,7 +8,7 @@ object TapnexCoreController {
     private val db = FirebaseFirestore.getInstance()
 
     // =========================
-    // 👤 USER COIN CONTROL
+    // 👤 COINS SYSTEM
     // =========================
 
     fun addCoins(userId: String, amount: Long, reason: String) {
@@ -18,7 +18,6 @@ object TapnexCoreController {
         val userRef = db.collection("users").document(userId)
 
         db.runTransaction { tx ->
-
             tx.update(userRef, "coins", FieldValue.increment(amount))
             tx.update(userRef, "lastTransactionReason", reason)
         }
@@ -47,14 +46,41 @@ object TapnexCoreController {
     }
 
     // =========================
-    // 🏆 TOURNAMENT ENTRY
+    // 🏆 TOURNAMENT
     // =========================
 
-    fun joinTournament(
-        tournamentId: String,
-        userId: String,
-        userName: String
-    ) {
+    fun createTournament(title: String, entryFee: Long, prizePool: Long) {
+
+        val id = db.collection("tournaments").document().id
+
+        db.collection("tournaments").document(id).set(
+            mapOf(
+                "id" to id,
+                "title" to title,
+                "entryFee" to entryFee,
+                "prizePool" to prizePool,
+                "status" to "UPCOMING",
+                "joinedPlayers" to 0,
+                "createdAt" to System.currentTimeMillis()
+            )
+        )
+    }
+
+    fun closeTournament(id: String) {
+        db.collection("tournaments").document(id)
+            .update("status", "CLOSED")
+    }
+
+    fun deleteTournament(id: String) {
+        db.collection("tournaments").document(id)
+            .delete()
+    }
+
+    // =========================
+    // 👥 JOIN TOURNAMENT
+    // =========================
+
+    fun joinTournament(tournamentId: String, userId: String, userName: String) {
 
         val participantRef = db.collection("tournaments")
             .document(tournamentId)
@@ -75,23 +101,15 @@ object TapnexCoreController {
                 "joinedAt" to System.currentTimeMillis()
             ))
 
-            batch.update(
-                userRef,
-                "tournamentEntries",
-                FieldValue.increment(1)
-            )
+            batch.update(userRef, "tournamentEntries", FieldValue.increment(1))
         }
     }
 
     // =========================
-    // 📊 SCORE UPDATE
+    // 📊 SCORE
     // =========================
 
-    fun updateScore(
-        tournamentId: String,
-        userId: String,
-        score: Long
-    ) {
+    fun updateScore(tournamentId: String, userId: String, score: Long) {
 
         db.collection("tournaments")
             .document(tournamentId)
@@ -101,14 +119,10 @@ object TapnexCoreController {
     }
 
     // =========================
-    // 🏅 RANK UPDATE
+    // 🏅 RANK
     // =========================
 
-    fun setRank(
-        tournamentId: String,
-        userId: String,
-        rank: Long
-    ) {
+    fun setRank(tournamentId: String, userId: String, rank: Long) {
 
         db.collection("tournaments")
             .document(tournamentId)
@@ -118,14 +132,10 @@ object TapnexCoreController {
     }
 
     // =========================
-    // 💰 REWARD SYSTEM
+    // 💰 REWARD
     // =========================
 
-    fun rewardUser(
-        tournamentId: String,
-        userId: String,
-        coins: Long
-    ) {
+    fun rewardUser(tournamentId: String, userId: String, coins: Long) {
 
         val participantRef = db.collection("tournaments")
             .document(tournamentId)
@@ -135,7 +145,6 @@ object TapnexCoreController {
         db.runTransaction { tx ->
 
             val snap = tx.get(participantRef)
-
             val rewarded = snap.getBoolean("rewarded") ?: false
 
             if (rewarded) return@runTransaction
@@ -147,21 +156,16 @@ object TapnexCoreController {
     }
 
     // =========================
-    // 🏦 DEPOSIT APPROVAL
+    // 💰 DEPOSIT
     // =========================
 
-    fun approveDeposit(
-        userId: String,
-        depositId: String,
-        amount: Long
-    ) {
+    fun approveDeposit(userId: String, depositId: String, amount: Long) {
 
         val depositRef = db.collection("deposits").document(depositId)
 
         db.runTransaction { tx ->
 
             val snap = tx.get(depositRef)
-
             val status = snap.getString("status")
 
             if (status == "APPROVED") return@runTransaction
@@ -173,23 +177,17 @@ object TapnexCoreController {
     }
 
     // =========================
-    // 💸 WITHDRAW APPROVAL
+    // 💸 WITHDRAW
     // =========================
 
-    fun approveWithdraw(
-        userId: String,
-        withdrawId: String,
-        amount: Long
-    ) {
+    fun approveWithdraw(userId: String, withdrawId: String, amount: Long) {
 
         val withdrawRef = db.collection("withdraws").document(withdrawId)
-
         val userRef = db.collection("users").document(userId)
 
         db.runTransaction { tx ->
 
             val snap = tx.get(withdrawRef)
-
             val status = snap.getString("status")
 
             if (status == "APPROVED") return@runTransaction
@@ -205,15 +203,10 @@ object TapnexCoreController {
     }
 
     // =========================
-    // 📜 TRANSACTION LOG
+    // 📜 LOGS
     // =========================
 
-    private fun logTransaction(
-        userId: String,
-        amount: Long,
-        type: String,
-        reason: String
-    ) {
+    private fun logTransaction(userId: String, amount: Long, type: String, reason: String) {
 
         db.collection("transactions").add(
             mapOf(
