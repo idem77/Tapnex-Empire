@@ -53,12 +53,6 @@ fun CharacterRenderer(
         )
 
           //🔮 MAGIC EFFECT
-             // 👑 MAGIC EFFECT
-
-if (
-    characterState.selectedMagic != "none"
-) {
-
     Image(
 
         painter = painterResource(
