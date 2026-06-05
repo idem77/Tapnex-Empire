@@ -108,9 +108,16 @@ Box(
             modifier = Modifier.height(12.dp)
         )
 
-        // 👑 
-         Text(
-    text = "Character Test"
+        // 🫅🏻 character 
+         Image(
+    painter = painterResource(
+        id = R.drawable.empire_immortal
+    ),
+    contentDescription = null,
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(380.dp),
+    contentScale = ContentScale.Fit
 )
 
         Spacer(
