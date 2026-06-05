@@ -53,7 +53,7 @@ fun CharacterRenderer(
         )
 
           //🔮 MAGIC EFFECT
-      Image(
+          Image(
 
         painter = painterResource(
 
@@ -76,7 +76,7 @@ fun CharacterRenderer(
 }
 
         // 👑 CHARACTER
- Image(
+        Image(
 
     painter = painterResource(
 
