@@ -14,35 +14,35 @@ fun AdminNavGraph(navController: NavHostController) {
     ) {
 
         composable("admin_dashboard") {
-            AdminDashboardScreen(navController)
+            AdminDashboardScreen(navController = navController)
         }
 
         composable("user_management") {
-            UserManagementScreen()
+            UserManagementScreen(navController = navController)
         }
 
         composable("tournament_control") {
-            TournamentControlScreen()
+            TournamentControlScreen(navController = navController)
         }
 
         composable("deposit_requests") {
-            DepositRequestScreen()
+            DepositRequestScreen(navController = navController)
         }
 
         composable("withdraw_requests") {
-            WithdrawRequestScreen()
+            WithdrawRequestScreen(navController = navController)
         }
 
         composable("event_control") {
-            EventControlScreen()
+            EventControlScreen(navController = navController)
         }
 
         composable("bundle_control") {
-            BundleControlScreen()
+            BundleControlScreen(navController = navController)
         }
 
         composable("character_control") {
-            CharacterControlScreen()
+            CharacterControlScreen(navController = navController)
         }
     }
 }
