@@ -52,47 +52,50 @@ fun CharacterRenderer(
             contentScale = ContentScale.Fit
         )
 
-          //🔮 MAGIC EFFECT
-          Image(
-
-        painter = painterResource(
-
-            id = CharacterImageMapper
-                .getMagicImage(
-
-                    characterState
-                        .selectedMagic
-                )
-        ),
-
-        contentDescription = null,
-
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        contentScale =
-            ContentScale.Fit
-    )
-}
-
-        // 👑 CHARACTER
-        Image(
-
-    painter = painterResource(
-
-        id = CharacterImageMapper
-            .getPoseImage(
-
-                characterState.currentPose
-            )
-    ),
-
-    contentDescription = null,
+      Box(
 
     modifier = Modifier
-        .fillMaxWidth(),
+        .fillMaxWidth()
+        .height(420.dp),
 
-    contentScale = ContentScale.Fit
-)
-    }
+    contentAlignment = Alignment.Center
+
+) {
+
+    // Rune
+    Image(
+        painter = painterResource(
+            id = CharacterImageMapper.getAuraImage(
+                characterState.selectedRune
+            )
+        ),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth(),
+        contentScale = ContentScale.Fit
+    )
+
+    // 🔮 Magic
+    Image(
+        painter = painterResource(
+            id = CharacterImageMapper.getMagicImage(
+                characterState.selectedMagic
+            )
+        ),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth(),
+        contentScale = ContentScale.Fit
+    )
+
+    // 🫅🏻 Character
+    Image(
+        painter = painterResource(
+            id = CharacterImageMapper.getPoseImage(
+                characterState.currentPose
+            )
+        ),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth(),
+        contentScale = ContentScale.Fit
+    )
+      }
 }
