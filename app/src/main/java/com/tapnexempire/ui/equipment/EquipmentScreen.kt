@@ -2,259 +2,107 @@ package com.tapnexempire.ui.equipment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tapnexempire.R
-import com.tapnexempire.data.model.CharacterPose
-import com.tapnexempire.data.model.bundles
-import com.tapnexempire.ui.character.CharacterRenderer
-import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
-fun EquipmentScreen(
+fun EquipmentScreen() {
 
-    viewModel: CharacterViewModel =
-        hiltViewModel()
-
+Box(
+    modifier = Modifier.fillMaxSize()
 ) {
 
-    val character =
-        viewModel.characterState
-
-    val poses = listOf(
-
-        CharacterPose.IDLE,
-        CharacterPose.BATTLE,
-        CharacterPose.AURA,
-        CharacterPose.DIVINE,
-        CharacterPose.THRONE,
-        CharacterPose.VICTORY,
-        CharacterPose.MEDITATION
+    // 👑 LOCKED BG
+    Image(
+        painter = painterResource(
+            id = R.drawable.equipment_locked_bg
+        ),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
     )
 
-    val runes = listOf(
-
-        "light_rune",
-        "void_rune",
-        "divine_rune"
-    )
-
-    val magicEffects = listOf(
-
-        "dark_flame",
-        "shadow_orb",
-        "spirit_energy",
-        "lightning_orb"
-    )
-
+    // 👑 BLACK OVERLAY
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Color.Black.copy(alpha = 0.7f)
+            )
+    )
+
+    // 👑 CENTER CONTENT
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment =
+            Alignment.CenterHorizontally,
+        verticalArrangement =
+            Arrangement.Center
     ) {
 
-        Image(
-
-            painter = painterResource(
-                id = R.drawable.empire_bg
-            ),
-
-            contentDescription = null,
-
-            modifier = Modifier.fillMaxSize(),
-
-            contentScale =
-                ContentScale.FillHeight
+        Text(
+            text = "🔒",
+            fontSize = 90.sp
         )
 
-        Column(
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
 
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(
-        rememberScrollState()
-    )
-                .padding(20.dp),
+        Text(
+            text = "LOCKED",
+            color = Color.White,
+            fontSize = 38.sp
+        )
 
-            horizontalAlignment =
-                Alignment.CenterHorizontally
-        ) {
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
 
-            Spacer(
-                modifier = Modifier.height(40.dp)
-            )
+        Text(
+            text = "Become The True Immortal",
+            color = Color.Yellow,
+            fontSize = 22.sp
+        )
 
-        
-            Text(
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
 
-                text = "⚔ Equipment",
+        Text(
+            text =
+            "Unlock All Bundles,\nRunes & Magic Effects",
+            color = Color.White,
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center
+        )
 
-                style =
-                    MaterialTheme
-                        .typography
-                        .headlineLarge
-            )
+        Spacer(
+            modifier = Modifier.height(24.dp)
+        )
 
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
+        Text(
+            text = "Required Deposit",
+            color = Color.LightGray,
+            fontSize = 18.sp
+        )
 
-            CharacterRenderer(
-                viewModel = viewModel
-            )
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            Text(
-
-                text =
-                    "Current Pose: ${character.currentPose}",
-
-                fontSize = 18.sp
-            )
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            // 👑 POSES
-
-            Text("👑 Poses")
-
-            LazyRow(
-
-                horizontalArrangement =
-                    Arrangement.spacedBy(12.dp)
-
-            ) {
-
-                items(poses) { pose ->
-
-                    Button(
-
-                        onClick = {
-
-                            viewModel.changePose(
-                                pose
-                            )
-                        }
-                    ) {
-
-                        Text(
-                            pose.name
-                        )
-                    }
-                }
-            }
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            // 👑 RUNES
-
-            Text("👑 Runes")
-
-            LazyRow(
-
-                horizontalArrangement =
-                    Arrangement.spacedBy(12.dp)
-
-            ) {
-
-                items(runes) { rune ->
-
-                    Button(
-
-                        onClick = {
-
-                            viewModel.changeAura(
-                                rune
-                            )
-                        }
-                    ) {
-
-                        Text(rune)
-                    }
-                }
-            }
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            // 🔮 MAGIC
-
-            Text("🔮 Magic")
-
-            LazyRow(
-
-                horizontalArrangement =
-                    Arrangement.spacedBy(12.dp)
-
-            ) {
-
-                items(magicEffects) { effect ->
-
-                    Button(
-
-                        onClick = {
-
-                            viewModel.changeMagic(
-                                effect
-                            )
-                        }
-                    ) {
-
-                        Text(effect)
-                    }
-                }
-            }
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            // ⚔ BUNDLES
-
-            Text("⚔ Bundles")
-
-            LazyRow(
-
-                horizontalArrangement =
-                    Arrangement.spacedBy(12.dp)
-
-            ) {
-
-                items(bundles) { bundle ->
-
-                    Button(
-
-                        onClick = {
-
-                            viewModel.equipBundle(
-                                bundle
-                            )
-                        }
-                    ) {
-
-                        Text(
-                            bundle.title
-                        )
-                    }
-                }
-            }
-        }
+        Text(
+            text = "1000 COINS",
+            color = Color.Yellow,
+            fontSize = 32.sp
+        )
     }
+  }
+ }
 }
