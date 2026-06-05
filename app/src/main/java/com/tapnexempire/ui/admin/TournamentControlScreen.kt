@@ -1,209 +1,114 @@
 package com.tapnexempire.ui.admin
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.tapnexempire.viewmodel.AdminViewModel
 
 @Composable
-fun TournamentControlScreen() {
-
-    Column(
-
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0E1015))
-            .padding(18.dp)
-            .verticalScroll(
-                rememberScrollState()
-            ),
-
-        horizontalAlignment =
-            Alignment.CenterHorizontally
-    ) {
-
-        Spacer(
-            modifier = Modifier.height(20.dp)
-        )
-
-        Text(
-
-            text = "🏆 Tournament Control",
-
-            color = Color.White
-        )
-
-        Spacer(
-            modifier = Modifier.height(24.dp)
-        )
-
-        TournamentCard(
-
-            title = "Ludo Supreme",
-
-            prizePool = "₹5,000",
-
-            players = "84 / 100"
-        )
-
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        TournamentCard(
-
-            title = "Shadow Arena",
-
-            prizePool = "₹10,000",
-
-            players = "52 / 100"
-        )
-
-        Spacer(
-            modifier = Modifier.height(24.dp)
-        )
-
-        Button(
-
-            onClick = {
-
-            },
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp),
-
-            colors = ButtonDefaults.buttonColors(
-
-                containerColor =
-                    Color(0xFFFFD54F)
-            )
-        ) {
-
-            Text(
-
-                text = "➕ Create Tournament",
-
-                color = Color.Black
-            )
-        }
-    }
-}
-
-@Composable
-fun TournamentCard(
-
-    title: String,
-
-    prizePool: String,
-
-    players: String
+fun TournamentControlScreen(
+    vm: AdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
 
-    Card(
+    val db = FirebaseFirestore.getInstance()
 
-        modifier = Modifier
-            .fillMaxWidth(),
+    var tournaments by remember { mutableStateOf(listOf<com.google.firebase.firestore.DocumentSnapshot>()) }
 
-        colors = CardDefaults.cardColors(
+    var title by remember { mutableStateOf("") }
+    var fee by remember { mutableStateOf("") }
+    var prize by remember { mutableStateOf("") }
 
-            containerColor =
-                Color(0xCC1A1C22)
+    // 🔥 LIVE TOURNAMENT STREAM
+    LaunchedEffect(true) {
+        db.collection("tournaments")
+            .addSnapshotListener { snap, _ ->
+                if (snap != null) tournaments = snap.documents
+            }
+    }
+
+    Column(Modifier.fillMaxSize().padding(12.dp)) {
+
+        Text("🏆 Tournament Control Panel",
+            style = MaterialTheme.typography.headlineMedium
         )
-    ) {
 
-        Column(
+        Spacer(Modifier.height(10.dp))
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp)
-        ) {
+        OutlinedTextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text("Title") }
+        )
 
-            Text(
+        OutlinedTextField(
+            value = fee,
+            onValueChange = { fee = it },
+            label = { Text("Entry Fee") }
+        )
 
-                text = "🎮 $title",
+        OutlinedTextField(
+            value = prize,
+            onValueChange = { prize = it },
+            label = { Text("Prize Pool") }
+        )
 
-                color = Color.White
+        Button(onClick = {
+            vm.createTournament(
+                title,
+                fee.toLongOrNull() ?: 0,
+                prize.toLongOrNull() ?: 0
             )
+        }) {
+            Text("Create Tournament")
+        }
 
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
+        Spacer(Modifier.height(20.dp))
 
-            Text(
+        LazyColumn {
 
-                text = "🏆 Prize Pool: $prizePool",
+            items(tournaments) { t ->
 
-                color = Color(0xFFFFD54F)
-            )
+                val id = t.id
+                val title = t.getString("title") ?: ""
+                val status = t.getString("status") ?: ""
 
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
+                Card(Modifier.padding(8.dp)) {
 
-            Text(
+                    Column(Modifier.padding(12.dp)) {
 
-                text = "👥 Players: $players",
+                        Text("🏆 $title")
+                        Text("🔒 Status: $status")
 
-                color = Color.LightGray
-            )
+                        Row {
 
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
+                            Button(onClick = {
+                                vm.closeTournament(id)
+                            }) {
+                                Text("Close")
+                            }
 
-            Row(
+                            Spacer(Modifier.width(6.dp))
 
-                modifier = Modifier.fillMaxWidth(),
+                            Button(onClick = {
+                                vm.deleteTournament(id)
+                            }) {
+                                Text("Delete")
+                            }
 
-                horizontalArrangement =
-                    Arrangement.SpaceBetween
-            ) {
+                            Spacer(Modifier.width(6.dp))
 
-                Button(
-
-                    onClick = {
-
-                    },
-
-                    colors = ButtonDefaults.buttonColors(
-
-                        containerColor =
-                            Color(0xFF1565C0)
-                    )
-                ) {
-
-                    Text(
-                        text = "Edit"
-                    )
-                }
-
-                Button(
-
-                    onClick = {
-
-                    },
-
-                    colors = ButtonDefaults.buttonColors(
-
-                        containerColor =
-                            Color(0xFFC62828)
-                    )
-                ) {
-
-                    Text(
-                        text = "Close"
-                    )
+                            Button(onClick = {
+                                // open participants screen navigation
+                            }) {
+                                Text("Players")
+                            }
+                        }
+                    }
                 }
             }
         }
