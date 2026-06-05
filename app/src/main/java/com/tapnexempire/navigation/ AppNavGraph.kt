@@ -200,9 +200,6 @@ composable(Routes.HOME) {
     EquipmentScreen()
             }
 
-
-}
-
         // 🏆 Tournament List
 composable(Routes.TOURNAMENTS) {
 
