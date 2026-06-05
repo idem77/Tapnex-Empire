@@ -103,5 +103,5 @@ Box(
             color = Color.Yellow,
             fontSize = 32.sp
         )
-    }
-  }
+ }
+} 
