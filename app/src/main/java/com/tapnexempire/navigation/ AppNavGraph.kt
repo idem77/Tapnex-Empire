@@ -200,55 +200,6 @@ composable(Routes.HOME) {
     EquipmentScreen()
             }
 
-        // 🤴king admin 
-          composable(
-route = "admin_dashboard"
-) {
-
-AdminDashboardScreen()
-
-          }
-
-        //🤴 admin
-        composable(Routes.DEPOSIT_REQUESTS) {
-
-DepositRequestScreen()
-
-}
-
-composable(Routes.WITHDRAW_REQUESTS) {
-
-WithdrawRequestScreen()
-
-}
-
-composable(Routes.TOURNAMENT_CONTROL) {
-
-TournamentControlScreen()
-
-}
-
-composable(Routes.BUNDLE_CONTROL) {
-
-BundleControlScreen()
-
-}
-
-composable(Routes.CHARACTER_CONTROL) {
-
-CharacterControlScreen()
-
-}
-
-composable(Routes.EVENT_CONTROL) {
-
-EventControlScreen()
-
-}
-
-composable(Routes.USER_MANAGEMENT) {
-
-UserManagementScreen()
 
 }
 
