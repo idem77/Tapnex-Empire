@@ -116,7 +116,7 @@ Box(
     contentDescription = null,
     modifier = Modifier
         .fillMaxWidth()
-        .height(380.dp),
+        .height(420.dp),
     contentScale = ContentScale.Fit
 )
 
