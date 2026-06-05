@@ -1,184 +1,75 @@
 package com.tapnexempire.ui.admin
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun AdminDashboardScreen() {
+fun AdminDashboardScreen(navController: NavHostController) {
 
     Column(
-
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0E1015))
-            .padding(18.dp)
-            .verticalScroll(
-                rememberScrollState()
-            ),
-
-        horizontalAlignment =
-            Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
 
-        Spacer(
-            modifier = Modifier.height(25.dp)
-        )
-
         Text(
-
-            text = "👑 Empire Admin Panel",
-
-            style =
-                MaterialTheme.typography.headlineMedium,
-
-            color = Color.White
+            text = "🛠 Admin Control Center",
+            style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(
-            modifier = Modifier.height(10.dp)
-        )
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Text(
-
-            text =
-                "Control The Entire Empire 😏🔥",
-
-            color = Color(0xFFFFD54F),
-
-            fontSize = 16.sp
-        )
-
-        Spacer(
-            modifier = Modifier.height(28.dp)
-        )
-
-        // 👑 TOTAL USERS
+        // 👤 USERS
         AdminCard(
-
-            title = "👥 Total Users",
-
-            value = "1,284"
+            title = "User Management",
+            subtitle = "Ban users, manage coins, view stats",
+            onClick = { navController.navigate("user_management") }
         )
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        // 💰 TOTAL DEPOSITS
+        // 🏆 TOURNAMENT
         AdminCard(
-
-            title = "💰 Total Deposits",
-
-            value = "₹84,520"
+            title = "Tournament Control",
+            subtitle = "Create, close, delete tournaments",
+            onClick = { navController.navigate("tournament_control") }
         )
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        // 🏆 TOURNAMENTS
+        // 💰 DEPOSIT
         AdminCard(
-
-            title = "🏆 Active Tournaments",
-
-            value = "12"
+            title = "Deposit Requests",
+            subtitle = "Approve or reject deposits",
+            onClick = { navController.navigate("deposit_requests") }
         )
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        // 💎 BUNDLES
+        // 💸 WITHDRAW
         AdminCard(
-
-            title = "💎 Active Bundles",
-
-            value = "8"
+            title = "Withdraw Requests",
+            subtitle = "Handle withdrawal approvals",
+            onClick = { navController.navigate("withdraw_requests") }
         )
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        // 📤 WITHDRAW REQUESTS
+        // 🎮 EVENTS
         AdminCard(
-
-            title = "📤 Withdraw Requests",
-
-            value = "24 Pending"
+            title = "Event Control",
+            subtitle = "Manage in-game events",
+            onClick = { navController.navigate("event_control") }
         )
 
-        Spacer(
-            modifier = Modifier.height(30.dp)
+        // 🎁 BUNDLES (FROZEN)
+        AdminCard(
+            title = "Bundle Control (Frozen)",
+            subtitle = "Currently disabled system",
+            onClick = { navController.navigate("bundle_control") }
         )
-    }
-}
 
-@Composable
-fun AdminCard(
-
-    title: String,
-
-    value: String
-) {
-
-    Card(
-
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(110.dp),
-
-        colors = CardDefaults.cardColors(
-
-            containerColor =
-                Color(0xCC1A1C22)
+        // 🧍 CHARACTER
+        AdminCard(
+            title = "Character Control",
+            subtitle = "Manage game characters/items",
+            onClick = { navController.navigate("character_control") }
         )
-    ) {
-
-        Column(
-
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(18.dp),
-
-            verticalArrangement =
-                Arrangement.Center
-        ) {
-
-            Text(
-
-                text = title,
-
-                style =
-                    MaterialTheme.typography.titleLarge,
-
-                color = Color.White
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-
-                text = value,
-
-                color = Color(0xFFFFD54F),
-
-                fontSize = 20.sp
-            )
-        }
     }
 }
