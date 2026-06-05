@@ -76,6 +76,9 @@ fun getMagicImage(
         "spirit_energy" ->
             R.drawable.spirit_energy
 
+          "shadow_orb" ->
+            R.drawable.shadow_orb
+
         else ->
                R.drawable.spirit_energy
     }
@@ -92,6 +95,8 @@ fun getAuraImage(
         "void_rune" ->
             R.drawable.void_rune
 
+           "light_rune" ->
+             R.drawable.blood_rune
 
         "lightning_rune" ->
             R.drawable.blood_rune
