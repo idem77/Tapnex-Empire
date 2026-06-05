@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.tapnexempire.R
 import com.tapnexempire.viewmodel.CharacterViewModel
 
 @Composable
@@ -31,9 +30,10 @@ fun CharacterRenderer(
 
         contentAlignment =
             Alignment.Center
+
     ) {
 
-        // 👑 AURA
+        // 👑 Rune
         Image(
 
             painter = painterResource(
@@ -46,56 +46,63 @@ fun CharacterRenderer(
 
             contentDescription = null,
 
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
 
             contentScale = ContentScale.Fit
         )
 
-      Box(
+        // 🔮 Magic
+        Image(
 
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(420.dp),
+            painter = painterResource(
 
-    contentAlignment = Alignment.Center
+                id = CharacterImageMapper
+                    .getMagicImage(
+                        characterState.selectedMagic
+                    )
+            ),
 
-) {
+            contentDescription = null,
 
-    // Rune
-    Image(
-        painter = painterResource(
-            id = CharacterImageMapper.getAuraImage(
-                characterState.selectedRune
-            )
-        ),
-        contentDescription = null,
-        modifier = Modifier.fillMaxWidth(),
-        contentScale = ContentScale.Fit
-    )
+            modifier = Modifier.fillMaxWidth(),
 
-    // 🔮 Magic
-    Image(
-        painter = painterResource(
-            id = CharacterImageMapper.getMagicImage(
-                characterState.selectedMagic
-            )
-        ),
-        contentDescription = null,
-        modifier = Modifier.fillMaxWidth(),
-        contentScale = ContentScale.Fit
-    )
+            contentScale = ContentScale.Fit
+        )
 
-    // 🫅🏻 Character
-    Image(
-        painter = painterResource(
-            id = CharacterImageMapper.getPoseImage(
-                characterState.currentPose
-            )
-        ),
-        contentDescription = null,
-        modifier = Modifier.fillMaxWidth(),
-        contentScale = ContentScale.Fit
-    )
-      }
+        // 🫅 Bundle
+        Image(
+
+            painter = painterResource(
+
+                id = CharacterImageMapper
+                    .getBundleImage(
+                        characterState.selectedBundle
+                    )
+            ),
+
+            contentDescription = null,
+
+            modifier = Modifier.fillMaxWidth(),
+
+            contentScale = ContentScale.Fit
+        )
+
+        // 👑 Pose
+        Image(
+
+            painter = painterResource(
+
+                id = CharacterImageMapper
+                    .getPoseImage(
+                        characterState.currentPose
+                    )
+            ),
+
+            contentDescription = null,
+
+            modifier = Modifier.fillMaxWidth(),
+
+            contentScale = ContentScale.Fit
+        )
+    }
 }
