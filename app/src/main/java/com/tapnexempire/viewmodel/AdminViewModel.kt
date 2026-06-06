@@ -1,117 +1,70 @@
 package com.tapnexempire.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.tapnexempire.core.TapnexCoreController
 import com.tapnexempire.admin.core.AdminLiveRepository
 
 class AdminViewModel : ViewModel() {
 
-    // =========================
-    // 👤 LIVE STATES
-    // =========================
+    // 👤 USERS
+    fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit) =
+        AdminLiveRepository.listenUsers(onUpdate)
 
-    val usersLive = mutableStateListOf<Map<String, Any>>()
-    val depositsLive = mutableStateListOf<Map<String, Any>>()
-    val withdrawsLive = mutableStateListOf<Map<String, Any>>()
+    fun updateCoins(userId: String, amount: Long) =
+        AdminLiveRepository.updateCoins(userId, amount)
 
-    init {
+    fun setCoins(userId: String, amount: Long) =
+        AdminLiveRepository.setCoins(userId, amount)
 
-        AdminLiveRepository.listenUsers {
-            usersLive.clear()
-            usersLive.addAll(it)
-        }
+    fun banUser(userId: String) =
+        AdminLiveRepository.banUser(userId)
 
-        AdminLiveRepository.listenDeposits {
-            depositsLive.clear()
-            depositsLive.addAll(it)
-        }
+    fun unbanUser(userId: String) =
+        AdminLiveRepository.unbanUser(userId)
 
-        AdminLiveRepository.listenWithdraws {
-            withdrawsLive.clear()
-            withdrawsLive.addAll(it)
-        }
-    }
-
-    // =========================
-    // 👤 USER ACTIONS
-    // =========================
-
-    fun ban(userId: String) = TapnexCoreController.banUser(userId)
-
-    fun unban(userId: String) = TapnexCoreController.unbanUser(userId)
-
-    fun addCoins(userId: String, amount: Long) =
-        TapnexCoreController.addCoins(userId, amount, "ADMIN")
-
-    fun setCoins(userId: String, amount: Long) {
-        com.google.firebase.firestore.FirebaseFirestore.getInstance()
-            .collection("users")
-            .document(userId)
-            .update("coins", amount)
-    }
-
-    // =========================
-    // 💰 DEPOSIT
-    // =========================
+    // 💰 DEPOSITS
+    fun listenDeposits(onUpdate: (List<Map<String, Any>>) -> Unit) =
+        AdminLiveRepository.listenDeposits(onUpdate)
 
     fun approveDeposit(userId: String, depositId: String, amount: Long) =
-        TapnexCoreController.approveDeposit(userId, depositId, amount)
+        AdminLiveRepository.approveDeposit(userId, depositId, amount)
 
     fun rejectDeposit(depositId: String) =
-        TapnexCoreController.rejectDeposit(depositId)
+        AdminLiveRepository.rejectDeposit(depositId)
 
-    // =========================
     // 💸 WITHDRAW
-    // =========================
+    fun listenWithdraws(onUpdate: (List<Map<String, Any>>) -> Unit) =
+        AdminLiveRepository.listenWithdraws(onUpdate)
 
     fun approveWithdraw(userId: String, withdrawId: String, amount: Long) =
-        TapnexCoreController.approveWithdraw(userId, withdrawId, amount)
+        AdminLiveRepository.approveWithdraw(userId, withdrawId, amount)
 
     fun rejectWithdraw(withdrawId: String) =
-        TapnexCoreController.rejectWithdraw(withdrawId)
+        AdminLiveRepository.rejectWithdraw(withdrawId)
 
-    // =========================
-    // 🏆 TOURNAMENT (ADD MISSING FUNCTIONS)
-    // =========================
+    // 🏆 TOURNAMENT
+    fun createTournament(title: String, entryFee: Long, prizePool: Long) =
+        AdminLiveRepository.createTournament(title, entryFee, prizePool)
 
-    fun updateScore(tournamentId: String, userId: String, score: Long) {
-        com.google.firebase.firestore.FirebaseFirestore.getInstance()
-            .collection("tournaments")
-            .document(tournamentId)
-            .collection("participants")
-            .document(userId)
-            .update("score", score)
-    }
+    fun closeTournament(id: String) =
+        AdminLiveRepository.closeTournament(id)
 
-    fun setRank(tournamentId: String, userId: String, rank: Long) {
-        com.google.firebase.firestore.FirebaseFirestore.getInstance()
-            .collection("tournaments")
-            .document(tournamentId)
-            .collection("participants")
-            .document(userId)
-            .update("rank", rank)
-    }
+    fun deleteTournament(id: String) =
+        AdminLiveRepository.deleteTournament(id)
 
-    fun rewardUser(tournamentId: String, userId: String, coins: Long) {
+    fun listenTournaments(onUpdate: (List<Map<String, Any>>) -> Unit) =
+        AdminLiveRepository.listenTournaments(onUpdate)
 
-        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+    fun listenParticipants(
+        tournamentId: String,
+        onUpdate: (List<Map<String, Any>>) -> Unit
+    ) = AdminLiveRepository.listenParticipants(tournamentId, onUpdate)
 
-        val ref = db.collection("tournaments")
-            .document(tournamentId)
-            .collection("participants")
-            .document(userId)
+    fun updateScore(tournamentId: String, userId: String, score: Long) =
+        AdminLiveRepository.updateScore(tournamentId, userId, score)
 
-        db.runTransaction { tx ->
+    fun setRank(tournamentId: String, userId: String, rank: Long) =
+        AdminLiveRepository.setRank(tournamentId, userId, rank)
 
-            val snap = tx.get(ref)
-            val rewarded = snap.getBoolean("rewarded") ?: false
-
-            if (rewarded) return@runTransaction
-
-            tx.update(ref, "rewarded", true)
-        }
-
-        TapnexCoreController.addCoins(userId, coins, "TOURNAMENT")
-    }
+    fun rewardUser(tournamentId: String, userId: String, coins: Long) =
+        AdminLiveRepository.rewardUser(tournamentId, userId, coins)
 }
