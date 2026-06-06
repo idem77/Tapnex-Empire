@@ -16,165 +16,44 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WithdrawRequestScreen() {
-
-    Column(
-
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0E1015))
-            .padding(18.dp)
-            .verticalScroll(
-                rememberScrollState()
-            ),
-
-        horizontalAlignment =
-            Alignment.CenterHorizontally
-    ) {
-
-        Spacer(
-            modifier = Modifier.height(20.dp)
-        )
-
-        Text(
-
-            text = "📤 Withdraw Requests",
-
-            color = Color.White
-        )
-
-        Spacer(
-            modifier = Modifier.height(24.dp)
-        )
-
-        WithdrawRequestCard(
-
-            userName = "EmpireKing",
-
-            amount = "₹250",
-
-            rewardType = "Amazon Gift Card"
-        )
-
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        WithdrawRequestCard(
-
-            userName = "ShadowLord",
-
-            amount = "₹500",
-
-            rewardType = "Google Play Gift Card"
-        )
-    }
-}
-
-@Composable
-fun WithdrawRequestCard(
-
-    userName: String,
-
-    amount: String,
-
-    rewardType: String
+fun WithdrawRequestScreen(
+    adminViewModel: AdminViewModel = hiltViewModel()
 ) {
 
-    Card(
+    val withdraws = adminViewModel.withdrawsLive
 
-        modifier = Modifier
-            .fillMaxWidth(),
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
 
-        colors = CardDefaults.cardColors(
+        Text("💸 Withdraw Requests", color = Color.White)
 
-            containerColor =
-                Color(0xCC1A1C22)
-        )
-    ) {
+        withdraws.forEach { item ->
 
-        Column(
+            val userId = item["userId"]?.toString() ?: ""
+            val id = item["id"]?.toString() ?: ""
+            val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp)
-        ) {
-
-            Text(
-
-                text = "👤 $userName",
-
-                color = Color.White
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-
-                text = "💰 Amount: $amount",
-
-                color = Color(0xFFFFD54F)
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-
-                text = "🎁 Reward: $rewardType",
-
-                color = Color.LightGray
-            )
-
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
-
-            Row(
-
-                modifier = Modifier.fillMaxWidth(),
-
-                horizontalArrangement =
-                    Arrangement.SpaceBetween
+            Card(
+                Modifier.fillMaxWidth().padding(8.dp)
             ) {
 
-                Button(
+                Column(Modifier.padding(12.dp)) {
 
-                    onClick = {
+                    Text("User: $userId")
 
-                    },
+                    Row {
 
-                    colors = ButtonDefaults.buttonColors(
+                        Button(onClick = {
+                            adminViewModel.approveWithdraw(userId, id, amount)
+                        }) {
+                            Text("Approve")
+                        }
 
-                        containerColor =
-                            Color(0xFF2E7D32)
-                    )
-                ) {
-
-                    Text(
-                        text = "Approve"
-                    )
-                }
-
-                Button(
-
-                    onClick = {
-
-                    },
-
-                    colors = ButtonDefaults.buttonColors(
-
-                        containerColor =
-                            Color(0xFFC62828)
-                    )
-                ) {
-
-                    Text(
-                        text = "Reject"
-                    )
+                        Button(onClick = {
+                            adminViewModel.rejectWithdraw(id)
+                        }) {
+                            Text("Reject")
+                        }
+                    }
                 }
             }
         }
