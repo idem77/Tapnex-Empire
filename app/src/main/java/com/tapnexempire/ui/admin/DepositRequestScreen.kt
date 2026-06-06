@@ -1,57 +1,68 @@
 package com.tapnexempire.ui.admin
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.tapnexempire.viewmodel.AdminViewModel
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tapnexempire.viewmodel.AdminViewModel
 
 @Composable
 fun DepositRequestScreen(
     adminViewModel: AdminViewModel = hiltViewModel()
 ) {
 
-    val deposits = adminViewModel.depositsLive
+    var deposits by remember {
+        mutableStateOf(listOf<Map<String, Any>>())
+    }
+
+    LaunchedEffect(Unit) {
+        adminViewModel.listenDeposits {
+            deposits = it
+        }
+    }
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
 
         Text("💰 Deposits", color = Color.White)
 
-        deposits.forEach { item ->
+        LazyColumn {
 
-            val userId = item["userId"]?.toString() ?: ""
-            val id = item["id"]?.toString() ?: ""
-            val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
+            items(deposits) { item ->
 
-            Card {
+                val userId = item["userId"]?.toString() ?: ""
+                val id = item["id"]?.toString() ?: ""
+                val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
 
-                Column {
+                Card(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
 
-                    Text("User: $userId")
+                    Column(Modifier.padding(12.dp)) {
 
-                    Row {
+                        Text("User: $userId")
 
-                        Button(onClick = {
-                            adminViewModel.approveDeposit(userId, id, amount)
-                        }) {
-                            Text("Approve")
-                        }
+                        Row {
 
-                        Button(onClick = {
-                            adminViewModel.rejectDeposit(id)
-                        }) {
-                            Text("Reject")
+                            Button(onClick = {
+                                adminViewModel.approveDeposit(userId, id, amount)
+                            }) {
+                                Text("Approve")
+                            }
+
+                            Spacer(Modifier.width(8.dp))
+
+                            Button(onClick = {
+                                adminViewModel.rejectDeposit(id)
+                            }) {
+                                Text("Reject")
+                            }
                         }
                     }
                 }
