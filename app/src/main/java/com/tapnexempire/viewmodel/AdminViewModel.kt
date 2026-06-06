@@ -2,7 +2,7 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.tapnexempire.core.TapnexCoreController
-import com.tapnexempire.repository.AdminRepository
+import com.tapnexempire.data.repository.AdminRepository
 
 class AdminViewModel : ViewModel() {
 
