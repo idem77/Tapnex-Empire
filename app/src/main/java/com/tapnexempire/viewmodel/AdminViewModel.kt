@@ -1,51 +1,43 @@
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.tapnexempire.admin.core.AdminLiveRepository
+import com.tapnexempire.core.TapnexCoreController
 
-class AdminLiveViewModel : ViewModel() {
-
-    fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit) {
-        AdminLiveRepository.listenUsers(onUpdate)
-    }
-
-    fun listenDeposits(onUpdate: (List<Map<String, Any>>) -> Unit) {
-        AdminLiveRepository.listenDeposits(onUpdate)
-    }
-
-    fun listenWithdraws(onUpdate: (List<Map<String, Any>>) -> Unit) {
-        AdminLiveRepository.listenWithdraws(onUpdate)
-    }
+class AdminViewModel : ViewModel() {
 
     fun addCoins(userId: String, amount: Long) {
-        AdminLiveRepository.updateCoins(userId, amount)
+        TapnexCoreController.addCoins(userId, amount, "ADMIN")
     }
 
-    fun setCoins(userId: String, amount: Long) {
-        AdminLiveRepository.setCoins(userId, amount)
+    fun removeCoins(userId: String, amount: Long) {
+        TapnexCoreController.removeCoins(userId, amount, "ADMIN")
     }
 
-    fun banUser(userId: String) {
-        AdminLiveRepository.banUser(userId)
+    fun createTournament(title: String, entryFee: Long, prizePool: Long) {
+        TapnexCoreController.createTournament(title, entryFee, prizePool)
     }
 
-    fun unbanUser(userId: String) {
-        AdminLiveRepository.unbanUser(userId)
+    fun closeTournament(id: String) {
+        TapnexCoreController.closeTournament(id)
+    }
+
+    fun deleteTournament(id: String) {
+        TapnexCoreController.deleteTournament(id)
     }
 
     fun approveDeposit(userId: String, depositId: String, amount: Long) {
-        AdminLiveRepository.approveDeposit(userId, depositId, amount)
+        TapnexCoreController.approveDeposit(userId, depositId, amount)
     }
 
     fun rejectDeposit(depositId: String) {
-        AdminLiveRepository.rejectDeposit(depositId)
+        TapnexCoreController.rejectDeposit(depositId)
     }
 
     fun approveWithdraw(userId: String, withdrawId: String, amount: Long) {
-        AdminLiveRepository.approveWithdraw(userId, withdrawId, amount)
+        TapnexCoreController.approveWithdraw(userId, withdrawId, amount)
     }
 
     fun rejectWithdraw(withdrawId: String) {
-        AdminLiveRepository.rejectWithdraw(withdrawId)
+        TapnexCoreController.rejectWithdraw(withdrawId)
     }
 }
