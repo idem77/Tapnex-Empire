@@ -316,34 +316,35 @@ Box(
             modifier = Modifier.height(18.dp)
         )
 
-        // 👑 ADMIN PANEL
+      // 🫅🏻 Admin 
+        if (isAdmin) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(95.dp)
+            .clickable {
+
+                navController.navigate(
+                    "admin_dashboard"
+                )
+            },
+
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xCC2A1822)
+        )
+    ) {
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
 
             Text(
-
-                text = "👑 Empire Admin",
-
-                style =
-                    MaterialTheme.typography.titleLarge,
-
-                color = Color.White
-            )
-
-            Spacer(
-                modifier = Modifier.height(4.dp)
-            )
-
-            Text(
-
-                text =
-                    "Control tournaments, deposits & empire systems 😏🔥",
-
-                color = Color.LightGray
+                text = "👑 Open Admin Panel",
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge
             )
         }
     }
-
-    Spacer(
-        modifier = Modifier.height(30.dp)
-    )
-  }
- }
+        }
