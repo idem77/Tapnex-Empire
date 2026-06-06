@@ -208,14 +208,6 @@ composable(Routes.HOME) {
     )
          }
 
-        // 👑 ADMIN DASHBOARD
-composable("admin_dashboard") {
-
-    AdminDashboardScreen(
-        navController = navController
-    )
-}
-
 // 👤 USER MANAGEMENT
 composable("user_management") {
 
