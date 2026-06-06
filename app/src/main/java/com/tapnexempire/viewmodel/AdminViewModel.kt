@@ -1,85 +1,51 @@
 package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.tapnexempire.core.TapnexCoreController
+import com.tapnexempire.admin.core.AdminLiveRepository
 
-class AdminViewModel : ViewModel() {
+class AdminLiveViewModel : ViewModel() {
 
-    // 🏆 CREATE TOURNAMENT
-    fun createTournament(title: String, entryFee: Long, prizePool: Long) {
-
-        TapnexCoreController.createTournament(
-            title = title,
-            entryFee = entryFee,
-            prizePool = prizePool
-        )
+    fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit) {
+        AdminLiveRepository.listenUsers(onUpdate)
     }
 
-    // 🔒 CLOSE TOURNAMENT
-    fun closeTournament(id: String) {
-
-        TapnexCoreController.closeTournament(id)
+    fun listenDeposits(onUpdate: (List<Map<String, Any>>) -> Unit) {
+        AdminLiveRepository.listenDeposits(onUpdate)
     }
 
-    // ❌ DELETE TOURNAMENT
-    fun deleteTournament(id: String) {
-
-        TapnexCoreController.deleteTournament(id)
+    fun listenWithdraws(onUpdate: (List<Map<String, Any>>) -> Unit) {
+        AdminLiveRepository.listenWithdraws(onUpdate)
     }
 
-    // 👥 ADD PARTICIPANT (JOIN TOURNAMENT)
-    fun addParticipant(
-        tournamentId: String,
-        userId: String,
-        userName: String
-    ) {
-
-        TapnexCoreController.joinTournament(
-            tournamentId = tournamentId,
-            userId = userId,
-            userName = userName
-        )
+    fun addCoins(userId: String, amount: Long) {
+        AdminLiveRepository.updateCoins(userId, amount)
     }
 
-    // 📊 UPDATE SCORE
-    fun updateScore(
-        tournamentId: String,
-        userId: String,
-        score: Long
-    ) {
-
-        TapnexCoreController.updateScore(
-            tournamentId,
-            userId,
-            score
-        )
+    fun setCoins(userId: String, amount: Long) {
+        AdminLiveRepository.setCoins(userId, amount)
     }
 
-    // 🏅 SET RANK
-    fun setRank(
-        tournamentId: String,
-        userId: String,
-        rank: Long
-    ) {
-
-        TapnexCoreController.setRank(
-            tournamentId,
-            userId,
-            rank
-        )
+    fun banUser(userId: String) {
+        AdminLiveRepository.banUser(userId)
     }
 
-    // 💰 REWARD USER (SAFE SYSTEM - NO FAKE RISK)
-    fun rewardUser(
-        tournamentId: String,
-        userId: String,
-        rewardCoins: Long
-    ) {
+    fun unbanUser(userId: String) {
+        AdminLiveRepository.unbanUser(userId)
+    }
 
-        TapnexCoreController.rewardUser(
-            tournamentId = tournamentId,
-            userId = userId,
-            coins = rewardCoins
-        )
+    fun approveDeposit(userId: String, depositId: String, amount: Long) {
+        AdminLiveRepository.approveDeposit(userId, depositId, amount)
+    }
+
+    fun rejectDeposit(depositId: String) {
+        AdminLiveRepository.rejectDeposit(depositId)
+    }
+
+    fun approveWithdraw(userId: String, withdrawId: String, amount: Long) {
+        AdminLiveRepository.approveWithdraw(userId, withdrawId, amount)
+    }
+
+    fun rejectWithdraw(withdrawId: String) {
+        AdminLiveRepository.rejectWithdraw(withdrawId)
     }
 }
