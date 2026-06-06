@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.runtime.*
+import com.google.firebase.auth.FirebaseAuth
+import com.tapnexempire.security.AdminSecurity
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -39,6 +42,25 @@ characterViewModel: CharacterViewModel =
 
 val characterState =
     characterViewModel.characterState
+  var isAdmin by remember {
+    mutableStateOf(false)
+}
+
+LaunchedEffect(Unit) {
+
+    val uid = FirebaseAuth
+        .getInstance()
+        .currentUser
+        ?.uid
+
+    if (uid != null) {
+
+        AdminSecurity.isAdmin(uid) { admin ->
+
+            isAdmin = admin
+        }
+    }
+}
 
 Box(
     modifier = Modifier.fillMaxSize()
@@ -295,64 +317,33 @@ Box(
         )
 
         // 👑 ADMIN PANEL
-        Card(
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(95.dp)
-                .shadow(12.dp)
-                .clickable {
+            Text(
 
-                    navController.navigate(
-                        "admin_dashboard"
-                    )
-                },
+                text = "👑 Empire Admin",
 
-            colors = CardDefaults.cardColors(
+                style =
+                    MaterialTheme.typography.titleLarge,
 
-                containerColor =
-                    Color(0xCC2A1822)
+                color = Color.White
             )
-        ) {
 
-            Column(
+            Spacer(
+                modifier = Modifier.height(4.dp)
+            )
 
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(18.dp),
+            Text(
 
-                verticalArrangement =
-                    Arrangement.Center
-            ) {
+                text =
+                    "Control tournaments, deposits & empire systems 😏🔥",
 
-                Text(
-
-                    text = "👑 Empire Admin",
-
-                    style =
-                        MaterialTheme.typography.titleLarge,
-
-                    color = Color.White
-                )
-
-                Spacer(
-                    modifier = Modifier.height(4.dp)
-                )
-
-                Text(
-
-                    text =
-                        "Control tournaments, deposits & empire systems 😏🔥",
-
-                    color = Color.LightGray
-                )
-            }
+                color = Color.LightGray
+            )
         }
-
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
     }
-}
 
-}
+    Spacer(
+        modifier = Modifier.height(30.dp)
+    )
+  }
+ }
