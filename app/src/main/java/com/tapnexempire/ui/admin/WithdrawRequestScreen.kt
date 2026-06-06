@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun WithdrawRequestScreen(
-    adminViewModel: AdminViewModel = hiltViewModel()
+    adminViewModel: AdminViewModel = ViewModel()
 ) {
 
     val withdraws = adminViewModel.withdrawsLive
