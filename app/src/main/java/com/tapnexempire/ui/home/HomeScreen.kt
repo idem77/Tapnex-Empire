@@ -340,11 +340,21 @@ Box(
             contentAlignment = Alignment.Center
         ) {
 
-            Text(
-                text = "👑 Open Admin Panel",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge
-            )
+             Text(
+    text = "👑 Open Admin Panel",
+    color = Color.White,
+    style = MaterialTheme.typography.titleLarge
+)
         }
     }
- }
+}
+
+Spacer(
+    modifier = Modifier.height(30.dp)
+)
+
+    }
+
+}
+
+}
