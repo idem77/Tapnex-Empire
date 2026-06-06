@@ -16,52 +16,40 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun UserManagementScreen(
+fun DepositRequestScreen(
     adminViewModel: AdminViewModel = hiltViewModel()
 ) {
 
-    val users = adminViewModel.usersLive
+    val deposits = adminViewModel.depositsLive
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
 
-        Text("👥 Live Users", color = Color.White)
+        Text("💰 Deposits", color = Color.White)
 
-        Spacer(Modifier.height(10.dp))
+        deposits.forEach { item ->
 
-        users.forEach { user ->
+            val userId = item["userId"]?.toString() ?: ""
+            val id = item["id"]?.toString() ?: ""
+            val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
 
-            val userId = user["userId"]?.toString() ?: ""
-            val name = user["name"]?.toString() ?: "Unknown"
-            val coins = user["coins"]?.toString() ?: "0"
+            Card {
 
-            Card(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
-                colors = CardDefaults.cardColors(Color(0xFF1A1C22))
-            ) {
+                Column {
 
-                Column(Modifier.padding(12.dp)) {
-
-                    Text("👤 $name", color = Color.White)
-                    Text("💰 Coins: $coins", color = Color.Yellow)
+                    Text("User: $userId")
 
                     Row {
 
                         Button(onClick = {
-                            adminViewModel.addCoins(userId, 100)
+                            adminViewModel.approveDeposit(userId, id, amount)
                         }) {
-                            Text("+100 Coins")
+                            Text("Approve")
                         }
 
-                        Spacer(Modifier.width(8.dp))
-
                         Button(onClick = {
-                            adminViewModel.ban(userId)
+                            adminViewModel.rejectDeposit(id)
                         }) {
-                            Text("Ban")
+                            Text("Reject")
                         }
                     }
                 }
