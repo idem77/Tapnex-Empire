@@ -16,165 +16,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DepositRequestScreen() {
-
-    Column(
-
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0E1015))
-            .padding(18.dp)
-            .verticalScroll(
-                rememberScrollState()
-            ),
-
-        horizontalAlignment =
-            Alignment.CenterHorizontally
-    ) {
-
-        Spacer(
-            modifier = Modifier.height(20.dp)
-        )
-
-        Text(
-
-            text = "💰 Deposit Requests",
-
-            color = Color.White
-        )
-
-        Spacer(
-            modifier = Modifier.height(24.dp)
-        )
-
-        DepositRequestCard(
-
-            userName = "EmpirePlayer",
-
-            amount = "₹500",
-
-            upiRef = "UPI847392"
-        )
-
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
-
-        DepositRequestCard(
-
-            userName = "ShadowKing",
-
-            amount = "₹1000",
-
-            upiRef = "UPI274829"
-        )
-    }
-}
-
-@Composable
-fun DepositRequestCard(
-
-    userName: String,
-
-    amount: String,
-
-    upiRef: String
+fun UserManagementScreen(
+    adminViewModel: AdminViewModel = hiltViewModel()
 ) {
 
-    Card(
+    val users = adminViewModel.usersLive
 
+    Column(
         modifier = Modifier
-            .fillMaxWidth(),
-
-        colors = CardDefaults.cardColors(
-
-            containerColor =
-                Color(0xCC1A1C22)
-        )
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
 
-        Column(
+        Text("👥 Live Users", color = Color.White)
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp)
-        ) {
+        Spacer(Modifier.height(10.dp))
 
-            Text(
+        users.forEach { user ->
 
-                text = "👤 $userName",
+            val userId = user["userId"]?.toString() ?: ""
+            val name = user["name"]?.toString() ?: "Unknown"
+            val coins = user["coins"]?.toString() ?: "0"
 
-                color = Color.White
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-
-                text = "💰 Amount: $amount",
-
-                color = Color(0xFFFFD54F)
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-
-                text = "🧾 Ref ID: $upiRef",
-
-                color = Color.LightGray
-            )
-
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
-
-            Row(
-
-                modifier = Modifier.fillMaxWidth(),
-
-                horizontalArrangement =
-                    Arrangement.SpaceBetween
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                colors = CardDefaults.cardColors(Color(0xFF1A1C22))
             ) {
 
-                Button(
+                Column(Modifier.padding(12.dp)) {
 
-                    onClick = {
+                    Text("👤 $name", color = Color.White)
+                    Text("💰 Coins: $coins", color = Color.Yellow)
 
-                    },
+                    Row {
 
-                    colors = ButtonDefaults.buttonColors(
+                        Button(onClick = {
+                            adminViewModel.addCoins(userId, 100)
+                        }) {
+                            Text("+100 Coins")
+                        }
 
-                        containerColor =
-                            Color(0xFF2E7D32)
-                    )
-                ) {
+                        Spacer(Modifier.width(8.dp))
 
-                    Text(
-                        text = "Approve"
-                    )
-                }
-
-                Button(
-
-                    onClick = {
-
-                    },
-
-                    colors = ButtonDefaults.buttonColors(
-
-                        containerColor =
-                            Color(0xFFC62828)
-                    )
-                ) {
-
-                    Text(
-                        text = "Reject"
-                    )
+                        Button(onClick = {
+                            adminViewModel.ban(userId)
+                        }) {
+                            Text("Ban")
+                        }
+                    }
                 }
             }
         }
