@@ -208,6 +208,57 @@ composable(Routes.HOME) {
     )
          }
 
+        // 👑 ADMIN DASHBOARD
+composable("admin_dashboard") {
+
+    AdminDashboardScreen(
+        navController = navController
+    )
+}
+
+// 👤 USER MANAGEMENT
+composable("user_management") {
+
+    UserManagementScreen()
+}
+
+// 🏆 TOURNAMENT CONTROL
+composable("tournament_control") {
+
+    TournamentControlScreen()
+}
+
+// 💰 DEPOSIT REQUESTS
+composable("deposit_requests") {
+
+    DepositRequestScreen()
+}
+
+// 💸 WITHDRAW REQUESTS
+composable("withdraw_requests") {
+
+    WithdrawRequestScreen()
+}
+
+// 🎮 EVENT CONTROL
+composable("event_control") {
+
+    EventControlScreen()
+}
+
+// 🎁 BUNDLE CONTROL
+composable("bundle_control") {
+
+    BundleControlScreen()
+}
+
+// 🧍 CHARACTER CONTROL
+composable("character_control") {
+
+    CharacterControlScreen()
+}
+        
+
         // 🏆 Tournament List
 composable(Routes.TOURNAMENTS) {
 
