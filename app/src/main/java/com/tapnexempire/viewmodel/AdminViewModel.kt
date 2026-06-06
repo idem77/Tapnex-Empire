@@ -2,17 +2,43 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.tapnexempire.core.TapnexCoreController
+import com.tapnexempire.repository.AdminRepository
 
 class AdminViewModel : ViewModel() {
 
-    fun addCoins(userId: String, amount: Long) {
-        TapnexCoreController.addCoins(userId, amount, "ADMIN")
+    private val repo = AdminRepository()
+
+    // 👤 USERS
+    fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit) {
+        repo.listenUsers(onUpdate)
     }
 
-    fun removeCoins(userId: String, amount: Long) {
-        TapnexCoreController.removeCoins(userId, amount, "ADMIN")
+    fun updateCoins(userId: String, amount: Long) {
+        repo.updateCoins(userId, amount)
     }
 
+    fun setCoins(userId: String, amount: Long) {
+        repo.setCoins(userId, amount)
+    }
+
+    fun banUser(userId: String) {
+        repo.banUser(userId)
+    }
+
+    fun unbanUser(userId: String) {
+        repo.unbanUser(userId)
+    }
+
+    // 💸 LIVE
+    fun listenDeposits(onUpdate: (List<Map<String, Any>>) -> Unit) {
+        repo.listenDeposits(onUpdate)
+    }
+
+    fun listenWithdraws(onUpdate: (List<Map<String, Any>>) -> Unit) {
+        repo.listenWithdraws(onUpdate)
+    }
+
+    // 🏆 CORE ACTIONS
     fun createTournament(title: String, entryFee: Long, prizePool: Long) {
         TapnexCoreController.createTournament(title, entryFee, prizePool)
     }
@@ -29,15 +55,7 @@ class AdminViewModel : ViewModel() {
         TapnexCoreController.approveDeposit(userId, depositId, amount)
     }
 
-    fun rejectDeposit(depositId: String) {
-        TapnexCoreController.rejectDeposit(depositId)
-    }
-
     fun approveWithdraw(userId: String, withdrawId: String, amount: Long) {
         TapnexCoreController.approveWithdraw(userId, withdrawId, amount)
-    }
-
-    fun rejectWithdraw(withdrawId: String) {
-        TapnexCoreController.rejectWithdraw(withdrawId)
     }
 }
