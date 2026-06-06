@@ -200,6 +200,14 @@ composable(Routes.HOME) {
     EquipmentScreen()
             }
 
+        //😛Admin
+         composable("admin_dashboard") {
+
+    AdminDashboardScreen(
+        navController = navController
+    )
+         }
+
         // 🏆 Tournament List
 composable(Routes.TOURNAMENTS) {
 
