@@ -354,11 +354,8 @@ composable(Routes.DEPOSIT) {
             navController.popBackStack()
         },
 
-        onProceed = { coins ->
-
-            viewModel.addCoins(coins)
-
-            navController.popBackStack()
+        onProceed = {
+            // create deposit request
         }
     )
       }         
