@@ -1,7 +1,7 @@
 package com.tapnexempire.admin.core
 
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
 object AdminLiveRepository {
@@ -9,23 +9,14 @@ object AdminLiveRepository {
     private val db = FirebaseFirestore.getInstance()
 
     // =========================
-    // 👤 USERS LIVE
+    // 👤 USERS
     // =========================
+
     fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit): ListenerRegistration {
         return db.collection("users")
             .addSnapshotListener { snap, _ ->
                 onUpdate(snap?.documents?.map { it.data ?: emptyMap() } ?: emptyList())
             }
-    }
-
-    fun updateCoins(userId: String, amount: Long) {
-        db.collection("users").document(userId)
-            .update("coins", FieldValue.increment(amount))
-    }
-
-    fun setCoins(userId: String, amount: Long) {
-        db.collection("users").document(userId)
-            .update("coins", amount)
     }
 
     fun banUser(userId: String) {
@@ -39,56 +30,83 @@ object AdminLiveRepository {
     }
 
     // =========================
-    // 💰 DEPOSITS LIVE
+    // 💰 DEPOSIT REQUESTS
     // =========================
+
     fun listenDeposits(onUpdate: (List<Map<String, Any>>) -> Unit): ListenerRegistration {
-        return db.collection("deposits")
-            .whereEqualTo("status", "PENDING")
+        return db.collection("deposit_requests")
+            .whereEqualTo("status", "pending")
             .addSnapshotListener { snap, _ ->
                 onUpdate(snap?.documents?.map { it.data ?: emptyMap() } ?: emptyList())
             }
     }
 
-    fun approveDeposit(userId: String, depositId: String, amount: Long) {
-        db.collection("deposits").document(depositId)
-            .update("status", "APPROVED")
+    fun approveDeposit(userId: String, depositId: String, coins: Long) {
 
-        db.collection("users").document(userId)
-            .update("coins", FieldValue.increment(amount))
+        val walletRef = db.collection("wallets").document(userId)
+        val depositRef = db.collection("deposit_requests").document(depositId)
+
+        db.runTransaction { tx ->
+
+            tx.update(depositRef, "status", "approved")
+
+            tx.update(walletRef, mapOf(
+                "depositCoins" to FieldValue.increment(coins),
+                "withdrawableCoins" to FieldValue.increment(coins)
+            ))
+        }
     }
 
     fun rejectDeposit(depositId: String) {
-        db.collection("deposits").document(depositId)
-            .update("status", "REJECTED")
+        db.collection("deposit_requests")
+            .document(depositId)
+            .update("status", "rejected")
     }
 
     // =========================
-    // 💸 WITHDRAW LIVE
+    // 💸 WITHDRAW REQUESTS
     // =========================
+
     fun listenWithdraws(onUpdate: (List<Map<String, Any>>) -> Unit): ListenerRegistration {
-        return db.collection("withdraws")
-            .whereEqualTo("status", "PENDING")
+        return db.collection("withdraw_requests")
+            .whereEqualTo("status", "pending")
             .addSnapshotListener { snap, _ ->
                 onUpdate(snap?.documents?.map { it.data ?: emptyMap() } ?: emptyList())
             }
     }
 
-    fun approveWithdraw(userId: String, withdrawId: String, amount: Long) {
+    fun approveWithdraw(userId: String, withdrawId: String, coins: Long) {
 
-        db.collection("withdraws").document(withdrawId)
-            .update("status", "APPROVED")
+        val withdrawRef = db.collection("withdraw_requests").document(withdrawId)
 
-        db.collection("users").document(userId)
-            .update("coins", FieldValue.increment(-amount))
+        db.runTransaction { tx ->
+
+            // Only mark approved (NO coin deduction here)
+            tx.update(withdrawRef, "status", "approved")
+        }
+
+        // Optional: log transaction
+        db.collection("transactions")
+            .document(userId)
+            .collection("history")
+            .add(
+                mapOf(
+                    "type" to "WITHDRAW",
+                    "amount" to coins,
+                    "status" to "SUCCESS",
+                    "createdAt" to System.currentTimeMillis()
+                )
+            )
     }
 
     fun rejectWithdraw(withdrawId: String) {
-        db.collection("withdraws").document(withdrawId)
-            .update("status", "REJECTED")
+        db.collection("withdraw_requests")
+            .document(withdrawId)
+            .update("status", "rejected")
     }
 
     // =========================
-    // 🏆 TOURNAMENT CONTROL (FULL)
+    // 🏆 TOURNAMENT CONTROL
     // =========================
 
     fun createTournament(title: String, entryFee: Long, prizePool: Long) {
@@ -101,7 +119,7 @@ object AdminLiveRepository {
                 "title" to title,
                 "entryFee" to entryFee,
                 "prizePool" to prizePool,
-                "status" to "UPCOMING",
+                "status" to "upcoming",
                 "joinedPlayers" to 0,
                 "createdAt" to System.currentTimeMillis()
             )
@@ -109,12 +127,14 @@ object AdminLiveRepository {
     }
 
     fun closeTournament(id: String) {
-        db.collection("tournaments").document(id)
-            .update("status", "CLOSED")
+        db.collection("tournaments")
+            .document(id)
+            .update("status", "closed")
     }
 
     fun deleteTournament(id: String) {
-        db.collection("tournaments").document(id)
+        db.collection("tournaments")
+            .document(id)
             .delete()
     }
 
@@ -133,6 +153,7 @@ object AdminLiveRepository {
         tournamentId: String,
         onUpdate: (List<Map<String, Any>>) -> Unit
     ): ListenerRegistration {
+
         return db.collection("tournaments")
             .document(tournamentId)
             .collection("participants")
@@ -174,8 +195,8 @@ object AdminLiveRepository {
             }
         }
 
-        db.collection("users")
+        db.collection("wallets")
             .document(userId)
-            .update("coins", FieldValue.increment(coins))
+            .update("withdrawableCoins", FieldValue.increment(coins))
     }
 }
