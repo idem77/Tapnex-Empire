@@ -36,7 +36,7 @@ fun DepositRequestScreen(
 
                 val userId = item["userId"]?.toString() ?: ""
                 val id = item["id"]?.toString() ?: ""
-                val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
+                val amount =  (item["amountCoins"] as? Long) ?: 0L
 
                 Card(
                     Modifier
