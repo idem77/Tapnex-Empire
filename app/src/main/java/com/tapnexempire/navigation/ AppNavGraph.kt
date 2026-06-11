@@ -346,8 +346,9 @@ composable(
             navController.popBackStack()
         },
 
-        onWithdraw = { coins ->
-
+        onWithdraw = { coins, redeemCode ->
+            
+           // code logic 
         }
     )
          }
