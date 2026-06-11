@@ -43,20 +43,34 @@ object AdminLiveRepository {
 
     fun approveDeposit(userId: String, depositId: String, coins: Long) {
 
-        val walletRef = db.collection("wallets").document(userId)
-        val depositRef = db.collection("deposit_requests").document(depositId)
+    val walletRef = db.collection("wallets").document(userId)
+    val depositRef = db.collection("deposit_requests").document(depositId)
 
-        db.runTransaction { tx ->
+    db.runTransaction { tx ->
 
-            tx.update(depositRef, "status", "approved")
+        tx.update(depositRef, "status", "approved")
 
-            tx.update(walletRef, mapOf(
-                "depositCoins" to FieldValue.increment(coins),
-                "withdrawableCoins" to FieldValue.increment(coins)
-            ))
-        }
+        tx.update(walletRef, mapOf(
+            "depositCoins" to FieldValue.increment(coins),
+            "withdrawableCoins" to FieldValue.increment(coins)
+        ))
     }
 
+    db.collection("transactions")
+        .document(userId)
+        .collection("history")
+        .add(
+            mapOf(
+                "type" to "DEPOSIT",
+                "coins" to coins,
+                "amount" to (coins / 10),
+                "status" to "SUCCESS",
+                "description" to "Coins deposited successfully",
+                "createdAt" to System.currentTimeMillis()
+            )
+        )
+    }
+    
     fun rejectDeposit(depositId: String) {
         db.collection("deposit_requests")
             .document(depositId)
