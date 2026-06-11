@@ -10,12 +10,6 @@ class AdminViewModel : ViewModel()  {
     fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit) =
         AdminLiveRepository.listenUsers(onUpdate)
 
-    fun updateCoins(userId: String, amount: Long) =
-        AdminLiveRepository.updateCoins(userId, amount)
-
-    fun setCoins(userId: String, amount: Long) =
-        AdminLiveRepository.setCoins(userId, amount)
-
     fun banUser(userId: String) =
         AdminLiveRepository.banUser(userId)
 
