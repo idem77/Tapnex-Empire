@@ -1,232 +1,243 @@
 package com.tapnexempire.ui.wallet
+import androidx.compose.foundation.Image import androidx.compose.foundation.layout.* import androidx.compose.foundation.rememberScrollState import androidx.compose.foundation.text.KeyboardOptions import androidx.compose.foundation.verticalScroll import androidx.compose.material3.* import androidx.compose.runtime.* import androidx.compose.ui.Alignment import androidx.compose.ui.Modifier import androidx.compose.ui.layout.ContentScale import androidx.compose.ui.res.painterResource import androidx.compose.ui.text.input.KeyboardType import androidx.compose.ui.unit.dp import androidx.compose.ui.unit.sp import androidx.hilt.navigation.compose.hiltViewModel import com.tapnexempire.R import com.tapnexempire.components.AppButton import com.tapnexempire.viewmodel.DepositViewModel import com.tapnexempire.ui.theme.EmpireGold import com.tapnexempire.ui.theme.EmpireWhite
+@Composable fun DepositScreen(
+userId: String,
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.tapnexempire.R
-import com.tapnexempire.components.AppButton
-import com.tapnexempire.ui.theme.EmpireGold
-import com.tapnexempire.ui.theme.EmpireWhite
+onBack: () -> Unit,
 
-@Composable
-fun DepositScreen(
+viewModel: DepositViewModel = hiltViewModel()
+) {
+var amount by remember {
+    mutableStateOf("")
+}
 
-    onBack: () -> Unit,
+var upiRef by remember {
+    mutableStateOf("")
+}
 
-    onProceed: (Int) -> Unit
+var loading by remember {
+    mutableStateOf(false)
+}
+
+val rupees =
+    amount.toIntOrNull() ?: 0
+
+val coins =
+    rupees * 10
+
+Box(
+    modifier = Modifier.fillMaxSize()
 ) {
 
-    var amount by remember {
+    Image(
+        painter = painterResource(id = R.drawable.wallet_bg),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.FillBounds
+    )
 
-        mutableStateOf("")
-    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+            .padding(top = 50.dp)
+            .verticalScroll(rememberScrollState()),
 
-    val rupees =
-        amount.toIntOrNull() ?: 0
-
-    val coins = rupees * 10
-
-    Box(
-        modifier = Modifier.fillMaxSize()
+        horizontalAlignment =
+            Alignment.CenterHorizontally
     ) {
 
-        // 👑 WALLET BACKGROUND
-        Image(
-            painter =
-                painterResource(id = R.drawable.wallet_bg),
-
-            contentDescription = null,
-
-            modifier = Modifier.fillMaxSize(),
-
-            contentScale = ContentScale.FillBounds
+        Text(
+            text = "💰 Deposit Coins",
+            style = MaterialTheme.typography.headlineLarge,
+            color = EmpireWhite
         )
 
-        Column(
+        Spacer(modifier = Modifier.height(10.dp))
 
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .padding(top = 50.dp)
-                .verticalScroll(rememberScrollState()),
+        Text(
+            text = "Secure • Fast • Premium",
+            color = EmpireGold,
+            fontSize = 16.sp
+        )
 
-            horizontalAlignment =
-                Alignment.CenterHorizontally
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth()
         ) {
 
-            // 👑 TITLE
-            Text(
-
-                text = "💰 Deposit Coins",
-
-                style =
-                    MaterialTheme.typography.headlineLarge,
-
-                color = EmpireWhite
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-
-                text =
-                    "Secure • Fast • Premium",
-
-                color = EmpireGold,
-
-                fontSize = 16.sp
-            )
-
-            Spacer(modifier = Modifier.height(35.dp))
-
-            // 👑 MAIN CARD
-            Card(
-
-                modifier = Modifier.fillMaxWidth(),
-
-                colors = CardDefaults.cardColors(
-                    containerColor =
-                        MaterialTheme.colorScheme.surface
-                ),
-
-                elevation =
-                    CardDefaults.cardElevation(
-                        defaultElevation = 10.dp
-                    )
+            Column(
+                modifier = Modifier.padding(20.dp)
             ) {
 
-                Column(
+                Text(
+                    text = "Enter Amount",
+                    color = EmpireGold
+                )
 
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(22.dp)
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                OutlinedTextField(
+
+                    value = amount,
+
+                    onValueChange = {
+                        amount = it
+                    },
+
+                    label = {
+                        Text("Amount ₹")
+                    },
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType =
+                                KeyboardType.Number
+                        ),
+
+                    modifier = Modifier.fillMaxWidth(),
+
+                    singleLine = true
+                )
+
+                Spacer(
+                    modifier = Modifier.height(20.dp)
+                )
+
+                Card(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
 
-                    Text(
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(18.dp),
 
-                        text = "Enter Amount",
-
-                        color = EmpireGold,
-
-                        fontSize = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(18.dp))
-
-                    OutlinedTextField(
-
-                        value = amount,
-
-                        onValueChange = {
-
-                            amount = it
-                        },
-
-                        label = {
-
-                            Text("Amount (₹)")
-                        },
-
-                        keyboardOptions =
-                            KeyboardOptions(
-
-                                keyboardType =
-                                    KeyboardType.Number
-                            ),
-
-                        modifier = Modifier.fillMaxWidth(),
-
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(22.dp))
-
-                    Card(
-
-                        modifier = Modifier.fillMaxWidth(),
-
-                        colors = CardDefaults.cardColors(
-                            containerColor =
-                                MaterialTheme.colorScheme.background
-                        )
+                        horizontalAlignment =
+                            Alignment.CenterHorizontally
                     ) {
 
-                        Column(
+                        Text("🎁 You Will Receive")
 
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(18.dp),
+                        Spacer(
+                            modifier = Modifier.height(8.dp)
+                        )
 
-                            horizontalAlignment =
-                                Alignment.CenterHorizontally
-                        ) {
+                        Text(
+                            text = "$coins Coins",
+                            color = EmpireGold,
+                            fontSize = 28.sp
+                        )
+                    }
+                }
 
-                            Text(
+                Spacer(
+                    modifier = Modifier.height(20.dp)
+                )
 
-                                text =
-                                    "🎁 You Will Receive",
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
 
-                                color = EmpireWhite
-                            )
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
 
-                            Spacer(
-                                modifier =
-                                    Modifier.height(10.dp)
-                            )
+                        Text("💳 Pay To")
 
-                            Text(
+                        Spacer(
+                            modifier = Modifier.height(8.dp)
+                        )
 
-                                text = "$coins Coins",
+                        Text(
+                            text = "YOUR_UPI_ID_HERE"
+                        )
+                    }
+                }
 
-                                color = EmpireGold,
+                Spacer(
+                    modifier = Modifier.height(20.dp)
+                )
 
-                                fontSize = 28.sp
-                            )
-                        }
+                OutlinedTextField(
+
+                    value = upiRef,
+
+                    onValueChange = {
+                        upiRef = it
+                    },
+
+                    label = {
+                        Text("UPI Reference Number")
+                    },
+
+                    modifier = Modifier.fillMaxWidth(),
+
+                    singleLine = true
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(25.dp)
+        )
+
+        AppButton(
+
+            text =
+                if (loading)
+                    "Submitting..."
+                else
+                    "📤 Submit Deposit",
+
+            enabled =
+                rupees > 0 &&
+                upiRef.isNotBlank() &&
+                !loading,
+
+            onClick = {
+
+                loading = true
+
+                viewModel.submitDeposit(
+
+                    userId = userId,
+
+                    amountRupees = rupees.toLong(),
+
+                    amountCoins = coins.toLong(),
+
+                    upiRef = upiRef
+
+                ) { success, message ->
+
+                    loading = false
+
+                    if (success) {
+
+                        amount = ""
+                        upiRef = ""
                     }
                 }
             }
+        )
 
-            Spacer(modifier = Modifier.height(30.dp))
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
 
-            // 👑 PAY BUTTON
-            AppButton(
-
-                text = "🚀 Proceed To Pay",
-
-                enabled = rupees > 0,
-
-                onClick = {
-
-                    onProceed(coins)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            // 👑 BACK BUTTON
-            OutlinedButton(
-
-                onClick = onBack,
-
-                modifier = Modifier.fillMaxWidth()
-            ) {
-
-                Text("Back")
-            }
-
-            Spacer(modifier = Modifier.height(40.dp))
+        OutlinedButton(
+            onClick = onBack,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Back")
         }
+
+        Spacer(
+            modifier = Modifier.height(40.dp)
+        )
     }
 }
