@@ -18,4 +18,5 @@ import javax.inject.Inject
         redeemCode = redeemCode,
         onResult = onResult
     )
-}
+  }
+}  
