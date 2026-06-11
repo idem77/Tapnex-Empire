@@ -336,20 +336,18 @@ composable(
         }
 
         // 💸 Withdraw
-         composable(Routes.DEPOSIT) {
+         composable(Routes.WITHDRAW) {
 
-    val viewModel: WalletViewModel =
-        hiltViewModel()
+    WithdrawScreen(
 
-    DepositScreen(
+        withdrawableCoins = 0L,
 
         onBack = {
-
             navController.popBackStack()
         },
 
-        onProceed = {
-            // create deposit request
+        onWithdraw = { coins ->
+
         }
     )
          }
