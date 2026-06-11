@@ -336,13 +336,7 @@ composable(
         }
 
         // 💸 Withdraw
-        composable(Routes.WITHDRAW) {
-
-            WithdrawScreen()
-        }
-
-       // 💰 Deposit
-composable(Routes.DEPOSIT) {
+         composable(Routes.DEPOSIT) {
 
     val viewModel: WalletViewModel =
         hiltViewModel()
@@ -358,6 +352,22 @@ composable(Routes.DEPOSIT) {
             // create deposit request
         }
     )
-      }         
+         }
+
+       // 💰 Deposit
+   composable(Routes.DEPOSIT) {
+
+    DepositScreen(
+
+        userId =
+            FirebaseAuth.getInstance()
+                .currentUser?.uid ?: "",
+
+        onBack = {
+
+            navController.popBackStack()
+        }
+    )
+   }     
     }
 }
