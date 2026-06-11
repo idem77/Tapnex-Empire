@@ -56,19 +56,23 @@ fun UserManagementScreen(
 
                         Row {
 
-                            Button(onClick = {
-                                adminViewModel.updateCoins(userId, 100)
-                            }) {
-                                Text("+100 Coins")
-                            }
+    Button(
+        onClick = {
+            adminViewModel.banUser(userId)
+        }
+    ) {
+        Text("Ban")
+    }
 
-                            Spacer(Modifier.width(8.dp))
+    Spacer(Modifier.width(8.dp))
 
-                            Button(onClick = {
-                                adminViewModel.banUser(userId)
-                            }) {
-                                Text("Ban")
-                            }
+    Button(
+        onClick = {
+            adminViewModel.unbanUser(userId)
+        }
+    ) {
+        Text("Unban")
+    }
                         }
                     }
                 }
