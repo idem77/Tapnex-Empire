@@ -3,7 +3,8 @@ package com.tapnexempire.viewmodel
 import androidx.lifecycle.ViewModel
 import com.tapnexempire.admin.core.AdminLiveRepository
 
-class AdminViewModel : ViewModel() {
+@HiltViewModel
+class AdminViewModel @Inject constructor() : ViewModel()  {
 
     // 👤 USERS
     fun listenUsers(onUpdate: (List<Map<String, Any>>) -> Unit) =
