@@ -2,6 +2,7 @@ package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.tapnexempire.admin.core.AdminLiveRepository
+import javax.inject.Inject
 
 @HiltViewModel
 class AdminViewModel @Inject constructor() : ViewModel()  {
