@@ -304,7 +304,7 @@ composable(
             .currentUser
             ?.uid ?: "",
 
-        entryFee = 240
+        entryFee = Long
     )
 }
           //🎮Game
