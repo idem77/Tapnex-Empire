@@ -137,7 +137,7 @@ Box(
     contentDescription = null,
     modifier = Modifier
         .fillMaxWidth()
-        .height(420.dp),
+        .height(520.dp),
     contentScale = ContentScale.Fit
 )
 
@@ -168,20 +168,6 @@ Box(
                 verticalArrangement =
                     Arrangement.Center
             ) {
-
-                Text(
-
-                    text = "💎 Active Bundle",
-
-                    color = EmpireGold,
-
-                    style =
-                        MaterialTheme.typography.titleMedium
-                )
-
-                Spacer(
-                    modifier = Modifier.height(4.dp)
-                )
 
                 Text(
 
