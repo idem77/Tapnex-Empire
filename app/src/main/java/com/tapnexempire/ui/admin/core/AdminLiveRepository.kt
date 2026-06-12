@@ -123,7 +123,7 @@ object AdminLiveRepository {
     // 🏆 TOURNAMENT CONTROL
     // =========================
 
-    fun createTournament(title: String, entryFee: Long, prizePool: Long) {
+    fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long ) {
 
         val id = db.collection("tournaments").document().id
 
@@ -134,6 +134,7 @@ object AdminLiveRepository {
                 "entryFee" to entryFee,
                 "prizePool" to prizePool,
                 "status" to "upcoming",
+                "maxPlayers" to maxPlayers,
                 "joinedPlayers" to 0,
                 "createdAt" to System.currentTimeMillis()
             )
