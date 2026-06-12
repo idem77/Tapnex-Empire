@@ -304,7 +304,7 @@ composable(
             .currentUser
             ?.uid ?: "",
 
-        entryFee = tournament.entryFee
+        entryFee = entryFee
     )
 }
           //🎮Game
