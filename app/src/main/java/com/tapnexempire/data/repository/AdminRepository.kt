@@ -35,8 +35,8 @@ class AdminRepository {
         AdminLiveRepository.rejectWithdraw(withdrawId)
 
     // 🏆 TOURNAMENT
-    fun createTournament(title: String, entryFee: Long, prizePool: Long) =
-        AdminLiveRepository.createTournament(title, entryFee, prizePool)
+    fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long ) =
+        AdminLiveRepository.createTournament(title, entryFee, prizePool, maxPlayers)
 
     fun closeTournament(id: String) =
         AdminLiveRepository.closeTournament(id)
