@@ -69,7 +69,7 @@ fun TournamentControlScreen(
             vm.createTournament(
                 title,
                 fee.toLongOrNull() ?: 0,
-                prize.toLongOrNull() ?: 0
+                prize.toLongOrNull() ?: 0,
                 maxPlayers.toLongOrNull() ?: 0
             )
         }) {
