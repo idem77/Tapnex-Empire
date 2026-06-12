@@ -22,7 +22,9 @@ fun TournamentControlScreen(
     var title by remember { mutableStateOf("") }
     var fee by remember { mutableStateOf("") }
     var prize by remember { mutableStateOf("") }
-
+    var maxPlayers by remember { mutableStateOf("") }
+   
+     
     // 🔥 LIVE TOURNAMENT STREAM
     LaunchedEffect(true) {
         db.collection("tournaments")
@@ -56,6 +58,12 @@ fun TournamentControlScreen(
             onValueChange = { prize = it },
             label = { Text("Prize Pool") }
         )
+
+        OutlinedTextField(
+    value = maxPlayers,
+    onValueChange = { maxPlayers = it },
+    label = { Text("Max Players") }
+)
 
         Button(onClick = {
             vm.createTournament(
