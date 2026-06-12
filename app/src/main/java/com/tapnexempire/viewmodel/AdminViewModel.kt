@@ -38,7 +38,7 @@ class AdminViewModel : ViewModel()  {
 
     // 🏆 TOURNAMENT
     fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long ) =
-        AdminLiveRepository.createTournament(title, entryFee, prizePool, maxplayers)
+        AdminLiveRepository.createTournament(title, entryFee, prizePool, maxPlayers)
 
     fun closeTournament(id: String) =
         AdminLiveRepository.closeTournament(id)
