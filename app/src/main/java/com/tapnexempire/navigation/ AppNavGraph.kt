@@ -302,7 +302,7 @@ composable(
         userId = FirebaseAuth
             .getInstance()
             .currentUser
-            ?.uid ?: "",
+            ?.uid ?: ""
 
     )
 }
