@@ -31,8 +31,6 @@ fun TournamentDetailScreen(
 
     userId: String,
 
-    entryFee: Long,
-
     viewModel: TournamentViewModel =
         hiltViewModel()
 ) {
@@ -46,6 +44,12 @@ fun TournamentDetailScreen(
 
         mutableStateOf("")
     }
+
+       val state by viewModel.state.collectAsState()
+
+LaunchedEffect(tournamentId) {
+    viewModel.loadTournament(tournamentId)
+}
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -94,7 +98,7 @@ fun TournamentDetailScreen(
             )
 
             Spacer(modifier = Modifier.height(30.dp))
-
+           
             // 👑 TOURNAMENT CARD
             Card(
 
@@ -138,13 +142,13 @@ fun TournamentDetailScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text(
+             val tournament =
+    (state as? UiState.Success)?.data
 
-                        text =
-                            "🎟 Entry Fee: $entryFee Coins",
-
-                        color = EmpireWhite
-                    )
+Text(
+    text =
+        "🎟 Entry Fee: ${tournament?.entryFee ?: 0} Coins"
+)
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -192,7 +196,8 @@ fun TournamentDetailScreen(
 
                         userId = userId,
 
-                        entryFee = entryFee,
+                        entryFee =
+    tournament?.entryFee ?: 0
 
                         onResult = { success, message ->
 
