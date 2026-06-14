@@ -14,9 +14,5 @@ data class WithdrawRequestModel(
 
     val status: String = "pending",
 
-    val createdAt: Long = 0L,
-
-    val approvedAt: Long = 0L,
-
-    val approvedBy: String = ""
+    val createdAt: Long = 0
 )
