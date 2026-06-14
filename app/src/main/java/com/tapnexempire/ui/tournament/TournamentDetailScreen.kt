@@ -197,7 +197,7 @@ Text(
                         userId = userId,
 
                         entryFee =
-    tournament?.entryFee ?: 0
+    tournament?.entryFee ?: 0,
 
                         onResult = { success, message ->
 
