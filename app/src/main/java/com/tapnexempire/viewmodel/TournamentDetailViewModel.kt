@@ -20,25 +20,26 @@ class TournamentDetailViewModel @Inject constructor(
         MutableStateFlow<UiState<TournamentModel>>(UiState.Loading)
     val state: StateFlow<UiState<TournamentModel>> = _state
 
-    fun loadTournament(id: String) {
-        viewModelScope.launch {
-            _state.value = UiState.Loading
+    fun getTournamentById(
+    tournamentId: String,
+    onResult: (TournamentModel?) -> Unit
+) {
 
-            try {
-                val tournament = TournamentModel(
-                    id = id,
-                    title = "",
-                    entryFee = 0,
-                    maxPlayers = 0,
-                    joinedPlayers = 0,
-                    createdAt = System.currentTimeMillis()
-                )
+    tournamentRef
+        .document(tournamentId)
+        .get()
+        .addOnSuccessListener { doc ->
 
-                _state.value = UiState.Success(tournament)
+            val tournament =
+                doc.toObject(TournamentModel::class.java)
+                    ?.copy(id = doc.id)
 
-            } catch (e: Exception) {
-                _state.value = UiState.Error(e.message ?: "Error")
-            }
+            onResult(tournament)
         }
+        .addOnFailureListener {
+
+            onResult(null)
+        }
+     }
     }
 }
