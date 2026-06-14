@@ -17,6 +17,16 @@ fun listenTournaments(onChange: (List<TournamentModel>) -> Unit) {
     }
 }
 
+   fun getTournamentById(
+    tournamentId: String,
+    onResult: (TournamentModel?) -> Unit
+) {
+    repo.getTournamentById(
+        tournamentId,
+        onResult
+    )
+   }
+
 fun joinTournament(
 
     tournamentId: String,
