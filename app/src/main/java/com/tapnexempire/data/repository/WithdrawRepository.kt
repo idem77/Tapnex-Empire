@@ -2,6 +2,7 @@ package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.model.WalletModel
+import com.tapnexempire.data.model.WithdrawRequestModel
 import javax.inject.Inject
 
 class WithdrawRepository @Inject constructor(
