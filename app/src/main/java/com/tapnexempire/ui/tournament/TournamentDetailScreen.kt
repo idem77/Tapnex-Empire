@@ -45,10 +45,17 @@ fun TournamentDetailScreen(
         mutableStateOf("")
     }
 
-       val state by viewModel.state.collectAsState()
+       var tournament by remember {
+    mutableStateOf<TournamentModel?>(null)
+}
 
 LaunchedEffect(tournamentId) {
-    viewModel.loadTournament(tournamentId)
+
+    viewModel.getTournamentById(
+        tournamentId = tournamentId
+    ) {
+        tournament = it
+    }
 }
 
     Box(
@@ -142,8 +149,6 @@ LaunchedEffect(tournamentId) {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-             val tournament =
-    (state as? UiState.Success)?.data
 
 Text(
     text =
