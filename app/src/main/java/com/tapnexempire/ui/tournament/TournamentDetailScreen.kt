@@ -20,6 +20,7 @@ import com.tapnexempire.components.AppButton
 import com.tapnexempire.navigation.Routes
 import com.tapnexempire.ui.theme.EmpireGold
 import com.tapnexempire.ui.theme.EmpireWhite
+import com.tapnexempire.data.model.TournamentModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 
 @Composable
