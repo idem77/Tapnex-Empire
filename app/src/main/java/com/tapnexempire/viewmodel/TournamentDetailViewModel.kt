@@ -40,6 +40,4 @@ class TournamentDetailViewModel @Inject constructor(
 
             onResult(null)
         }
-     }
     }
-}
