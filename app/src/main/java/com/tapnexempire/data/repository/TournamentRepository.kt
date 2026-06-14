@@ -40,6 +40,29 @@ class TournamentRepository @Inject constructor(
             }
     }
 
+        // Tournament get 
+        fun getTournamentById(
+    tournamentId: String,
+    onResult: (TournamentModel?) -> Unit
+) {
+
+    tournamentRef
+        .document(tournamentId)
+        .get()
+        .addOnSuccessListener { doc ->
+
+            val tournament =
+                doc.toObject(TournamentModel::class.java)
+                    ?.copy(id = doc.id)
+
+            onResult(tournament)
+        }
+        .addOnFailureListener {
+            onResult(null)
+        }
+        }
+     
+
     // 🏆 Join Tournament
     fun joinTournament(
 
