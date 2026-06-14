@@ -302,9 +302,7 @@ composable(
         userId = FirebaseAuth
             .getInstance()
             .currentUser
-            ?.uid ?: "",
-
-        entryFee = 0
+            ?.uid ?: ""
 
     )
 }
