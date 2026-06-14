@@ -22,6 +22,7 @@ import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.viewmodel.WithdrawViewModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
 import com.tapnexempire.ui.admin.AdminDashboardScreen
@@ -337,6 +338,13 @@ composable(
         // 💸 Withdraw
          composable(Routes.WITHDRAW) {
 
+    val userId =
+        FirebaseAuth.getInstance()
+            .currentUser?.uid ?: ""
+
+    val withdrawViewModel: WithdrawViewModel =
+        hiltViewModel()
+
     WithdrawScreen(
 
         withdrawableCoins = 0L,
@@ -346,8 +354,19 @@ composable(
         },
 
         onWithdraw = { coins, redeemCode ->
-            
-           // code logic 
+
+            withdrawViewModel.requestWithdraw(
+
+                userId = userId,
+
+                coins = coins,
+
+                redeemCode = redeemCode
+
+            ) { success, message ->
+
+                println(message)
+            }
         }
     )
          }
