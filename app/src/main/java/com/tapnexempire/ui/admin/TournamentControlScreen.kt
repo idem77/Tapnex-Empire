@@ -112,9 +112,13 @@ fun TournamentControlScreen(
                             Spacer(Modifier.width(6.dp))
 
                             Button(onClick = {
-                                // open participants screen navigation
-                            }) {
-                                Text("Players")
+
+    navController.navigate(
+        "${Routes.TOURNAMENT_PARTICIPANTS}/$id"
+    )
+
+}) {
+    Text("Players")
                             }
                         }
                     }
