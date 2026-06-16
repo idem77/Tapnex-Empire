@@ -64,6 +64,9 @@ object Routes {
 
     const val ADMIN = "admin"
 
+    const val TOURNAMENT_PARTICIPANTS =
+    "tournament_participants"
+
 const val DEPOSIT_REQUESTS =
 "deposit_requests"
 
@@ -322,6 +325,20 @@ composable(
         gameUrl = gameUrl
     )
             }
+
+            // 👬 Participants
+              composable(
+    "${Routes.TOURNAMENT_PARTICIPANTS}/{tournamentId}"
+) { backStackEntry ->
+
+    val tournamentId =
+        backStackEntry.arguments
+            ?.getString("tournamentId") ?: ""
+
+    TournamentParticipantsScreen(
+        tournamentId = tournamentId
+    )
+              }
 
         // 📜 Transactions
         composable(Routes.TRANSACTIONS) {
