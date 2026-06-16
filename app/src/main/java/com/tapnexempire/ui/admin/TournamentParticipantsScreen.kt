@@ -7,87 +7,93 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapnexempire.viewmodel.AdminViewModel
 
 @Composable
 fun TournamentParticipantsScreen(
     tournamentId: String,
-    vm: AdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    vm: AdminViewModel = viewModel()
 ) {
 
-    val db = FirebaseFirestore.getInstance()
-
-    var players by remember { mutableStateOf(listOf<com.google.firebase.firestore.DocumentSnapshot>()) }
-
-    LaunchedEffect(tournamentId) {
-        db.collection("tournaments")
-            .document(tournamentId)
-            .collection("participants")
-            .addSnapshotListener { snap, _ ->
-                if (snap != null) players = snap.documents
-            }
+    var participants by remember {
+        mutableStateOf<List<Map<String, Any>>>(emptyList())
     }
 
-    Column(Modifier.fillMaxSize().padding(12.dp)) {
+    LaunchedEffect(Unit) {
+        vm.listenParticipants(tournamentId) {
+            participants = it
+        }
+    }
 
-        Text("👥 Participants",
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .padding(12.dp)
+    ) {
+
+        Text(
+            "🏆 Tournament Players",
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(16.dp))
 
         LazyColumn {
 
-            items(players) { p ->
+            items(participants) { player ->
 
-                val userId = p.getString("userId") ?: ""
-                val score = p.getLong("score") ?: 0L
-                val rank = p.getLong("rank") ?: 0L
-                val rewarded = p.getBoolean("rewarded") ?: false
+                val userId =
+                    player["userId"]?.toString() ?: ""
 
-                Card(Modifier.padding(8.dp)) {
+                val score =
+                    (player["score"] as? Long) ?: 0L
 
-                    Column(Modifier.padding(12.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+                ) {
+
+                    Column(
+                        Modifier.padding(12.dp)
+                    ) {
 
                         Text("👤 $userId")
-                        Text("📊 Score: $score")
-                        Text("🏅 Rank: $rank")
+                        Text("🏆 Score: $score")
 
-                        Text(if (rewarded) "✅ Rewarded" else "⏳ Pending")
-
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(
+                            Modifier.height(8.dp)
+                        )
 
                         Row {
 
-                            Button(onClick = {
-                                vm.updateScore(tournamentId, userId, score + 10)
-                            }) {
-                                Text("+Score")
+                            Button(
+                                onClick = {
+                                    vm.updateScore(
+                                        tournamentId,
+                                        userId,
+                                        score + 10
+                                    )
+                                }
+                            ) {
+                                Text("+10")
                             }
 
-                            Spacer(Modifier.width(6.dp))
+                            Spacer(
+                                Modifier.width(8.dp)
+                            )
 
-                            Button(onClick = {
-                                vm.setRank(tournamentId, userId, 1)
-                            }) {
-                                Text("Rank 1")
+                            Button(
+                                onClick = {
+                                    vm.updateScore(
+                                        tournamentId,
+                                        userId,
+                                        score + 50
+                                    )
+                                }
+                            ) {
+                                Text("+50")
                             }
-                        }
-
-                        Spacer(Modifier.height(8.dp))
-
-                        Button(
-                            enabled = !rewarded,
-                            onClick = {
-                                vm.rewardUser(
-                                    tournamentId,
-                                    userId,
-                                    1000
-                                )
-                            }
-                        ) {
-                            Text("Reward Player")
                         }
                     }
                 }
