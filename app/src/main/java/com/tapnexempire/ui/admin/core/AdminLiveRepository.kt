@@ -51,8 +51,7 @@ object AdminLiveRepository {
         tx.update(depositRef, "status", "approved")
 
         tx.update(walletRef, mapOf(
-            "depositCoins" to FieldValue.increment(coins),
-            "withdrawableCoins" to FieldValue.increment(coins)
+            "depositCoins" to FieldValue.increment(coins)
         ))
     }
 
