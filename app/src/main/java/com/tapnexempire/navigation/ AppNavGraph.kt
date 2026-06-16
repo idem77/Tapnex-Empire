@@ -15,6 +15,7 @@ import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.splash.SplashScreen
 import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
+import com.tapnexempire.ui.admin.TournamentParticipantsScreen
 import com.tapnexempire.ui.game.GameScreen
 import com.tapnexempire.ui.equipment.EquipmentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
