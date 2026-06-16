@@ -22,7 +22,10 @@ fun AdminNavGraph(navController: NavHostController) {
         }
 
         composable("tournament_control") {
-            TournamentControlScreen()
+
+    TournamentControlScreen(
+        navController = navController
+    )
         }
 
         composable("deposit_requests") {
