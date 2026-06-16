@@ -8,10 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.navigation.NavController
 import com.tapnexempire.viewmodel.AdminViewModel
 
 @Composable
 fun TournamentControlScreen(
+    navController: NavController,
     vm: AdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
 
