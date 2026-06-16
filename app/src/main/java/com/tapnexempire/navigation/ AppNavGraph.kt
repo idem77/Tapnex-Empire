@@ -221,7 +221,9 @@ composable("user_management") {
 // 🏆 TOURNAMENT CONTROL
 composable("tournament_control") {
 
-    TournamentControlScreen()
+    TournamentControlScreen(
+        navController = navController
+    )
 }
 
 // 💰 DEPOSIT REQUESTS
