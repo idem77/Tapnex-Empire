@@ -15,8 +15,11 @@ object TournamentEngine {
             .addOnSuccessListener { snapshot ->
 
                 val players = snapshot.documents.map {
-                    val score = (100..1000).random() // 🎮 Hybrid placeholder
-                    Pair(it.id, score)
+
+    val score =
+        it.getLong("score") ?: 0
+
+    Pair(it.id, score)
                 }
 
                 // 📊 Sort by score
