@@ -79,6 +79,25 @@ fun TournamentParticipantsScreen(
                                 Text("+10")
                             }
 
+                                Button(
+    onClick = {
+
+        vm.setRank(
+            tournamentId,
+            userId,
+            1
+        )
+
+        vm.rewardUser(
+            tournamentId,
+            userId,
+            500
+        )
+    }
+) {
+    Text("🏆 Winner")
+                                }
+                          
                             Spacer(
                                 Modifier.width(8.dp)
                             )
