@@ -75,6 +75,7 @@ fun EmpireCastleClimbScreen() {
         heroOffset = 0f
     }
                 }
+            }
     ) {
 
         // 🏰 Castle
