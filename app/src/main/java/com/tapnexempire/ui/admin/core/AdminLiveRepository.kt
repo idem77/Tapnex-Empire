@@ -2,6 +2,7 @@ package com.tapnexempire.admin.core
 
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tapnexempire.domain.TournamentEngine
 import com.google.firebase.firestore.ListenerRegistration
 
 object AdminLiveRepository {
@@ -141,9 +142,14 @@ object AdminLiveRepository {
     }
 
     fun closeTournament(id: String) {
-        db.collection("tournaments")
-            .document(id)
-            .update("status", "closed")
+
+    db.collection("tournaments")
+        .document(id)
+        .update("status", "closed")
+        .addOnSuccessListener {
+
+            TournamentEngine.runTournament(id)
+        }
     }
 
     fun deleteTournament(id: String) {
