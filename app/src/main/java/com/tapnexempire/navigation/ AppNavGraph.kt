@@ -17,6 +17,7 @@ import com.tapnexempire.ui.task.TaskScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.admin.TournamentParticipantsScreen
 import com.tapnexempire.ui.game.GameScreen
+import com.tapnexempire.ui.game.castleclimb.EmpireCastleClimbScreen
 import com.tapnexempire.ui.equipment.EquipmentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
@@ -60,6 +61,8 @@ object Routes {
     const val TRANSACTIONS = "transactions"
     
     const val GAME = "game"
+
+    const val CASTLE_CLIMB = "castle_climb"
 
     const val EQUIPMENT = "equipment"
 
@@ -329,6 +332,12 @@ composable(
     )
             }
 
+            // 🏰GameCastle
+              composable(Routes.CASTLE_CLIMB) {
+
+    EmpireCastleClimbScreen()
+              }
+            
             // 👬 Participants
               composable(
     "${Routes.TOURNAMENT_PARTICIPANTS}/{tournamentId}"
