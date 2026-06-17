@@ -219,9 +219,9 @@ Text(
                                 )
 
                                 navController.navigate(
-
-                                    "${Routes.GAME}/$encodedUrl"
-                                )
+                                     Routes.CASTLE_CLIMB
+                       )
+                     
                             }
                         }
                     )
