@@ -22,6 +22,14 @@ fun EmpireCastleClimbScreen() {
         mutableStateOf(0f)
     }
 
+    var castleReached by remember {
+     mutableStateOf(0)
+}
+
+    var totalScore by remember {
+     mutableStateOf(0)
+}
+    
     var timeLeft by remember {
         mutableStateOf(30)
     }
@@ -52,11 +60,21 @@ fun EmpireCastleClimbScreen() {
 
                 if (!gameOver) {
 
-                    score++
+    score++
 
-                    heroOffset += 8f
+    totalScore++
+
+    heroOffset += 8f
+
+    if (heroOffset >= 300f) {
+
+        castleReached++
+
+        totalScore += 50
+
+        heroOffset = 0f
+    }
                 }
-            }
     ) {
 
         // 🏰 Castle
@@ -76,6 +94,17 @@ fun EmpireCastleClimbScreen() {
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         )
+
+          Text(
+    text = "🏰 Castle: $castleReached",
+    fontSize = 20.sp
+)
+
+Text(
+    text = "👑 Total: $totalScore",
+    fontSize = 20.sp
+)
+        
 
         // ⏱ Timer
         Text(
@@ -101,7 +130,15 @@ fun EmpireCastleClimbScreen() {
 
             Text(
                 text =
-                    "🏆 Game Over\nScore: $score",
+                    """
+🏆 Game Over
+
+⭐ Tap Score: $score
+
+🏰 Castle Reached: $castleReached
+
+👑 Final Score: $totalScore
+""",
 
                 fontSize = 28.sp,
 
