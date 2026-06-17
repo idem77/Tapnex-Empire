@@ -30,23 +30,37 @@ object TournamentEngine {
 
                 sorted.take(10).forEachIndexed { index, pair ->
 
-                    val userId = pair.first
-                    val reward = prizes[index]
+    val userId = pair.first
+    val reward = prizes[index]
 
-                    val walletRef =
-                        firestore.collection("wallets").document(userId)
+    val participantRef =
+        tournamentDoc
+            .collection("participants")
+            .document(userId)
 
-                    firestore.runTransaction { transaction ->
-                        val snap = transaction.get(walletRef)
-                        val wallet =
-                            snap.toObject(WalletModel::class.java) ?: return@runTransaction
+    participantRef.update(
+        "rank",
+        index + 1
+    )
 
-                        transaction.update(
-                            walletRef,
-                            "withdrawableCoins",
-                            wallet.withdrawableCoins + reward
-                        )
-                    }
+    val walletRef =
+        firestore.collection("wallets")
+            .document(userId)
+
+    firestore.runTransaction { transaction ->
+
+        val snap = transaction.get(walletRef)
+
+        val wallet =
+            snap.toObject(WalletModel::class.java)
+                ?: return@runTransaction
+
+        transaction.update(
+            walletRef,
+            "withdrawableCoins",
+            wallet.withdrawableCoins + reward
+        )
+    }
                 }
             }
     }
