@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.navigation.NavController
 import com.tapnexempire.navigation.Routes
+import com.tapnexempire.domain.TournamentEngine
 import com.tapnexempire.viewmodel.AdminViewModel
 
 @Composable
@@ -98,10 +99,15 @@ fun TournamentControlScreen(
 
                         Row {
 
-                            Button(onClick = {
-                                vm.closeTournament(id)
-                            }) {
-                                Text("Close")
+                            Button(
+    onClick = {
+
+        vm.closeTournament(id)
+
+        TournamentEngine.runTournament(id)
+    }
+) {
+    Text("🏆 Close & Process")
                             }
 
                             Spacer(Modifier.width(6.dp))
