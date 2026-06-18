@@ -62,7 +62,8 @@ object Routes {
     
     const val GAME = "game"
 
-    const val CASTLE_CLIMB = "castle_climb"
+    const val CASTLE_CLIMB =
+    "castle_climb/{tournamentId}"
 
     const val EQUIPMENT = "equipment"
 
@@ -333,9 +334,17 @@ composable(
             }
 
             // 🏰GameCastle
-              composable(Routes.CASTLE_CLIMB) {
+              composable(
+    Routes.CASTLE_CLIMB
+) { backStackEntry ->
 
-    EmpireCastleClimbScreen()
+    val tournamentId =
+        backStackEntry.arguments
+            ?.getString("tournamentId") ?: ""
+
+    EmpireCastleClimbScreen(
+        tournamentId = tournamentId
+    )
               }
             
             // 👬 Participants
