@@ -65,6 +65,9 @@ fun TournamentParticipantsScreen(
                         Modifier.padding(12.dp)
                     ) {
 
+                        Text(
+    "🥇 Rank #${participants.indexOf(player) + 1}"
+)
                         Text("👤 $userId")
                         Text("🏆 Score: $score")
 
