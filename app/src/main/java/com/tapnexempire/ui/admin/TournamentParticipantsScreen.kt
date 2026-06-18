@@ -21,10 +21,17 @@ fun TournamentParticipantsScreen(
     }
 
     LaunchedEffect(Unit) {
-        vm.listenParticipants(tournamentId) {
-            participants = it
-        }
+
+    vm.listenParticipants(tournamentId) {
+
+        participants =
+            it.sortedByDescending { player ->
+
+                (player["score"] as? Long) ?: 0L
+            }
     }
+    }
+
 
     Column(
         modifier = Modifier.fillMaxSize()
