@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import com.tapnexempire.admin.core.AdminLiveRepository
 
 @Composable
 fun EmpireCastleClimbScreen(
@@ -40,6 +41,10 @@ fun EmpireCastleClimbScreen(
     var gameOver by remember {
         mutableStateOf(false)
     }
+
+        var scoreSaved by remember {
+    mutableStateOf(false)
+        }
 
     LaunchedEffect(Unit) {
 
@@ -129,6 +134,28 @@ Text(
                     y = (-heroOffset).dp
                 )
         )
+
+       LaunchedEffect(gameOver) {
+
+    if (
+        gameOver &&
+        !scoreSaved &&
+        tournamentId.isNotEmpty() &&
+        userId.isNotEmpty()
+    ) {
+
+        AdminLiveRepository.updateScore(
+
+            tournamentId = tournamentId,
+
+            userId = userId,
+
+            score = totalScore.toLong()
+        )
+
+        scoreSaved = true
+    }
+       } 
 
         if (gameOver) {
 
