@@ -12,7 +12,9 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
 @Composable
-fun EmpireCastleClimbScreen() {
+fun EmpireCastleClimbScreen(
+    tournamentId: String
+) {
 
     var score by remember {
         mutableStateOf(0)
