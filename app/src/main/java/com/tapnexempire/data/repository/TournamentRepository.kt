@@ -160,20 +160,24 @@ class TournamentRepository @Inject constructor(
             )
 
             // 👤 SAVE PARTICIPANT
-            transaction.set(
+               transaction.set(
 
-                participantDoc,
+    participantDoc,
 
-                mapOf(
+    mapOf(
 
-                    "userId" to userId,
+        "userId" to userId,
 
-                    "score" to 0,
+        "score" to 0,
 
-                    "joinedAt" to
-                        System.currentTimeMillis()
-                )
-            )
+        "rank" to 0,
+
+        "rewarded" to false,
+
+        "joinedAt" to
+            System.currentTimeMillis()
+    )
+)
 
             // 🧾 SAVE TRANSACTION
             transaction.set(
