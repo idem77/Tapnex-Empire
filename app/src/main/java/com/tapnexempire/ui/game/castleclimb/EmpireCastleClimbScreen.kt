@@ -13,7 +13,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun EmpireCastleClimbScreen(
-    tournamentId: String
+    tournamentId: String,
+    userId: String
 ) {
 
     var score by remember {
