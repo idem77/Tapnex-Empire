@@ -343,7 +343,11 @@ composable(
             ?.getString("tournamentId") ?: ""
 
     EmpireCastleClimbScreen(
-        tournamentId = tournamentId
+        tournamentId = tournamentId,
+         userId = FirebaseAuth
+        .getInstance()
+        .currentUser
+        ?.uid ?: ""
     )
               }
             
