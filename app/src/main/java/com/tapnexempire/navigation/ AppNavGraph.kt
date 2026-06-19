@@ -445,7 +445,7 @@ composable(
 
         
         onEditProfile = {navController.navigate(
-            Routes.EDIT_PROFILES
+            Routes.EDIT_PROFILE
         )
         },
 
