@@ -55,8 +55,8 @@ object Routes {
 
     const val PROFILE = "profile"
 
-    const val EDITPROFILE = "editprofile"
-
+    const val EDIT_PROFILE = "editprofile"
+    
     const val TOURNAMENTS = "tournaments"
 
     const val TOURNAMENT_DETAIL = "tournament_detail"
@@ -463,6 +463,11 @@ composable(
     )
           }
 
+          // edit profile 
+         composable(
+    Routes.EDIT_PROFILE
+) 
+             
        // 💰 Deposit
    composable(Routes.DEPOSIT) {
 
