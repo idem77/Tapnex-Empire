@@ -23,6 +23,7 @@ import com.tapnexempire.ui.tournament.MyTournamentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.profile.ProfileScreen
+import com.tapnexempire.ui.profile.EditProfileScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
@@ -53,6 +54,8 @@ object Routes {
     const val TASKS = "tasks"
 
     const val PROFILE = "profile"
+
+    const val EDITPROFILE = "editprofile"
 
     const val TOURNAMENTS = "tournaments"
 
