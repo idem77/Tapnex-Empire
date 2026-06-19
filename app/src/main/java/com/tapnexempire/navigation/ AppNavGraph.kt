@@ -468,7 +468,10 @@ composable(
     Routes.EDIT_PROFILE
 )   {
 
-    EditProfileScreen()
+    EditProfileScreen(
+        currentName: String,
+    onSaveClick: {}
+    )
          }
          
        // 💰 Deposit
