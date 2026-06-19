@@ -9,103 +9,102 @@ object TournamentEngine {
 
     fun runTournament(tournamentId: String) {
 
-val tournamentDoc =
-    firestore.collection("tournaments")
-        .document(tournamentId)
+        val tournamentRef =
+            firestore.collection("tournaments").document(tournamentId)
 
-tournamentDoc.get()
-    .addOnSuccessListener { tournamentSnap ->
+        tournamentRef.get()
+            .addOnSuccessListener { tournamentSnap ->
 
-        val totalPool =
-            tournamentSnap.getLong("prizePool")
-                ?: 0L
+                val totalPool =
+                    tournamentSnap.getLong("prizePool") ?: 0L
 
-        val prizes =
-            PrizeCalculator
-                .calculateTop10Prizes(totalPool)
+                val prizes =
+                    PrizeCalculator.calculateTop10Prizes(totalPool)
 
-        tournamentDoc
-            .collection("participants")
-            .get()
-            .addOnSuccessListener { snapshot ->
+                tournamentRef.collection("participants")
+                    .get()
+                    .addOnSuccessListener { snapshot ->
 
-                val players =
-                    snapshot.documents.map {
+                        // 🧠 STEP 1: SAFE PLAYER LIST
+                        val players = snapshot.documents.mapNotNull {
 
-                        val score =
-                            it.getLong("score")
-                                ?: 0L
+                            val score = it.getLong("score")
 
-                        Pair(it.id, score)
-                    }
+                            if (score != null) {
+                                Pair(it.id, score)
+                            } else null
+                        }
 
-                val sorted =
-                    players.sortedByDescending {
-                        it.second
-                    }
+                        // 🏁 STEP 2: SORT
+                        val sorted =
+                            players.sortedByDescending { it.second }
 
-                sorted.take(10)
-                    .forEachIndexed { index, pair ->
+                        // 🔒 STEP 3: LIMIT SAFELY
+                        val topPlayers =
+                            sorted.take(minOf(10, sorted.size))
 
-                        val userId =
-                            pair.first
+                        val safePrizes =
+                            prizes.take(topPlayers.size)
 
-                        val reward =
-                            prizes[index]
+                        // 🧩 STEP 4: PROCESS EACH PLAYER
+                        topPlayers.forEachIndexed { index, pair ->
 
-                        val participantRef =
-                            tournamentDoc
-                                .collection("participants")
-                                .document(userId)
+                            val userId = pair.first
+                            val reward = safePrizes.getOrElse(index) { 0L }
 
-                        val walletRef =
-                            firestore
-                                .collection("wallets")
-                                .document(userId)
+                            val participantRef =
+                                tournamentRef
+                                    .collection("participants")
+                                    .document(userId)
 
-                        firestore.runTransaction { transaction ->
+                            val walletRef =
+                                firestore.collection("wallets")
+                                    .document(userId)
 
-                            val participantSnap =
-                                transaction.get(participantRef)
+                            firestore.runTransaction { transaction ->
 
-                            val rewarded =
-                                participantSnap
-                                    .getBoolean("rewarded")
-                                    ?: false
+                                val participantSnap =
+                                    transaction.get(participantRef)
 
-                            transaction.update(
-                                participantRef,
-                                "rank",
-                                (index + 1).toLong()
-                            )
+                                val alreadyRewarded =
+                                    participantSnap.getBoolean("rewarded") ?: false
 
-                            if (!rewarded) {
-
-                                val walletSnap =
-                                    transaction.get(walletRef)
-
-                                val wallet =
-                                    walletSnap.toObject(
-                                        WalletModel::class.java
-                                    )
-                                        ?: return@runTransaction
-
-                                transaction.update(
-                                    walletRef,
-                                    "withdrawableCoins",
-                                    wallet.withdrawableCoins + reward
-                                )
-
+                                // 🏆 UPDATE RANK (ALWAYS SAFE)
                                 transaction.update(
                                     participantRef,
-                                    "rewarded",
-                                    true
+                                    mapOf(
+                                        "rank" to (index + 1).toLong()
+                                    )
                                 )
+
+                                // 💰 ONLY GIVE REWARD ONCE
+                                if (!alreadyRewarded) {
+
+                                    val walletSnap =
+                                        transaction.get(walletRef)
+
+                                    val wallet =
+                                        walletSnap.toObject(WalletModel::class.java)
+                                            ?: return@runTransaction
+
+                                    val newBalance =
+                                        wallet.withdrawableCoins + reward
+
+                                    transaction.update(
+                                        walletRef,
+                                        "withdrawableCoins",
+                                        newBalance
+                                    )
+
+                                    transaction.update(
+                                        participantRef,
+                                        "rewarded",
+                                        true
+                                    )
+                                }
                             }
                         }
                     }
             }
-    }
-
     }
 }
