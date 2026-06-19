@@ -469,7 +469,7 @@ composable(
 )   {
 
     EditProfileScreen(
-        currentName: String,
+        currentName: "",
     onSaveClick: {}
     )
          }
