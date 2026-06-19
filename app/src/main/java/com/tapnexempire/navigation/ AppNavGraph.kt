@@ -464,15 +464,15 @@ composable(
           }
 
           // edit profile 
-         composable(
+          composable(
     Routes.EDIT_PROFILE
-)   {
+) {
 
     EditProfileScreen(
-        currentName: "",
-    onSaveClick: {}
+        currentName = "",
+        onSaveClick = {}
     )
-         }
+          }
          
        // 💰 Deposit
    composable(Routes.DEPOSIT) {
