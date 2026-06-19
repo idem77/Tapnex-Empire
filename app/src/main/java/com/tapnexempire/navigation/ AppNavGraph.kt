@@ -19,6 +19,7 @@ import com.tapnexempire.ui.admin.TournamentParticipantsScreen
 import com.tapnexempire.ui.game.GameScreen
 import com.tapnexempire.ui.game.castleclimb.EmpireCastleClimbScreen
 import com.tapnexempire.ui.equipment.EquipmentScreen
+import com.tapnexempire.ui.tournament.MyTournamentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
@@ -64,6 +65,9 @@ object Routes {
 
     const val CASTLE_CLIMB =
     "castle_climb/{tournamentId}"
+
+    const val MY_TOURNAMENTS =
+    "my_tournaments"
 
     const val EQUIPMENT = "equipment"
 
@@ -410,6 +414,21 @@ composable(
                 println(message)
             }
         }
+    )
+         }
+
+            // my tournament rank 🏅
+         composable(
+    Routes.MY_TOURNAMENTS
+) {
+
+    MyTournamentScreen(
+
+        userId =
+            FirebaseAuth
+                .getInstance()
+                .currentUser
+                ?.uid ?: ""
     )
          }
 
