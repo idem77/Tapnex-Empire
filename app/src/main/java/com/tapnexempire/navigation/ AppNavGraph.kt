@@ -466,8 +466,11 @@ composable(
           // edit profile 
          composable(
     Routes.EDIT_PROFILE
-) 
-             
+)   {
+
+    EditProfileScreen()
+         }
+         
        // 💰 Deposit
    composable(Routes.DEPOSIT) {
 
