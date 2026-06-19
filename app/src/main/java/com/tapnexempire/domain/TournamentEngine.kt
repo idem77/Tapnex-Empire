@@ -34,34 +34,52 @@ object TournamentEngine {
     val reward = prizes[index]
 
     val participantRef =
-        tournamentDoc
-            .collection("participants")
-            .document(userId)
+    tournamentDoc
+        .collection("participants")
+        .document(userId)
 
-    participantRef.update(
+val walletRef =
+    firestore.collection("wallets")
+        .document(userId)
+
+firestore.runTransaction { transaction ->
+
+    val participantSnap =
+        transaction.get(participantRef)
+
+    val rewarded =
+        participantSnap.getBoolean("rewarded")
+            ?: false
+
+    transaction.update(
+        participantRef,
         "rank",
         index + 1
     )
 
-    val walletRef =
-        firestore.collection("wallets")
-            .document(userId)
+    if (!rewarded) {
 
-    firestore.runTransaction { transaction ->
-
-        val snap = transaction.get(walletRef)
+        val walletSnap =
+            transaction.get(walletRef)
 
         val wallet =
-            snap.toObject(WalletModel::class.java)
-                ?: return@runTransaction
+            walletSnap.toObject(
+                WalletModel::class.java
+            ) ?: return@runTransaction
 
         transaction.update(
             walletRef,
             "withdrawableCoins",
             wallet.withdrawableCoins + reward
         )
+
+        transaction.update(
+            participantRef,
+            "rewarded",
+            true
+        )
     }
+}
                 }
-            }
     }
 }
