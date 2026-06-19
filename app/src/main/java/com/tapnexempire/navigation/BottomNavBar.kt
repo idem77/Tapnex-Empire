@@ -63,14 +63,14 @@ fun BottomNavBar(
             Routes.WALLET,
             Icons.Default.AccountBalanceWallet,
             "Wallet"
-        )
-    )
+        ),
 
     BottomNavItem(
     Routes.PROFILE,
     Icons.Default.Person,
     "Profile"
 )
+    )
 
     val navBackStackEntry by
         navController.currentBackStackEntryAsState()
@@ -113,7 +113,7 @@ fun BottomNavBar(
                             item.route
                         ) {
 
-                            popUpTo(Routes.HOME)
+                            popUpTo(navController.graph.startDestinationId)
 
                             launchSingleTop = true
                         }
