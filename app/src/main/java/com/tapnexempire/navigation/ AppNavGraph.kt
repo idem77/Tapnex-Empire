@@ -440,19 +440,20 @@ composable(
 
     ProfileScreen(
 
-        phoneNumber = phoneNumber,
+        
+        onEditProfile = {},
 
-        onEditProfile = {
-            ...
-        },
+        onSettings = {},
 
-        onSettings = {
-            ...
-        },
+        onMyTournaments = {
 
-        onLogout = {
-            ...
-        }
+        navController.navigate(
+            Routes.MY_TOURNAMENTS
+        )
+    },
+
+        onLogout = {}
+
     )
           }
 
