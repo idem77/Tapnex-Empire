@@ -52,12 +52,6 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ProfileCard(
-                phoneNumber = phoneNumber
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
             Button(
                 onClick = onEditProfile,
                 modifier = Modifier.fillMaxWidth()
