@@ -219,9 +219,12 @@ Text(
                                 )
 
                                 navController.navigate(
-                                     Routes.CASTLE_CLIMB
-                       )
-                     
+    Routes.CASTLE_CLIMB.replace(
+        "{tournamentId}",
+        tournamentId
+    )
+)
+                                
                             }
                         }
                     )
