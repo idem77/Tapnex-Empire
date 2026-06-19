@@ -19,6 +19,7 @@ fun ProfileScreen(
     phoneNumber: String = "",
     onEditProfile: () -> Unit,
     onSettings: () -> Unit,
+    onMyTournaments: () -> Unit,
     onLogout: () -> Unit
 ) {
 
@@ -74,6 +75,15 @@ fun ProfileScreen(
                 Text("Settings")
             }
 
+              Spacer(modifier = Modifier.height(12.dp))
+
+Button(
+    onClick = onMyTournaments,
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text("🏆 My Tournaments")
+}
+            
             Spacer(modifier = Modifier.height(12.dp))
 
             TextButton(
