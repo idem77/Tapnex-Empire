@@ -75,7 +75,13 @@ object TournamentEngine {
                                     mapOf(
                                         "rank" to (index + 1).toLong()
                                     )
-                                )
+                                    
+                                tournamentRef.update(
+    mapOf(
+        "status" to "COMPLETED",
+        "completedAt" to System.currentTimeMillis()
+    )
+)
 
                                 // 💰 ONLY GIVE REWARD ONCE
                                 if (!alreadyRewarded) {
