@@ -25,8 +25,19 @@ object TournamentEngine {
                 // 📊 Sort by score
                 val sorted = players.sortedByDescending { it.second }
 
-                val totalPool = snapshot.size() * 250L
-                val prizes = PrizeCalculator.calculateTop10Prizes(totalPool)
+                tournamentDoc.get()
+    .addOnSuccessListener { tournamentSnap ->
+
+        val totalPool =
+            tournamentSnap.getLong("prizePool")
+                ?: 0L
+
+        val prizes =
+            PrizeCalculator
+                .calculateTop10Prizes(totalPool)
+
+        // Yahan ranking & reward code
+    }
 
                 sorted.take(10).forEachIndexed { index, pair ->
 
