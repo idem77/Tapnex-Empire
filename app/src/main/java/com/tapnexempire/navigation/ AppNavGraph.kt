@@ -22,6 +22,7 @@ import com.tapnexempire.ui.equipment.EquipmentScreen
 import com.tapnexempire.ui.tournament.MyTournamentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
+import com.tapnexempire.ui.profile.ProfileScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
@@ -50,6 +51,8 @@ object Routes {
     const val WALLET = "wallet"
 
     const val TASKS = "tasks"
+
+    const val PROFILE = "profile"
 
     const val TOURNAMENTS = "tournaments"
 
@@ -431,6 +434,27 @@ composable(
                 ?.uid ?: ""
     )
          }
+
+         //profile 
+          composable(Routes.PROFILE) {
+
+    ProfileScreen(
+
+        phoneNumber = phoneNumber,
+
+        onEditProfile = {
+            ...
+        },
+
+        onSettings = {
+            ...
+        },
+
+        onLogout = {
+            ...
+        }
+    )
+          }
 
        // 💰 Deposit
    composable(Routes.DEPOSIT) {
