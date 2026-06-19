@@ -441,7 +441,10 @@ composable(
     ProfileScreen(
 
         
-        onEditProfile = {},
+        onEditProfile = {navController.navigate(
+            Routes.EDIT_PROFILES
+        )
+        },
 
         onSettings = {},
 
