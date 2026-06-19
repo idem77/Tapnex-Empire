@@ -16,7 +16,6 @@ import com.tapnexempire.R
 
 @Composable
 fun ProfileScreen(
-    phoneNumber: String = "",
     onEditProfile: () -> Unit,
     onSettings: () -> Unit,
     onMyTournaments: () -> Unit,
