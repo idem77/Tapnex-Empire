@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Task
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.NavigationBar
@@ -64,6 +65,12 @@ fun BottomNavBar(
             "Wallet"
         )
     )
+
+    BottomNavItem(
+    Routes.PROFILE,
+    Icons.Default.Person,
+    "Profile"
+)
 
     val navBackStackEntry by
         navController.currentBackStackEntryAsState()
