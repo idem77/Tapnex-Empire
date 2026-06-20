@@ -69,20 +69,21 @@ object TournamentEngine {
                                 val alreadyRewarded =
                                     participantSnap.getBoolean("rewarded") ?: false
 
-                                // 🏆 UPDATE RANK (ALWAYS SAFE)
-                                transaction.update(
-                                    participantRef,
-                                    mapOf(
-                                        "rank" to (index + 1).toLong()
-                                    )
-                                    
-                                tournamentRef.update(
+                                // 🏆 UPDATE RANK
+transaction.update(
+    participantRef,
+    mapOf(
+        "rank" to (index + 1).toLong()
+    )
+)
+
+// Tournament Complete
+tournamentRef.update(
     mapOf(
         "status" to "COMPLETED",
         "completedAt" to System.currentTimeMillis()
     )
 )
-
                                 // 💰 ONLY GIVE REWARD ONCE
                                 if (!alreadyRewarded) {
 
