@@ -107,6 +107,7 @@ object TournamentEngine {
                                         "rewarded",
                                         true
                                     )
+                        )  
                                 }
                             }
                         }
