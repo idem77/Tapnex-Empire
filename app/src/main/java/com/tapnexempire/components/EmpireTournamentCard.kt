@@ -35,92 +35,99 @@ fun EmpireTournamentCard(
 
     Card(
 
+modifier = Modifier
+    .fillMaxWidth()
+    .padding(vertical = 8.dp),
+
+shape = RoundedCornerShape(28.dp),
+
+colors = CardDefaults.cardColors(
+    containerColor = Color.Transparent
+),
+
+elevation = CardDefaults.cardElevation(
+    defaultElevation = 18.dp
+)
+
+) {
+
+Column(
+
+    modifier = Modifier
+
+        .background(
+
+            brush = Brush.verticalGradient(
+
+                colors = listOf(
+
+                    Color(0xFF081B29),
+                    Color(0xFF0E3A5D),
+                    Color(0xFF1976D2)
+                )
+            )
+        )
+
+        .padding(22.dp)
+) {
+
+    Text(
+        text = title,
+        color = Color.White,
+        fontSize = 22.sp
+    )
+
+    Spacer(modifier = Modifier.height(14.dp))
+
+    Text(
+        text = "🎟 Entry: $entryFee Coins",
+        color = Color(0xFFFFE082)
+    )
+
+    Spacer(modifier = Modifier.height(6.dp))
+
+    Text(
+        text = "🏆 Prize Pool: $prizePool Coins",
+        color = Color(0xFF80CBC4)
+    )
+
+    Spacer(modifier = Modifier.height(6.dp))
+
+    Text(
+        text = "👥 Players: $joinedPlayers/$maxPlayers",
+        color = Color.White.copy(alpha = 0.85f)
+    )
+
+    Spacer(modifier = Modifier.height(6.dp))
+
+    Text(
+        text = "⚡ Status: $status",
+        color = Color(0xFF81D4FA)
+    )
+
+    Spacer(modifier = Modifier.height(18.dp))
+
+    Button(
+
+        onClick = onJoin,
+
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .height(56.dp),
 
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(18.dp),
 
-        colors = CardDefaults.cardColors(
-            containerColor =
-                Color(0xFF1A1C22).copy(alpha = 0.92f)
-        ),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 12.dp
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF4FC3F7)
         )
     ) {
 
-        Column(
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        ) {
-
-            Text(
-
-                text = title,
-
-                color = Color.White,
-
-                fontSize = 22.sp
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Text(
-                text = "🎟 Entry: $entryFee Coins",
-                color = Color(0xFFFFD54F)
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = "🏆 Prize Pool: $prizePool Coins",
-                color = Color(0xFF81C784)
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text =
-                    "👥 Players: $joinedPlayers/$maxPlayers",
-
-                color = Color.LightGray
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = "⚡ Status: $status",
-                color = Color(0xFF64B5F6)
-            )
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            Button(
-
-                onClick = onJoin,
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-
-                shape = RoundedCornerShape(18.dp),
-
-                colors = ButtonDefaults.buttonColors(
-                    containerColor =
-                        Color(0xFFFFB300)
-                )
-            ) {
-
-                Text(
-                    text = "Join Tournament",
-                    color = Color.Black,
-                    fontSize = 16.sp
-                )
-            }
-        }
+        Text(
+            text = "Join Tournament",
+            color = Color.Black,
+            fontSize = 16.sp
+        )
     }
 }
+
+    }
