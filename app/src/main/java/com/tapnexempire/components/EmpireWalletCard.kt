@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import com.tapnexempire.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.graphicsLayer
@@ -53,18 +54,7 @@ Card(
             }
     )
 
-    modifier = Modifier.fillMaxWidth(),
-
-    shape = RoundedCornerShape(28.dp),
-
-    colors = CardDefaults.cardColors(
-        containerColor = Color.Transparent
-    ),
-
-    elevation = CardDefaults.cardElevation(
-        defaultElevation = 18.dp
-    )
-) {
+  {
 
     Column(
 
