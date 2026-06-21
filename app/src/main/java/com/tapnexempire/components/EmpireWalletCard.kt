@@ -1,22 +1,22 @@
 package com.tapnexempire.ui.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import com.tapnexempire.R
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.background
+import com.tapnexempire.R
 
 @Composable
 fun EmpireWalletCard(
@@ -29,94 +29,110 @@ bonusCoins: Long
 
 ) {
 
-Card( 
+Card(
 
-    Box(
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier.fillMaxWidth(),
+
+    shape = RoundedCornerShape(28.dp),
+
+    colors = CardDefaults.cardColors(
+        containerColor = Color.Transparent
+    ),
+
+    elevation = CardDefaults.cardElevation(
+        defaultElevation = 18.dp
+    )
 ) {
 
-    Image(
-        painter = painterResource(R.drawable.wallet_corner),
-        contentDescription = null,
-        modifier = Modifier
-            .size(120.dp)
-            .align(Alignment.TopStart)
-    )
-
-    Image(
-        painter = painterResource(R.drawable.wallet_corner),
-        contentDescription = null,
-        modifier = Modifier
-            .size(120.dp)
-            .align(Alignment.TopEnd)
-            .graphicsLayer {
-                scaleX = -1f
-            }
-    )
-
-  {
-
-    Column(
-
-        modifier = Modifier
-
-            .background(
-
-                brush = Brush.verticalGradient(
-
-                    colors = listOf(
-
-                        Color(0xFF081322),
-                        Color(0xFF102A43),
-                        Color(0xFF1565C0)
-                    )
-                )
-            )
-
-            .padding(24.dp)
+    Box(
+        modifier = Modifier.fillMaxWidth()
     ) {
 
-        Text(
-
-            text = "👑 Empire Wallet",
-
-            color = Color.White,
-
-            fontSize = 24.sp
+        Image(
+            painter = painterResource(R.drawable.wallet_corner),
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp)
+                .align(Alignment.TopStart)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text(
-
-            text = "💰 Deposit Coins: $depositCoins",
-
-            color = Color(0xFFFFE082),
-
-            fontSize = 18.sp
+        Image(
+            painter = painterResource(R.drawable.wallet_corner),
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp)
+                .align(Alignment.TopEnd)
+                .graphicsLayer {
+                    scaleX = -1f
+                }
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Column(
 
-        Text(
+            modifier = Modifier
 
-            text = "🏆 Withdrawable: $withdrawableCoins",
+                .fillMaxWidth()
 
-            color = Color(0xFF80CBC4),
+                .background(
 
-            fontSize = 18.sp
-        )
+                    brush = Brush.verticalGradient(
 
-        Spacer(modifier = Modifier.height(12.dp))
+                        colors = listOf(
 
-        Text(
+                            Color(0xFF081322),
 
-            text = "🎁 Bonus Coins: $bonusCoins",
+                            Color(0xFF102A43),
 
-            color = Color(0xFF81D4FA),
+                            Color(0xFF1565C0)
+                        )
+                    )
+                )
 
-            fontSize = 18.sp
-        )
+                .padding(24.dp)
+        ) {
+
+            Text(
+
+                text = "👑 Empire Wallet",
+
+                color = Color.White,
+
+                fontSize = 24.sp
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+
+                text = "💰 Deposit Coins: $depositCoins",
+
+                color = Color(0xFFFFE082),
+
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+
+                text = "🏆 Withdrawable: $withdrawableCoins",
+
+                color = Color(0xFF80CBC4),
+
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+
+                text = "🎁 Bonus Coins: $bonusCoins",
+
+                color = Color(0xFF81D4FA),
+
+                fontSize = 18.sp
+            )
+        }
     }
 }
 
