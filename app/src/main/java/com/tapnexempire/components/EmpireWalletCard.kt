@@ -16,92 +16,91 @@ import androidx.compose.foundation.background
 @Composable
 fun EmpireWalletCard(
 
-    depositCoins: Long,
+depositCoins: Long,
 
-    withdrawableCoins: Long,
+withdrawableCoins: Long,
 
-    bonusCoins: Long
+bonusCoins: Long
+
 ) {
 
-    Card(
+Card(
+
+    modifier = Modifier.fillMaxWidth(),
+
+    shape = RoundedCornerShape(28.dp),
+
+    colors = CardDefaults.cardColors(
+        containerColor = Color.Transparent
+    ),
+
+    elevation = CardDefaults.cardElevation(
+        defaultElevation = 18.dp
+    )
+) {
+
+    Column(
 
         modifier = Modifier
-            .fillMaxWidth(),
 
-        shape = RoundedCornerShape(28.dp),
+            .background(
 
-        colors = CardDefaults.cardColors(
-            containerColor =
-                Color.Transparent
-        ),
+                brush = Brush.verticalGradient(
 
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 12.dp
-        )
-    ) {
+                    colors = listOf(
 
-        Column(
-
-            modifier = Modifier
-
-                .background(
-
-                    brush = Brush.verticalGradient(
-
-                        colors = listOf(
-
-                            Color(0xFF23262F),
-
-                            Color(0xFF16181D)
-                        )
+                        Color(0xFF081322),
+                        Color(0xFF102A43),
+                        Color(0xFF1565C0)
                     )
                 )
-
-                .padding(22.dp)
-        ) {
-
-            Text(
-
-                text = "👑 Empire Wallet",
-
-                color = Color.White,
-
-                fontSize = 22.sp
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            .padding(24.dp)
+    ) {
 
-            Text(
+        Text(
 
-                text = "💰 Deposit Coins: $depositCoins",
+            text = "👑 Empire Wallet",
 
-                color = Color(0xFFFFD54F),
+            color = Color.White,
 
-                fontSize = 18.sp
-            )
+            fontSize = 24.sp
+        )
 
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
+        Text(
 
-                text =
-                    "🏆 Withdrawable: $withdrawableCoins",
+            text = "💰 Deposit Coins: $depositCoins",
 
-                color = Color(0xFF81C784),
+            color = Color(0xFFFFE082),
 
-                fontSize = 18.sp
-            )
+            fontSize = 18.sp
+        )
 
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
+        Text(
 
-                text = "🎁 Bonus Coins: $bonusCoins",
+            text = "🏆 Withdrawable: $withdrawableCoins",
 
-                color = Color(0xFF64B5F6),
+            color = Color(0xFF80CBC4),
 
-                fontSize = 18.sp
-            )
-        }
+            fontSize = 18.sp
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+
+            text = "🎁 Bonus Coins: $bonusCoins",
+
+            color = Color(0xFF81D4FA),
+
+            fontSize = 18.sp
+        )
     }
+}
+
 }
