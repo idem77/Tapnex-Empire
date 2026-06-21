@@ -129,21 +129,7 @@ Box(
             modifier = Modifier.height(12.dp)
         )
 
-        // 🫅🏻 character 
-         Image(
-    painter = painterResource(
-        id = R.drawable.empire_immortal
-    ),
-    contentDescription = null,
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(520.dp),
-    contentScale = ContentScale.Fit
-)
-
-        Spacer(
-            modifier = Modifier.height(10.dp)
-        )
+  
 
         // 💎 CURRENT BUNDLE
         Card(
