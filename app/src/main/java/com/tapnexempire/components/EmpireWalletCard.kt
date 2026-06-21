@@ -24,7 +24,30 @@ bonusCoins: Long
 
 ) {
 
-Card(
+Card( 
+
+    Box(
+    modifier = Modifier.fillMaxWidth()
+) {
+
+    Image(
+        painter = painterResource(R.drawable.wallet_corner),
+        contentDescription = null,
+        modifier = Modifier
+            .size(120.dp)
+            .align(Alignment.TopStart)
+    )
+
+    Image(
+        painter = painterResource(R.drawable.wallet_corner),
+        contentDescription = null,
+        modifier = Modifier
+            .size(120.dp)
+            .align(Alignment.TopEnd)
+            .graphicsLayer {
+                scaleX = -1f
+            }
+    )
 
     modifier = Modifier.fillMaxWidth(),
 
