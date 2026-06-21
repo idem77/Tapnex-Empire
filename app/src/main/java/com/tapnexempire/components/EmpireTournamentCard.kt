@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,6 +39,7 @@ fun EmpireTournamentCard(
 
     Card(
 
+
 modifier = Modifier
     .fillMaxWidth()
     .padding(vertical = 8.dp),
@@ -50,6 +55,29 @@ elevation = CardDefaults.cardElevation(
 )
 
 ) {
+
+        Box(
+    modifier = Modifier.fillMaxWidth()
+) {
+
+    Image(
+        painter = painterResource(R.drawable.tournament_corner),
+        contentDescription = null,
+        modifier = Modifier
+            .size(120.dp)
+            .align(Alignment.TopStart)
+    )
+
+    Image(
+        painter = painterResource(R.drawable.tournament_corner),
+        contentDescription = null,
+        modifier = Modifier
+            .size(120.dp)
+            .align(Alignment.TopEnd)
+            .graphicsLayer {
+                scaleX = -1f
+            }
+    )
 
 Column(
 
