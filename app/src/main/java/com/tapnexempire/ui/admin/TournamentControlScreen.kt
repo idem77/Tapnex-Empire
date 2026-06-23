@@ -24,7 +24,11 @@ fun TournamentControlScreen(
     var tournaments by remember { mutableStateOf(listOf<com.google.firebase.firestore.DocumentSnapshot>()) }
 
     var title by remember { mutableStateOf("") }
+    var durationMinutes by remember {
+    mutableStateOf("30")
+    } 
     var fee by remember { mutableStateOf("") }
+    var maxPlayers by remember { mutableStateOf("") }
     var prize by remember { mutableStateOf("") }
     var maxPlayers by remember { mutableStateOf("") }
    
@@ -69,12 +73,26 @@ fun TournamentControlScreen(
     label = { Text("Max Players") }
 )
 
+      OutlinedTextField(
+
+    value = durationMinutes,
+
+    onValueChange = {
+        durationMinutes = it
+    },
+
+    label = {
+        Text("Duration Minutes")
+    }
+)
+        
         Button(onClick = {
             vm.createTournament(
                 title,
                 fee.toLongOrNull() ?: 0,
                 prize.toLongOrNull() ?: 0,
-                maxPlayers.toLongOrNull() ?: 0
+                maxPlayers.toLongOrNull() ?: 0,
+                durationMinutes.toLongOrNull() ?: 30
             )
         }) {
             Text("Create Tournament")
