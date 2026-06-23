@@ -37,8 +37,8 @@ class AdminViewModel : ViewModel()  {
         AdminLiveRepository.rejectWithdraw(withdrawId)
 
     // 🏆 TOURNAMENT
-    fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long ) =
-        AdminLiveRepository.createTournament(title, entryFee, prizePool, maxPlayers)
+    fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long, durationMinutes: Long ) =
+        AdminLiveRepository.createTournament(title, entryFee, prizePool, maxPlayers, durationMinutes)
 
     fun closeTournament(id: String) =
         AdminLiveRepository.closeTournament(id)
