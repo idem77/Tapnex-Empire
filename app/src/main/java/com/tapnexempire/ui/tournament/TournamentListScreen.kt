@@ -115,6 +115,8 @@ fun TournamentListScreen(
                         maxPlayers =
                             tournament.maxPlayers,
 
+                        endTime = tournament.endTime,
+
                         status =
                             tournament.status,
 
