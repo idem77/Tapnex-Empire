@@ -122,21 +122,41 @@ object AdminLiveRepository {
     // =========================
     // 🏆 TOURNAMENT CONTROL
     // =========================
+    fun createTournament(
+    title: String,
+    entryFee: Long,
+    prizePool: Long,
+    maxPlayers: Long,
+    durationMinutes: Long
+) {
 
-    fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long ) {
+    val id = db.collection("tournaments").document().id
 
-        val id = db.collection("tournaments").document().id
+    val startTime = System.currentTimeMillis()
 
-        db.collection("tournaments").document(id).set(
+    val endTime =
+        startTime + (durationMinutes * 60 * 1000)
+
+    db.collection("tournaments")
+        .document(id)
+        .set(
             mapOf(
                 "id" to id,
                 "title" to title,
                 "entryFee" to entryFee,
                 "prizePool" to prizePool,
-                "status" to "upcoming",
+
+                "status" to "ACTIVE",
+
                 "maxPlayers" to maxPlayers,
                 "joinedPlayers" to 0,
-                "createdAt" to System.currentTimeMillis()
+
+                "durationMinutes" to durationMinutes,
+
+                "startTime" to startTime,
+                "endTime" to endTime,
+
+                "createdAt" to startTime
             )
         )
     }
