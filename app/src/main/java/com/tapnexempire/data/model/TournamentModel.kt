@@ -8,5 +8,8 @@ data class TournamentModel(
     val maxPlayers: Long = 0,
     val joinedPlayers: Long = 0,
     val status: String = "UPCOMING",
+    val durationMinutes: Long = 0L,
+    val startTime: Long = 0L,
+    val endTime: Long = 0L,
     val createdAt: Long = System.currentTimeMillis()
 )
