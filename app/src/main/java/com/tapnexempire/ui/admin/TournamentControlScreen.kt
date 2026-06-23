@@ -20,7 +20,7 @@ fun TournamentControlScreen(
 ) {
 
     val db = FirebaseFirestore.getInstance()
-
+    var title by remember { mutableStateOf("") }
     var tournaments by remember { mutableStateOf(listOf<com.google.firebase.firestore.DocumentSnapshot>()) }
     var fee by remember { mutableStateOf("") }
     var prize by remember { mutableStateOf("") }
