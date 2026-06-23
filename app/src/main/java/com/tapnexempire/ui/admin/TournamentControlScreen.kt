@@ -23,9 +23,11 @@ fun TournamentControlScreen(
 
     var tournaments by remember { mutableStateOf(listOf<com.google.firebase.firestore.DocumentSnapshot>()) }
     var fee by remember { mutableStateOf("") }
-    var maxPlayers by remember { mutableStateOf("") }
     var prize by remember { mutableStateOf("") }
     var maxPlayers by remember { mutableStateOf("") }
+    var durationMinutes by remember {
+    mutableStateOf("30")
+    }
    
      
     // 🔥 LIVE TOURNAMENT STREAM
