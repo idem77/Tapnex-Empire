@@ -3,6 +3,8 @@ package com.tapnexempire.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,11 +35,36 @@ joinedPlayers: Long,
 
 maxPlayers: Long,
 
+endTime: Long,
+
 status: String,
 
 onJoin: () -> Unit
 
 ) {
+
+    var currentTime by remember {
+    mutableStateOf(System.currentTimeMillis())
+}
+
+LaunchedEffect(Unit) {
+
+    while (true) {
+
+        currentTime = System.currentTimeMillis()
+
+        kotlinx.coroutines.delay(1000)
+    }
+}
+
+val remainingMillis =
+    endTime - currentTime
+
+val remainingMinutes =
+    (remainingMillis / 1000 / 60)
+
+val remainingSeconds =
+    (remainingMillis / 1000) % 60
 
 Card(
 
@@ -132,6 +159,17 @@ Card(
 
             Spacer(modifier = Modifier.height(6.dp))
 
+              Text(
+
+    text =
+        if (remainingMillis > 0)
+            "⏳ ${remainingMinutes}m ${remainingSeconds}s Left"
+        else
+            "⏳ Tournament Finished",
+
+    color = Color(0xFFFFE082)
+)
+            
             Text(
                 text = "⚡ Status: $status",
                 color = Color(0xFF81D4FA)
