@@ -20,6 +20,19 @@ fun LeaderboardPlayerCard(
 
 ) {
 
+    val title = when(rank) {
+
+        1 -> "🌊 Ocean Emperor"
+
+        2 -> "⚡ Tide Master"
+
+        3 -> "🔥 Deep Sea Lord"
+
+        in 4..10 -> "🏆 Elite Challenger"
+
+        else -> "⭐ Empire Warrior"
+    }
+
     Card(
 
         modifier = Modifier.fillMaxWidth(),
@@ -30,29 +43,38 @@ fun LeaderboardPlayerCard(
                 Color(0xFF102A43)
 
         )
+
     ) {
 
-        Row(
+        Column(
 
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-
-            horizontalArrangement =
-                Arrangement.SpaceBetween
+                .padding(16.dp)
 
         ) {
 
             Text(
-                text = "#$rank"
+                text = "#$rank  $username",
+                color = Color.White
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
             )
 
             Text(
-                text = username
+                text = title,
+                color = Color(0xFF81D4FA)
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
             )
 
             Text(
-                text = "$points ⭐"
+                text = "🔥 Competing For Weekly Rewards",
+                color = Color(0xFFFFE082)
             )
         }
     }
