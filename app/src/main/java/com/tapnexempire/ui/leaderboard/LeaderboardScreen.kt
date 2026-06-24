@@ -142,6 +142,18 @@ Box(
                 )
 
                 Text(
+    text = "⚡ Final Rankings Revealed Every Sunday"
+)
+
+Text(
+    text = "🏆 Stay Active To Reach Top Positions"
+)
+
+Text(
+    text = "👑 Rewards Sent After Weekly Review"
+)
+
+                Text(
                     text = "#2 10,000 Coins",
                     color = EmpireWhite
                 )
