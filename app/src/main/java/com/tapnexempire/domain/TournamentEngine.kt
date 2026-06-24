@@ -7,113 +7,134 @@ object TournamentEngine {
 
 private val firestore = FirebaseFirestore.getInstance()
 
-fun runTournament(tournamentId: String) {
+    fun runTournament(tournamentId: String) {
 
-    val tournamentRef =
-        firestore.collection("tournaments")
-            .document(tournamentId)
+val tournamentRef =
+    firestore.collection("tournaments")
+        .document(tournamentId)
 
-    tournamentRef.get()
-        .addOnSuccessListener { tournamentSnap ->
+tournamentRef.get()
+    .addOnSuccessListener { tournamentSnap ->
 
-            val totalPool =
-                tournamentSnap.getLong("prizePool") ?: 0L
+        // ✅ Already completed protection
+        val status =
+            tournamentSnap.getString("status") ?: ""
 
-            val prizes =
-                PrizeCalculator.calculateTop10Prizes(totalPool)
+        if (status == "COMPLETED") {
+            return@addOnSuccessListener
+        }
 
-            tournamentRef.collection("participants")
-                .get()
-                .addOnSuccessListener { snapshot ->
+        val totalPool =
+            tournamentSnap.getLong("prizePool") ?: 0L
 
-                    val players =
-                        snapshot.documents.mapNotNull {
+        val prizes =
+            PrizeCalculator.calculateTop10Prizes(totalPool)
 
-                            val score =
-                                it.getLong("score")
+        tournamentRef.collection("participants")
+            .get()
+            .addOnSuccessListener { snapshot ->
 
-                            if (score != null)
-                                Pair(it.id, score)
-                            else
-                                null
-                        }
+                val players =
+                    snapshot.documents.mapNotNull {
 
-                    val sorted =
-                        players.sortedByDescending { it.second }
+                        val score =
+                            it.getLong("score")
 
-                    val topPlayers =
-                        sorted.take(minOf(10, sorted.size))
-
-                    val safePrizes =
-                        prizes.take(topPlayers.size)
-
-                    topPlayers.forEachIndexed { index, pair ->
-
-                        val userId = pair.first
-                        val reward =
-                            safePrizes.getOrElse(index) { 0L }
-
-                        val participantRef =
-                            tournamentRef
-                                .collection("participants")
-                                .document(userId)
-
-                        val walletRef =
-                            firestore.collection("wallets")
-                                .document(userId)
-
-                        firestore.runTransaction { transaction ->
-
-                            val participantSnap =
-                                transaction.get(participantRef)
-
-                            val alreadyRewarded =
-                                participantSnap.getBoolean("rewarded")
-                                    ?: false
-
-                            // 🏆 Rank
-                            transaction.update(
-                                participantRef,
-                                "rank",
-                                (index + 1).toLong()
-                            )
-
-                            // 💰 Reward only once
-                            if (!alreadyRewarded) {
-
-                                val walletSnap =
-                                    transaction.get(walletRef)
-
-                                val wallet =
-                                    walletSnap.toObject(
-                                        WalletModel::class.java
-                                    )
-                                        ?: return@runTransaction
-
-                                transaction.update(
-                                    walletRef,
-                                    "withdrawableCoins",
-                                    wallet.withdrawableCoins + reward
-                                )
-
-                                transaction.update(
-                                    participantRef,
-                                    "rewarded",
-                                    true
-                                )
-                            }
-                        }
+                        if (score != null)
+                            Pair(it.id, score)
+                        else
+                            null
                     }
 
-                    // 🏁 Complete tournament only once
+                // ✅ No players protection
+                if (players.isEmpty()) {
+
                     tournamentRef.update(
                         mapOf(
                             "status" to "COMPLETED",
                             "completedAt" to System.currentTimeMillis()
                         )
                     )
-                }
-        }
-}
 
-}
+                    return@addOnSuccessListener
+                }
+
+                val sorted =
+                    players.sortedByDescending { it.second }
+
+                val topPlayers =
+                    sorted.take(minOf(10, sorted.size))
+
+                val safePrizes =
+                    prizes.take(topPlayers.size)
+
+                topPlayers.forEachIndexed { index, pair ->
+
+                    val userId = pair.first
+
+                    val reward =
+                        safePrizes.getOrElse(index) { 0L }
+
+                    val participantRef =
+                        tournamentRef
+                            .collection("participants")
+                            .document(userId)
+
+                    val walletRef =
+                        firestore.collection("wallets")
+                            .document(userId)
+
+                    firestore.runTransaction { transaction ->
+
+                        val participantSnap =
+                            transaction.get(participantRef)
+
+                        val alreadyRewarded =
+                            participantSnap.getBoolean("rewarded")
+                                ?: false
+
+                        // 🏆 Save Rank
+                        transaction.update(
+                            participantRef,
+                            "rank",
+                            (index + 1).toLong()
+                        )
+
+                        // 💰 Reward only once
+                        if (!alreadyRewarded) {
+
+                            val walletSnap =
+                                transaction.get(walletRef)
+
+                            val wallet =
+                                walletSnap.toObject(
+                                    WalletModel::class.java
+                                )
+                                    ?: return@runTransaction
+
+                            transaction.update(
+                                walletRef,
+                                "withdrawableCoins",
+                                wallet.withdrawableCoins + reward
+                            )
+
+                            transaction.update(
+                                participantRef,
+                                "rewarded",
+                                true
+                            )
+                        }
+                    }
+                }
+
+                // ✅ Final Complete
+                tournamentRef.update(
+                    mapOf(
+                        "status" to "COMPLETED",
+                        "completedAt" to System.currentTimeMillis()
+                    )
+                )
+            }
+    }
+
+    }
