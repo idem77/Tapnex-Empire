@@ -23,6 +23,7 @@ import com.tapnexempire.ui.tournament.MyTournamentScreen
 import com.tapnexempire.ui.tournament.detail.TournamentDetailScreen
 import com.tapnexempire.ui.wallet.DepositScreen
 import com.tapnexempire.ui.profile.ProfileScreen
+import com.tapnexempire.ui.leaderboard.LeaderboardScreen
 import com.tapnexempire.ui.profile.EditProfileScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
@@ -64,6 +65,8 @@ object Routes {
     const val WITHDRAW = "withdraw"
 
     const val DEPOSIT = "deposit"
+
+    const val LEADERBOARD = "leaderboard"
 
     const val TRANSACTIONS = "transactions"
     
@@ -471,6 +474,16 @@ composable(
     EditProfileScreen(
         currentName = "",
         onSaveClick = {}
+    )
+          }
+
+          //leaderboard
+          composable(
+    Routes.LEADERBOARD
+) {
+
+    LeaderboardScreen(
+        navController = navController
     )
           }
          
