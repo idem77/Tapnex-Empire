@@ -287,6 +287,62 @@ Box(
             modifier = Modifier.height(18.dp)
         )
 
+        // 🌊 LEADERBOARD CARD
+
+Card(
+
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(95.dp)
+        .shadow(12.dp)
+        .clickable {
+
+            navController.navigate(
+                Routes.LEADERBOARD
+            )
+        },
+
+    colors = CardDefaults.cardColors(
+
+        containerColor =
+            Color(0xCC102A43)
+    )
+) {
+
+    Column(
+
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(18.dp),
+
+        verticalArrangement =
+            Arrangement.Center
+    ) {
+
+        Text(
+
+            text = "🌊 Ocean Leaderboard",
+
+            style =
+                MaterialTheme.typography.titleLarge,
+
+            color = Color.White
+        )
+
+        Spacer(
+            modifier = Modifier.height(4.dp)
+        )
+
+        Text(
+
+            text =
+                "Weekly Rankings & Empire Rewards 👑",
+
+            color = Color.LightGray
+        )
+    }
+}
+
       // 🫅🏻 Admin 
         if (isAdmin) {
 
