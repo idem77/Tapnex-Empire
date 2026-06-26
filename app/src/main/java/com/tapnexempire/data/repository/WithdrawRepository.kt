@@ -14,7 +14,6 @@ private val withdrawRef = firestore.collection("withdraw_requests")
 fun requestWithdraw(
     userId: String,
     coins: Long,
-    redeemCode: String,
     onResult: (Boolean, String) -> Unit
 ) {
 
