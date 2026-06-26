@@ -483,7 +483,6 @@ composable(
 ) {
 
     LeaderboardScreen(
-        navController = navController
     )
           }
          
