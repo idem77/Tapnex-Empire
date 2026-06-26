@@ -143,6 +143,73 @@ fun WalletScreen(
                             wallet.bonusCoins
                     )
 
+                    Card(
+
+    modifier = Modifier
+        .fillMaxWidth(),
+
+    colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surface
+    ),
+
+    elevation = CardDefaults.cardElevation(
+        defaultElevation = 8.dp
+    )
+) {
+
+    Column(
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp)
+
+    ) {
+
+        Text(
+            text = "⚡ Empire Processing Center",
+            color = EmpireGold,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        Text(
+            text = "💸 Withdraw Requests",
+            color = EmpireWhite
+        )
+
+        Text(
+            text = "Estimated Time: 24 - 48 Hours",
+            color = EmpireWhite.copy(alpha = 0.8f)
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        Text(
+            text = "🎁 Redeem Code Delivery",
+            color = EmpireWhite
+        )
+
+        Text(
+            text = "Estimated Time: 12 - 24 Hours",
+            color = EmpireWhite.copy(alpha = 0.8f)
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        Text(
+            text = "👑 Approved rewards and redeem codes will appear automatically in your account.",
+            color = EmpireGold
+        )
+    }
+                    }
+
                     // 💰 DEPOSIT BUTTON
                     AppButton(
 
