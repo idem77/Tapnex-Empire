@@ -83,7 +83,7 @@ fun requestWithdraw(
 
                 "amountRupees" to (coins / 10),
 
-                "redeemCode" to redeemCode,
+                "redeemCode" to "",
 
                 "status" to "pending",
 
