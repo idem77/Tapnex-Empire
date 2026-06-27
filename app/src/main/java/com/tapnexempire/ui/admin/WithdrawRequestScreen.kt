@@ -20,11 +20,28 @@ fun WithdrawRequestScreen(
         mutableStateOf(listOf<Map<String, Any>>())
     }
 
+    var redeemCode by remember {
+    mutableStateOf("")
+    }
+
     LaunchedEffect(Unit) {
         adminViewModel.listenWithdraws {
             withdraws = it
         }
     }
+
+    OutlinedTextField(
+
+    value = redeemCode,
+
+    onValueChange = {
+        redeemCode = it
+    },
+
+    label = {
+        Text("Redeem Code")
+    }
+)
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
 
@@ -51,7 +68,7 @@ fun WithdrawRequestScreen(
                         Row {
 
                             Button(onClick = {
-                                adminViewModel.approveWithdraw(userId, id, amount)
+                                adminViewModel.approveWithdraw(userId, id, amount, redeemCode)
                             }) {
                                 Text("Approve")
                             }
