@@ -8,13 +8,13 @@ import javax.inject.Inject
 
     fun requestWithdraw(
     userId: String,
-    amount: Long,
+    coins: Long,
     redeemCode: String,
     onResult: (Boolean, String) -> Unit
 ) {
     repository.requestWithdraw(
         userId = userId,
-        amount = amount,
+        coins = amount,
         redeemCode = redeemCode,
         onResult = onResult
     )
