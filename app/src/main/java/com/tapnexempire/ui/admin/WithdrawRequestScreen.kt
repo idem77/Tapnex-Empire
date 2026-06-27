@@ -67,12 +67,26 @@ fun WithdrawRequestScreen(
 
                         Row {
 
-                            Button(onClick = {
-                                adminViewModel.approveWithdraw(userId, id, amount, redeemCode)
-                            }) {
-                                Text("Approve")
-                            }
+                            Button(
 
+    enabled = currentCode.isNotBlank(),
+
+    onClick = {
+
+        adminViewModel.approveWithdraw(
+
+            userId = userId,
+
+            withdrawId = id,
+
+            coins = amount,
+
+            redeemCode = currentCode
+        )
+    }
+) {
+    Text("Approve")
+                            }
                             Spacer(Modifier.width(8.dp))
 
                             Button(onClick = {
