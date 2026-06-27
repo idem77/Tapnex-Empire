@@ -53,6 +53,7 @@ fun WithdrawRequestScreen(
                     Column(Modifier.padding(12.dp)) {
 
                         Text("User: $userId")
+                        Text("Coins: $amount")
 
                        Spacer(modifier = Modifier.height(8.dp))
 
