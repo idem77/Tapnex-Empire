@@ -416,8 +416,6 @@ composable(
 
                 coins = coins,
 
-                redeemCode = redeemCode
-
             ) { success, message ->
 
                 println(message)
