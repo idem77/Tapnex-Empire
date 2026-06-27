@@ -89,14 +89,21 @@ object AdminLiveRepository {
             }
     }
 
-    fun approveWithdraw(userId: String, withdrawId: String, coins: Long) {
+    fun approveWithdraw(userId: String, withdrawId: String, coins: Long,   redeemCode: String) {
 
         val withdrawRef = db.collection("withdraw_requests").document(withdrawId)
 
         db.runTransaction { tx ->
 
             // Only mark approved (NO coin deduction here)
-            tx.update(withdrawRef, "status", "approved")
+            tx.update(
+    withdrawRef,
+    mapOf(
+        "status" to "approved",
+        "redeemCode" to redeemCode,
+        "approvedAt" to System.currentTimeMillis()
+    )
+)
         }
 
         // Optional: log transaction
