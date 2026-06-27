@@ -41,7 +41,8 @@ fun WithdrawRequestScreen(
 
                 val userId = item["userId"]?.toString() ?: ""
                 val id = item["id"]?.toString() ?: ""
-                val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
+                val amount =
+    item["amountCoins"]?.toString()?.toLongOrNull() ?: 0L
                 val currentCode = redeemCodes[id] ?: ""
                 
                 Card(
