@@ -15,7 +15,7 @@ import javax.inject.Inject
     repository.requestWithdraw(
         userId = userId,
         amount = amount,
-        redeemCode = currentCode,
+        redeemCode = redeemCode,
         onResult = onResult
     )
   }
