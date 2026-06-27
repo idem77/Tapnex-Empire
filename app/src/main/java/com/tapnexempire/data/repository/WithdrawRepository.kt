@@ -13,7 +13,7 @@ private val withdrawRef = firestore.collection("withdraw_requests")
 
 fun requestWithdraw(
     userId: String,
-    amount: Long,
+    coins: Long,
     onResult: (Boolean, String) -> Unit
 ) {
 
