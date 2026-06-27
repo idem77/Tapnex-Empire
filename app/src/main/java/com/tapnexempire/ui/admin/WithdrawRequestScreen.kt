@@ -20,8 +20,8 @@ fun WithdrawRequestScreen(
         mutableStateOf(listOf<Map<String, Any>>())
     }
 
-    var redeemCode by remember {
-    mutableStateOf("")
+    val redeemCodes = remember {
+    mutableStateMapOf<String, String>()
     }
 
     LaunchedEffect(Unit) {
@@ -30,18 +30,6 @@ fun WithdrawRequestScreen(
         }
     }
 
-    OutlinedTextField(
-
-    value = redeemCode,
-
-    onValueChange = {
-        redeemCode = it
-    },
-
-    label = {
-        Text("Redeem Code")
-    }
-)
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
 
@@ -54,7 +42,8 @@ fun WithdrawRequestScreen(
                 val userId = item["userId"]?.toString() ?: ""
                 val id = item["id"]?.toString() ?: ""
                 val amount = item["amount"]?.toString()?.toLongOrNull() ?: 0L
-
+                val currentCode = redeemCodes[id] ?: ""
+                
                 Card(
                     Modifier
                         .fillMaxWidth()
@@ -64,6 +53,27 @@ fun WithdrawRequestScreen(
                     Column(Modifier.padding(12.dp)) {
 
                         Text("User: $userId")
+
+                       Spacer(modifier = Modifier.height(8.dp))
+
+OutlinedTextField(
+
+    value = currentCode,
+
+    onValueChange = {
+
+        redeemCodes[id] = it
+    },
+
+    label = {
+
+        Text("Redeem Code")
+    },
+
+    modifier = Modifier.fillMaxWidth()
+)
+
+Spacer(modifier = Modifier.height(10.dp)) 
 
                         Row {
 
