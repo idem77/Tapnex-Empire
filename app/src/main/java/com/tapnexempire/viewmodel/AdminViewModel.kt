@@ -30,8 +30,8 @@ class AdminViewModel : ViewModel()  {
     fun listenWithdraws(onUpdate: (List<Map<String, Any>>) -> Unit) =
         AdminLiveRepository.listenWithdraws(onUpdate)
 
-    fun approveWithdraw(userId: String, withdrawId: String, amount: Long, redeemCode: String) =
-        AdminLiveRepository.approveWithdraw(userId, withdrawId, amount, redeemCode)
+    fun approveWithdraw(userId: String, withdrawId: String, coins: Long, redeemCode: String) =
+        AdminLiveRepository.approveWithdraw(userId, withdrawId, coins, redeemCode)
 
     fun rejectWithdraw(withdrawId: String) =
         AdminLiveRepository.rejectWithdraw(withdrawId)
