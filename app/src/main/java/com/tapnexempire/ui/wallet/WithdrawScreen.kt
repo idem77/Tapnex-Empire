@@ -136,18 +136,7 @@ Box(
                     modifier = Modifier.height(16.dp)
                 )
 
-                redeemCode.isNotBlank()
-
-                    onValueChange = {
-                        redeemCode = it
-                    },
-
-                    label = {
-                        Text("Redeem Code / Gift Card")
-                    },
-
-                    modifier = Modifier.fillMaxWidth()
-                )
+                
 
                 Spacer(
                     modifier = Modifier.height(10.dp)
