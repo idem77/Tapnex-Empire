@@ -416,10 +416,7 @@ composable(
             withdrawViewModel.requestWithdraw(
 
                 userId = userId,
-
                 coins = coins,
-
-                rewardType = rewardType,
 
             ) { success, message ->
 
