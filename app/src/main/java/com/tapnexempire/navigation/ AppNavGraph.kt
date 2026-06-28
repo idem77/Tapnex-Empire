@@ -28,6 +28,7 @@ import com.tapnexempire.ui.profile.EditProfileScreen
 import com.tapnexempire.ui.wallet.TransactionHistoryScreen
 import com.tapnexempire.ui.wallet.WalletScreen
 import com.tapnexempire.ui.wallet.WithdrawScreen
+import com.tapnexempire.ui.wallet.MyWithdrawScreen
 import com.tapnexempire.viewmodel.WithdrawViewModel
 import com.tapnexempire.viewmodel.TournamentViewModel
 import com.tapnexempire.viewmodel.WalletViewModel
@@ -67,6 +68,8 @@ object Routes {
     const val DEPOSIT = "deposit"
 
     const val LEADERBOARD = "leaderboard"
+
+    const val MY_WITHDRAWS = "my_withdraws"
 
     const val TRANSACTIONS = "transactions"
     
@@ -425,6 +428,26 @@ composable(
         }
     )
          }
+
+        // my withdraw screen 
+          composable(Routes.MY_WITHDRAWS) {
+
+    MyWithdrawScreen(
+
+        userId = FirebaseAuth
+            .getInstance()
+            .currentUser
+            ?.uid ?: "",
+
+        onBack = {
+
+            navController.popBackStack()
+
+        }
+
+    )
+
+          }
 
             // my tournament rank 🏅
          composable(
