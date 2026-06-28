@@ -417,6 +417,7 @@ composable(
 
                 userId = userId,
                 coins = coins,
+             rewardType = rewardType,
 
             ) { success, message ->
 
