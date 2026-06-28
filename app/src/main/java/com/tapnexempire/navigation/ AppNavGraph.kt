@@ -416,6 +416,8 @@ composable(
 
                 coins = coins,
 
+                rewardType = rewardType,
+
             ) { success, message ->
 
                 println(message)
