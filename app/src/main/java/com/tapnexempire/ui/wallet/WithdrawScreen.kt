@@ -8,7 +8,7 @@ onBack: () -> Unit,
 
 onWithdraw: (
     coins: Long,
-    redeemType: String
+    rewardType: String
 ) -> Unit
 ) {
 var coinInput by remember {
