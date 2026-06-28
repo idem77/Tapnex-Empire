@@ -55,6 +55,9 @@ fun WithdrawRequestScreen(
 
                         Text("User: $userId")
                         Text("Amount: ₹${amount / 10}")
+                        Text(
+    text = "Reward : ${item["rewardType"] ?: "-"}"
+)
 
                        Spacer(modifier = Modifier.height(8.dp))
 
