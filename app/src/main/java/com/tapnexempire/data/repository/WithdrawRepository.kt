@@ -14,6 +14,7 @@ private val withdrawRef = firestore.collection("withdraw_requests")
 fun requestWithdraw(
     userId: String,
     coins: Long,
+    rewardType: String,
     onResult: (Boolean, String) -> Unit
 ) {
 
@@ -72,24 +73,18 @@ fun requestWithdraw(
             withdrawRef.document()
 
         transaction.set(
-            requestRef,
-            mapOf(
-                "id" to requestRef.id,
-
-                "userId" to userId,
-
-                "amountCoins" to coins,
-
-                "amountRupees" to (coins / 10),
-
-                "redeemCode" to "",
-
-                "status" to "pending",
-
-                "createdAt" to currentTime
-            )
-        )
-
+    requestRef,
+    mapOf(
+        "id" to requestRef.id,
+        "userId" to userId,
+        "amountCoins" to coins,
+        "amountRupees" to (coins / 10),
+        "rewardType" to rewardType,
+        "redeemCode" to "",
+        "status" to "pending",
+        "createdAt" to currentTime
+    )
+)
     }.addOnSuccessListener {
 
         onResult(
