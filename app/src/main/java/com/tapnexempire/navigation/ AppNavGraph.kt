@@ -411,13 +411,12 @@ composable(
             navController.popBackStack()
         },
 
-        onWithdraw = { coins, redeemCode ->
+        onWithdraw = { coins, rewardType ->
 
             withdrawViewModel.requestWithdraw(
 
                 userId = userId,
                 coins = coins,
-             rewardType = rewardType,
 
             ) { success, message ->
 
