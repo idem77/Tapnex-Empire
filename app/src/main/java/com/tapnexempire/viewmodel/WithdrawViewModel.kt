@@ -18,6 +18,8 @@ class WithdrawViewModel @Inject constructor(
 
         coins: Long,
 
+        rewardType: String,
+
         onResult: (Boolean, String) -> Unit
 
     ) {
@@ -27,6 +29,8 @@ class WithdrawViewModel @Inject constructor(
             userId = userId,
 
             coins = coins,
+
+            rewardType = rewardType,
 
             onResult = onResult
         )
