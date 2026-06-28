@@ -53,7 +53,9 @@ val rupees =
     coins / 10
 
 val isValid =
-    coins in 100..2000
+    coins in 100..2000 &&
+    rewardType.isNotBlank()
+    
 
 Box(
     modifier = Modifier.fillMaxSize()
@@ -252,6 +254,13 @@ Box(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+Text(
+    text = "Selected: $rewardType",
+    color = EmpireGold
+)
 
         Spacer(
             modifier = Modifier.height(24.dp)
