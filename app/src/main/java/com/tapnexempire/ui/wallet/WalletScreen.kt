@@ -236,6 +236,21 @@ fun WalletScreen(
                         }
                     )
 
+                   //🎁My withdraw screen 
+                    AppButton(
+
+    text = "🎁 My Rewards",
+
+    onClick = {
+
+        navController.navigate(
+            Routes.MY_WITHDRAWS
+        )
+
+    }
+
+)
+
                     // 📜 TRANSACTION BUTTON
                     AppButton(
 
