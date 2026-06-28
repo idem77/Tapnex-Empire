@@ -21,6 +21,7 @@ import com.tapnexempire.components.AppButton
 import com.tapnexempire.ui.theme.EmpireGold 
 import com.tapnexempire.ui.theme.EmpireWhite
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable fun WithdrawScreen(
 withdrawableCoins: Long,
 onBack: () -> Unit,
