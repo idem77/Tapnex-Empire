@@ -136,9 +136,7 @@ Box(
                     modifier = Modifier.height(16.dp)
                 )
 
-                OutlinedTextField(
-
-                    value = redeemCode,
+                redeemCode.isNotBlank()
 
                     onValueChange = {
                         redeemCode = it
@@ -177,7 +175,7 @@ Box(
 
                 onWithdraw(
                     coins,
-                    redeemCode
+                    rewardType
                 )
             }
         )
