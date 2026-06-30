@@ -24,11 +24,18 @@ tournamentRef.get()
             return@addOnSuccessListener
         }
 
-        val totalPool =
-            tournamentSnap.getLong("prizePool") ?: 0L
+        val entryFee =
+    tournamentSnap.getLong("entryFee") ?: 0L
 
-        val prizes =
-            PrizeCalculator.calculateTop10Prizes(totalPool)
+val joinedPlayers =
+    players.size.toLong()
+
+val totalPool =
+    entryFee * joinedPlayers
+
+val prizes =
+    PrizeCalculator.calculateTop10Prizes(totalPool)
+            
 
         tournamentRef.collection("participants")
             .get()
