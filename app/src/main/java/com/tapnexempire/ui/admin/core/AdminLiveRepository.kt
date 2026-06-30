@@ -168,14 +168,17 @@ object AdminLiveRepository {
         )
     }
 
-    fun closeTournament(id: String) {
+    fun closeTournament(
+    id: String,
+    onComplete: () -> Unit
+) {
 
     db.collection("tournaments")
         .document(id)
         .update("status", "closed")
         .addOnSuccessListener {
 
-            TournamentEngine.runTournament(id)
+            onComplete()
         }
     }
 
