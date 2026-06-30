@@ -117,9 +117,11 @@ fun TournamentControlScreen(
                             Button(
     onClick = {
 
-        vm.closeTournament(id)
+    vm.closeTournament(id) {
 
         TournamentEngine.runTournament(id)
+
+    }
     }
 ) {
     Text("🏆 Close & Process")
