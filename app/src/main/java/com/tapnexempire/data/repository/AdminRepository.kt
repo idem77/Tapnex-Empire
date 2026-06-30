@@ -38,8 +38,13 @@ class AdminRepository {
     fun createTournament(title: String, entryFee: Long, prizePool: Long, maxPlayers: Long, durationMinutes: Long ) =
         AdminLiveRepository.createTournament(title, entryFee, prizePool, maxPlayers, durationMinutes)
 
-    fun closeTournament(id: String) =
-        AdminLiveRepository.closeTournament(id)
+    fun closeTournament(
+    id: String,
+    onComplete: () -> Unit
+) {
+    AdminLiveRepository.closeTournament(id, onComplete)
+    }
+        
 
     fun deleteTournament(id: String) =
         AdminLiveRepository.deleteTournament(id)
