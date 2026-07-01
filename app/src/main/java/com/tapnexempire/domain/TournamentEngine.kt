@@ -24,7 +24,19 @@ tournamentRef.get()
             return@addOnSuccessListener
         }
 
-        val entryFee =
+        
+          val players =
+    snapshot.documents.mapNotNull {
+
+        val score =
+            it.getLong("score")
+
+        if (score != null)
+            Pair(it.id, score)
+        else
+            null
+    }
+      val entryFee =
     tournamentSnap.getLong("entryFee") ?: 0L
 
 val joinedPlayers =
@@ -35,7 +47,6 @@ val totalPool =
 
 val prizes =
     PrizeCalculator.calculateTop10Prizes(totalPool)
-            
 
         tournamentRef.collection("participants")
             .get()
