@@ -25,28 +25,6 @@ tournamentRef.get()
         }
 
         
-          val players =
-    snapshot.documents.mapNotNull {
-
-        val score =
-            it.getLong("score")
-
-        if (score != null)
-            Pair(it.id, score)
-        else
-            null
-    }
-      val entryFee =
-    tournamentSnap.getLong("entryFee") ?: 0L
-
-val joinedPlayers =
-    players.size.toLong()
-
-val totalPool =
-    entryFee * joinedPlayers
-
-val prizes =
-    PrizeCalculator.calculateTop10Prizes(totalPool)
 
         tournamentRef.collection("participants")
             .get()
@@ -63,6 +41,18 @@ val prizes =
                         else
                             null
                     }
+                    
+                    val entryFee =
+    tournamentSnap.getLong("entryFee") ?: 0L
+
+val joinedPlayers =
+    players.size.toLong()
+
+val totalPool =
+    entryFee * joinedPlayers
+
+val prizes =
+    PrizeCalculator.calculateTop10Prizes(totalPool)
 
                 // ✅ No players protection
                 if (players.isEmpty()) {
