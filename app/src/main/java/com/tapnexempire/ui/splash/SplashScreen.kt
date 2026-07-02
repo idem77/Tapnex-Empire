@@ -62,10 +62,10 @@ fun SplashScreen(navController: NavHostController) {
     contentDescription = "Tapnex Empire Splash",
 
     modifier = Modifier
-        .fillMaxSize()
+        .matchParentSize()
         .scale(scale.value),
 
-    contentScale = ContentScale.FillBounds
+    contentScale = ContentScale.Crop
 )
     }
 }
