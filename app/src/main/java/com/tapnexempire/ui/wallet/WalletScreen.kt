@@ -66,8 +66,8 @@ fun WalletScreen(
         Image(
             painter = painterResource(id = R.drawable.wallet_bg),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            modifier = Modifier.Modifier.matchParentSize(),
+            contentScale = ContentScale.Crop
         )
 
         when (state) {
