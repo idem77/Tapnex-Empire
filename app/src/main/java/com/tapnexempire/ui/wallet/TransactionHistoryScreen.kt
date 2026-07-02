@@ -49,9 +49,9 @@ fun TransactionHistoryScreen(
 
             contentDescription = null,
 
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.Modifier.matchParentSize(),
 
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop
         )
 
         Column(
