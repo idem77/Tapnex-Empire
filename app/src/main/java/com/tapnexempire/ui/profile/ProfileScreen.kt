@@ -30,7 +30,7 @@ fun ProfileScreen(
         Image(
             painter = painterResource(id = R.drawable.profile_bg), // make sure this exists
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
         )
 
