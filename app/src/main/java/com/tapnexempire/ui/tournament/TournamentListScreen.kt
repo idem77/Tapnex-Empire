@@ -51,7 +51,7 @@ fun TournamentListScreen(
 
         // 👑 BACKGROUND
         Image(
-            painter = painterResource(id = R.drawable.empire_bg),
+            painter = painterResource(id = R.drawable.tournament_bg),
             contentDescription = null,
             modifier = Modifier.Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
