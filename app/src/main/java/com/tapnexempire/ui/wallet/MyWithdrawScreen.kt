@@ -48,7 +48,7 @@ fun MyWithdrawScreen(
 
             contentDescription = null,
 
-            modifier = Modifier.Modifier.matchParentSize(),
+            modifier = Modifier.matchParentSize(),
 
             contentScale = ContentScale.Crop
         )
