@@ -53,7 +53,7 @@ fun TournamentListScreen(
         Image(
             painter = painterResource(id = R.drawable.tournament_bg),
             contentDescription = null,
-            modifier = Modifier.Modifier.matchParentSize(),
+            modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
         )
 
