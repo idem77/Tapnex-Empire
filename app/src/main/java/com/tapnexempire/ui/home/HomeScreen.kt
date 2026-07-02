@@ -74,7 +74,7 @@ Box(
 
         contentDescription = null,
 
-        modifier = Modifier.matchParentSize
+        modifier = Modifier.matchParentSize(),
 
         contentScale = ContentScale.Crop,
 
