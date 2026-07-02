@@ -74,9 +74,9 @@ Box(
 
         contentDescription = null,
 
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.matchParentSize
 
-        contentScale = ContentScale.FillHeight,
+        contentScale = ContentScale.Crop,
 
         alignment = Alignment.Center
     )
