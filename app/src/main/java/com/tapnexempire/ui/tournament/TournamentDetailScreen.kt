@@ -68,7 +68,7 @@ LaunchedEffect(tournamentId) {
             painter = painterResource(id = R.drawable.empire_bg),
             contentDescription = null,
             modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.crop
+            contentScale = ContentScale.Crop
         )
 
         Column(
