@@ -81,7 +81,7 @@ Box(
     Image(
         painter = painterResource(id = R.drawable.wallet_bg),
         contentDescription = null,
-        modifier = Modifier.Modifier.matchParentSize(),
+        modifier = Modifier.matchParentSize(),
         contentScale = ContentScale.Crop
     )
 
