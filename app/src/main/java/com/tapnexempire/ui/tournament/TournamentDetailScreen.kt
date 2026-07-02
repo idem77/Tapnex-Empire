@@ -67,8 +67,8 @@ LaunchedEffect(tournamentId) {
         Image(
             painter = painterResource(id = R.drawable.empire_bg),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            modifier = Modifier.Modifier.matchParentSize,
+            contentScale = ContentScale.crop
         )
 
         Column(
