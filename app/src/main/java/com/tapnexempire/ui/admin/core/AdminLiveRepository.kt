@@ -113,9 +113,11 @@ object AdminLiveRepository {
             .add(
                 mapOf(
                     "type" to "WITHDRAW",
-                    "amount" to coins,
-                    "status" to "SUCCESS",
-                    "createdAt" to System.currentTimeMillis()
+"coins" to coins,
+"amount" to (coins / 10),
+"status" to "SUCCESS",
+"description" to "Withdraw Approved",
+"createdAt" to System.currentTimeMillis()
                 )
             )
     }
@@ -228,25 +230,48 @@ object AdminLiveRepository {
             .update("rank", rank)
     }
 
-    fun rewardUser(tournamentId: String, userId: String, coins: Long) {
+    fun rewardUser(
+    tournamentId: String,
+    userId: String,
+    coins: Long
+) {
 
-        val ref = db.collection("tournaments")
-            .document(tournamentId)
-            .collection("participants")
-            .document(userId)
+    val ref = db.collection("tournaments")
+        .document(tournamentId)
+        .collection("participants")
+        .document(userId)
 
-        db.runTransaction { tx ->
+    db.runTransaction { tx ->
 
-            val snap = tx.get(ref)
-            val rewarded = snap.getBoolean("rewarded") ?: false
+        val snap = tx.get(ref)
+        val rewarded = snap.getBoolean("rewarded") ?: false
 
-            if (!rewarded) {
-                tx.update(ref, "rewarded", true)
-            }
+        if (!rewarded) {
+            tx.update(ref, "rewarded", true)
         }
+    }
 
-        db.collection("wallets")
-            .document(userId)
-            .update("withdrawableCoins", FieldValue.increment(coins))
+    // ✅ Add Winning Coins
+    db.collection("wallets")
+        .document(userId)
+        .update(
+            "withdrawableCoins",
+            FieldValue.increment(coins)
+        )
+
+    // ✅ Save Transaction History
+    db.collection("transactions")
+        .document(userId)
+        .collection("history")
+        .add(
+            mapOf(
+                "type" to "WIN",
+                "coins" to coins,
+                "amount" to (coins / 10),
+                "status" to "SUCCESS",
+                "description" to "Tournament Reward",
+                "createdAt" to System.currentTimeMillis()
+            )
+        )
     }
 }
