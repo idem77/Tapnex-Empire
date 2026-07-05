@@ -31,8 +31,8 @@ fun AppButton(
         enabled = enabled,
 
         modifier = modifier
-            .fillMaxWidth()
-            .height(58.dp),
+            .fillMaxWidth(0.90f)
+            .height(52.dp),
 
         shape = RoundedCornerShape(18.dp),
 
