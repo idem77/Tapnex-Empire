@@ -127,14 +127,27 @@ Card(
                     )
                 )
 
-                .padding(22.dp)
+                .padding(20.dp)
         ) {
 
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 22.sp
-            )
+            Row(
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically
+) {
+
+    Text(
+        text = title,
+        color = Color.White,
+        fontSize = 22.sp,
+        modifier = Modifier.weight(1f)
+    )
+
+    Image(
+        painter = painterResource(R.drawable.empire_king),
+        contentDescription = null,
+        modifier = Modifier.size(52.dp)
+    )
+            }
 
             Spacer(modifier = Modifier.height(14.dp))
 
