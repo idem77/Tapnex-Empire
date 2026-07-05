@@ -145,7 +145,7 @@ Card(
     Image(
         painter = painterResource(R.drawable.empire_king),
         contentDescription = null,
-        modifier = Modifier.size(52.dp)
+        modifier = Modifier.size(48.dp)
     )
             }
 
@@ -196,18 +196,18 @@ Card(
 
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(52.dp),
 
-                shape = RoundedCornerShape(18.dp),
+                shape = RoundedCornerShape(20.dp),
 
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4FC3F7)
+                    containerColor = Color(0xFF1E88E5)
                 )
             ) {
 
                 Text(
                     text = "Join Tournament",
-                    color = Color.Black,
+                    color = Color.White,
                     fontSize = 16.sp
                 )
             }
