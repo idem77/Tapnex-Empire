@@ -39,10 +39,10 @@ fun AppButton(
         colors = ButtonDefaults.buttonColors(
 
             containerColor =
-                Color(0xFFFFC107),
+                ButtonBackground,
 
             contentColor =
-                Color.Black,
+                ButtonTextColor,
 
             disabledContainerColor =
                 Color.Gray
