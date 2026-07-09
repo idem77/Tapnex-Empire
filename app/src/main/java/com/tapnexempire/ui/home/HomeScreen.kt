@@ -125,24 +125,6 @@ Box(
             fontSize = 16.sp
         )
 
-        Spacer(
-            modifier = Modifier.height(12.dp)
-        )
-
-  
-
-        // 💎 CURRENT BUNDLE
-        Card(
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(85.dp),
-
-            colors = CardDefaults.cardColors(
-
-                containerColor =
-                    Color(0xCC15171D)
-            )
         ) {
 
             Column(
