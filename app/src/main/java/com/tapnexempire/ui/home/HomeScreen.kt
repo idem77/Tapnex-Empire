@@ -123,9 +123,10 @@ Box(
             color = EmpireGold,
 
             fontSize = 16.sp
-        ),
+        )
 
-        ) {
+        )
+    }      {
 
             Column(
 
