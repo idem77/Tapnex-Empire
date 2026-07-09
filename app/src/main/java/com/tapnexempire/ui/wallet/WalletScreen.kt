@@ -264,6 +264,18 @@ fun WalletScreen(
 
         )
 
+        HorizontalDivider(
+    color = Color.White.copy(alpha = 0.10f)
+)
+
+Spacer(modifier = Modifier.height(8.dp))
+
+Text(
+    text = "⚡ Processing times may vary during special events or high traffic periods. This helps the Empire maintain secure, fair and reliable service for every member.",
+    color = Color(0xFF8EDFFF),
+    style = MaterialTheme.typography.bodySmall
+)
+
     }
 
                     }
