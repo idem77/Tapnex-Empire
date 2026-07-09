@@ -1,16 +1,16 @@
 package com.tapnexempire.navigation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Task
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Task
 import androidx.compose.material3.Icon
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -25,12 +25,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 data class BottomNavItem(
-
     val route: String,
-
-    val icon:
-        androidx.compose.ui.graphics.vector.ImageVector,
-
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val label: String
 )
 
@@ -40,66 +36,58 @@ fun BottomNavBar(
 ) {
 
     val items = listOf(
-
         BottomNavItem(
             Routes.HOME,
             Icons.Default.Home,
             "Home"
         ),
-
         BottomNavItem(
             Routes.TOURNAMENTS,
             Icons.Default.EmojiEvents,
             "Battle"
         ),
-
         BottomNavItem(
             Routes.TASKS,
             Icons.Default.Task,
             "Tasks"
         ),
-
         BottomNavItem(
             Routes.WALLET,
             Icons.Default.AccountBalanceWallet,
             "Wallet"
         ),
-
-    BottomNavItem(
-    Routes.PROFILE,
-    Icons.Default.Person,
-    "Profile"
-)
+        BottomNavItem(
+            Routes.PROFILE,
+            Icons.Default.Person,
+            "Profile"
+        )
     )
 
-    val navBackStackEntry by
-        navController.currentBackStackEntryAsState()
-
-    val currentRoute =
-        navBackStackEntry?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
 
         modifier = Modifier
-    .height(80.dp)
-    .navigationBarsPadding()
-    .clip(
-        RoundedCornerShape(
-            topStart = 28.dp,
-            topEnd = 28.dp
-        )
-    ),
+            .padding(horizontal = 14.dp, vertical = 10.dp)
+            .height(72.dp)
+            .navigationBarsPadding()
+            .clip(
+                RoundedCornerShape(
+                    topStart = 32.dp,
+                    topEnd = 32.dp
+                )
+            ),
 
-        containerColor =
-            Color(0xFF12141A),
+        containerColor = Color(0xEE0B1220),
 
-        tonalElevation = 12.dp
+        tonalElevation = 18.dp
+
     ) {
 
         items.forEach { item ->
 
-            val selected =
-                currentRoute == item.route
+            val selected = currentRoute == item.route
 
             NavigationBarItem(
 
@@ -109,13 +97,15 @@ fun BottomNavBar(
 
                     if (currentRoute != item.route) {
 
-                        navController.navigate(
-                            item.route
-                        ) {
+                        navController.navigate(item.route) {
 
                             popUpTo(navController.graph.startDestinationId)
 
                             launchSingleTop = true
+
+                            restoreState = true
+
+                            saveState = true
                         }
                     }
                 },
@@ -123,11 +113,10 @@ fun BottomNavBar(
                 icon = {
 
                     Icon(
-
                         imageVector = item.icon,
-
                         contentDescription = item.label
                     )
+
                 },
 
                 label = {
@@ -135,27 +124,29 @@ fun BottomNavBar(
                     Text(
                         text = item.label
                     )
+
                 },
 
-                colors =
-                    NavigationBarItemDefaults.colors(
+                alwaysShowLabel = false,
 
-                        selectedIconColor =
-                            Color(0xFF00D1FF),
+                colors = NavigationBarItemDefaults.colors(
 
-                        selectedTextColor =
-                            Color(0xFF00D1FF),
+                    selectedIconColor = Color(0xFFFFD54F),
 
-                        unselectedIconColor =
-                            Color.LightGray,
+                    selectedTextColor = Color(0xFFFFD54F),
 
-                        unselectedTextColor =
-                            Color.LightGray,
+                    unselectedIconColor = Color(0xFFBFC6D1),
 
-                        indicatorColor =
-                            Color(0x2200D1FF)
-                    )
+                    unselectedTextColor = Color(0xFFBFC6D1),
+
+                    indicatorColor = Color(0x33FFD54F)
+
+                )
+
             )
+
         }
+
     }
+
 }
