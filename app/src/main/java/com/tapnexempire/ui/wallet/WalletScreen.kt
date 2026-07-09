@@ -8,6 +8,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -145,71 +149,124 @@ fun WalletScreen(
 
                     Card(
 
-    modifier = Modifier
-        .fillMaxWidth(),
+    modifier = Modifier.fillMaxWidth(),
+
+    shape = RoundedCornerShape(24.dp),
 
     colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = Color(0xCC173650)
+    ),
+
+    border = BorderStroke(
+        1.dp,
+        Color(0x3362D9FF)
     ),
 
     elevation = CardDefaults.cardElevation(
-        defaultElevation = 8.dp
+        defaultElevation = 10.dp
     )
+
 ) {
 
     Column(
 
         modifier = Modifier
             .fillMaxWidth()
-            .padding(18.dp)
+            .padding(20.dp),
+
+        verticalArrangement = Arrangement.spacedBy(14.dp)
 
     ) {
 
         Text(
-            text = "⚡ Empire Processing Center",
-            color = EmpireGold,
-            style = MaterialTheme.typography.titleMedium
-        )
 
-        Spacer(
-            modifier = Modifier.height(12.dp)
-        )
+            text = "👑 Empire Control Center",
 
-        Text(
-            text = "💸 Withdraw Requests",
-            color = EmpireWhite
+            color = Color(0xFF62D9FF),
+
+            style = MaterialTheme.typography.titleLarge
+
         )
 
         Text(
-            text = "Estimated Time: 24 - 48 Hours",
-            color = EmpireWhite.copy(alpha = 0.8f)
+
+            text = "Every reward, withdrawal and redeem request is securely managed by the Empire. Our systems continuously verify and process every request to ensure a safe and trusted experience.",
+
+            color = Color(0xFFD9F4FF),
+
+            style = MaterialTheme.typography.bodyMedium
+
         )
 
-        Spacer(
-            modifier = Modifier.height(12.dp)
+        HorizontalDivider(
+            color = Color.White.copy(alpha = 0.10f)
+        )
+
+        Column {
+
+            Text(
+
+                text = "💸 Withdraw Requests",
+
+                color = Color.White,
+
+                style = MaterialTheme.typography.titleSmall
+
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+
+                text = "Estimated Processing Time • 24–48 Hours",
+
+                color = Color(0xFFD9F4FF)
+
+            )
+
+        }
+
+        Column {
+
+            Text(
+
+                text = "🎁 Reward & Redeem Delivery",
+
+                color = Color.White,
+
+                style = MaterialTheme.typography.titleSmall
+
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+
+                text = "Estimated Delivery Time • 12–24 Hours",
+
+                color = Color(0xFFD9F4FF)
+
+            )
+
+        }
+
+        HorizontalDivider(
+            color = Color.White.copy(alpha = 0.10f)
         )
 
         Text(
-            text = "🎁 Redeem Code Delivery",
-            color = EmpireWhite
+
+            text = "🛡️ Empire Security protects every transaction. Once approved, your rewards, redeem codes and withdrawals will be delivered automatically to your Empire account.",
+
+            color = Color(0xFF9FE7FF),
+
+            style = MaterialTheme.typography.bodyMedium
+
         )
 
-        Text(
-            text = "Estimated Time: 12 - 24 Hours",
-            color = EmpireWhite.copy(alpha = 0.8f)
-        )
-
-        Spacer(
-            modifier = Modifier.height(12.dp)
-        )
-
-        Text(
-            text = "👑 Approved rewards and redeem codes will appear automatically in your account.",
-            color = EmpireGold
-        )
     }
-                    }
 
+                    }
                     // 💰 DEPOSIT BUTTON
                     AppButton(
 
