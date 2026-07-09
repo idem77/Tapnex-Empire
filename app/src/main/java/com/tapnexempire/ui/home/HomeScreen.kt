@@ -125,8 +125,7 @@ Box(
             fontSize = 16.sp
         )
 
-        )
-    }      {
+        {
 
             Column(
 
