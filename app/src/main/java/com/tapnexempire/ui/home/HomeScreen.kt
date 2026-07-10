@@ -126,27 +126,7 @@ Box(
             fontSize = 16.sp
         )
 
-        {
-
-            Column(
-
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-
-                verticalArrangement =
-                    Arrangement.Center
-            ) {
-
-                Text(
-
-                    text =
-                        characterState.selectedBundle.title,
-
-                    color = Color.White
-                )
-            }
-        }
+    
 
         Spacer(
             modifier = Modifier.height(18.dp)
