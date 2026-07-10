@@ -114,6 +114,7 @@ Box(
         Spacer(
             modifier = Modifier.height(8.dp)
         )
+    )
 
         Text(
 
