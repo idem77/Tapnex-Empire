@@ -145,7 +145,7 @@ Card(
     Image(
         painter = painterResource(R.drawable.empire_king),
         contentDescription = null,
-        modifier = Modifier.size(58.dp)
+        modifier = Modifier.size(72.dp)
     )
             }
 
