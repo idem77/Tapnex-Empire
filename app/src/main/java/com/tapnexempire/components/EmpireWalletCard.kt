@@ -60,7 +60,7 @@ Card(
             painter = painterResource(R.drawable.wallet_corner),
             contentDescription = null,
             modifier = Modifier
-                .size(120.dp)
+                .size(116.dp)
                 .align(Alignment.TopEnd)
                 .graphicsLayer {
                     scaleX = -1f
