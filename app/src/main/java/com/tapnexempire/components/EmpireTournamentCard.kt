@@ -91,7 +91,7 @@ Card(
             painter = painterResource(R.drawable.tournament_corner),
             contentDescription = null,
             modifier = Modifier
-                .size(120.dp)
+                .size(116.dp)
                 .align(Alignment.TopStart)
         )
 
@@ -145,7 +145,7 @@ Card(
     Image(
         painter = painterResource(R.drawable.empire_king),
         contentDescription = null,
-        modifier = Modifier.size(48.dp)
+        modifier = Modifier.size(58.dp)
     )
             }
 
