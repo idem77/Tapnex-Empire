@@ -99,13 +99,11 @@ fun BottomNavBar(
 
                         navController.navigate(item.route) {
 
-                            popUpTo(navController.graph.startDestinationId)
+    popUpTo(navController.graph.startDestinationId)
 
-                            launchSingleTop = true
+    launchSingleTop = true
 
-                            restoreState = true
-
-                            saveState = true
+    restoreState = true
                         }
                     }
                 },
