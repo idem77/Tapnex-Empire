@@ -91,7 +91,7 @@ Card(
             painter = painterResource(R.drawable.tournament_corner),
             contentDescription = null,
             modifier = Modifier
-                .size(116.dp)
+                .size(108.dp)
                 .align(Alignment.TopStart)
         )
 
