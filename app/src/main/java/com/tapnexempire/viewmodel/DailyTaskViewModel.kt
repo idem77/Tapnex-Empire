@@ -25,6 +25,12 @@ class DailyTaskViewModel @Inject constructor(
     private val _message =
     MutableStateFlow("")
 
+    private val _isLoading =
+    MutableStateFlow(false)
+
+val isLoading: StateFlow<Boolean> =
+    _isLoading
+    
 val message: StateFlow<String> =
     _message
 
