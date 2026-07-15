@@ -1,4 +1,4 @@
-package com.tapnexempire.admin.task
+package com.tapnexempire.admin
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
