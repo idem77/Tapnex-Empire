@@ -38,23 +38,21 @@ class DailyTaskViewModel @Inject constructor(
 
     }
 
-
-
     fun checkAnswer(
-        userAnswer: String,
-        correctAnswer: String
-    ): Boolean {
+    userAnswer: String,
+    correctAnswer: String
+): Boolean {
 
+    val user = userAnswer
+        .trim()
+        .replace("\\s+".toRegex(), " ")
+        .lowercase()
 
-        return userAnswer
-            .trim()
-            .lowercase()
-            ==
-            correctAnswer
-                .trim()
-                .lowercase()
+    val answer = correctAnswer
+        .trim()
+        .replace("\\s+".toRegex(), " ")
+        .lowercase()
 
+    return user == answer
     }
-
-
 }
