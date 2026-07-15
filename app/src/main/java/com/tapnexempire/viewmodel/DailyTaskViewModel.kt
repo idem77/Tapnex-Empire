@@ -1,4 +1,4 @@
-package com.tapnexempire.viewmodel.task
+package com.tapnexempire.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
