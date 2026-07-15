@@ -22,19 +22,40 @@ class DailyTaskViewModel @Inject constructor(
             emptyList()
         )
 
+    private val _message =
+    MutableStateFlow("")
+
+val message: StateFlow<String> =
+    _message
+
     val tasks: StateFlow<List<DailyTaskModel>> =
         _tasks
 
 
 
-    fun loadTasks(){
+    fun loadTasks() {
 
-        viewModelScope.launch {
+    viewModelScope.launch {
+
+        try {
+
+            _isLoading.value = true
 
             _tasks.value =
                 repository.getDailyTasks()
 
+        } catch (e: Exception) {
+
+            _message.value =
+                e.message ?: "Unknown Error"
+
+        } finally {
+
+            _isLoading.value = false
+
         }
+
+    }
 
     }
 
