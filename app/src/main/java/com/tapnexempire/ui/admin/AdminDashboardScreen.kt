@@ -66,6 +66,43 @@ fun AdminDashboardScreen(navController: NavHostController) {
             onClick = { navController.navigate("bundle_control") }
         )
 
+        // 🧑🏻‍💻Taskedit
+        Button(
+
+    onClick = {
+
+        navController.navigate(
+            "admin_task_list"
+        )
+
+    }
+
+) {
+
+    Text(
+        "📚 Daily Tasks"
+    )
+
+        }
+
+        Button(
+
+    onClick = {
+
+        navController.navigate(
+            "admin_create_task"
+        )
+
+    }
+
+) {
+
+    Text(
+        "➕ Create Daily Task"
+    )
+
+        }
+
         // 🧍 CHARACTER
         AdminCard(
             title = "Character Control",
