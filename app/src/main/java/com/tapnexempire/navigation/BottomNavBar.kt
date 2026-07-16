@@ -48,7 +48,7 @@ fun BottomNavBar(
         ),
         BottomNavItem(
             Routes.DAILYTASKS,
-            Icons.Default.DailyTask,
+            Icons.Default.Task,
             "DailyTasks"
         ),
         BottomNavItem(
