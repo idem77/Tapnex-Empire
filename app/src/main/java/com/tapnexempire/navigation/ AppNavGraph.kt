@@ -39,6 +39,8 @@ import com.tapnexempire.ui.admin.TournamentControlScreen
 import com.tapnexempire.ui.admin.BundleControlScreen
 import com.tapnexempire.ui.admin.CharacterControlScreen
 import com.tapnexempire.ui.admin.EventControlScreen
+import com.tapnexempire.ui.admin.AdminTaskListScreen
+import com.tapnexempire.ui.admin.AdminCreateTaskScreen
 import com.tapnexempire.ui.admin.UserManagementScreen
 
 object Routes {
