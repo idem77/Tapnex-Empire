@@ -289,7 +289,7 @@ composable("character_control") {
 }
 
 //🧑🏻‍💻Taskedit
-composable(ADMIN_TASK_LIST) {
+composable(Routes.ADMIN_TASK_LIST) {
 
     AdminTaskListScreen(
 
@@ -303,7 +303,7 @@ composable(ADMIN_TASK_LIST) {
 
 }
 
-composable(ADMIN_CREATE_TASK) {
+composable(Routes.ADMIN_CREATE_TASK) {
 
     AdminCreateTaskScreen()
 
