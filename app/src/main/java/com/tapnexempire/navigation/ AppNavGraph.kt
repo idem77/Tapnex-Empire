@@ -13,7 +13,7 @@ import com.tapnexempire.ui.auth.LoginScreen
 import com.tapnexempire.ui.auth.SignupScreen
 import com.tapnexempire.ui.home.HomeScreen
 import com.tapnexempire.ui.splash.SplashScreen
-import com.tapnexempire.ui.task.TaskScreen
+import com.tapnexempire.ui.task.DailyTaskScreen
 import com.tapnexempire.ui.tournament.TournamentListScreen
 import com.tapnexempire.ui.admin.TournamentParticipantsScreen
 import com.tapnexempire.ui.game.GameScreen
@@ -53,7 +53,7 @@ object Routes {
 
     const val WALLET = "wallet"
 
-    const val TASKS = "tasks"
+    const val DAILYTASKS = "dailytasks"
 
     const val PROFILE = "profile"
 
@@ -212,9 +212,9 @@ composable(Routes.HOME) {
         }
 
         // 🔹 Tasks
-        composable(Routes.TASKS) {
+        composable(Routes.DAILYTASKS) {
 
-            TaskScreen()
+            DailyTaskScreen()
         }
 
           //🧸Equipment screen 
