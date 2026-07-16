@@ -214,8 +214,13 @@ composable(Routes.HOME) {
         // 🔹 Tasks
         composable(Routes.DAILYTASKS) {
 
-            DailyTaskScreen()
+            DailyTaskScreen(
+    onWatchVideo = { youtubeLink ->
+        // YouTube screen ya browser open karna
+    }
+)
         }
+        
 
           //🧸Equipment screen 
             composable(
