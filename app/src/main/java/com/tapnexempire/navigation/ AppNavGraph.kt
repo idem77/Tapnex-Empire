@@ -100,6 +100,10 @@ const val TOURNAMENT_CONTROL =
 const val BUNDLE_CONTROL =
 "bundle_control"
 
+const val ADMIN_TASK_LIST = "admin_task_list"
+    
+const val ADMIN_CREATE_TASK = "admin_create_task"
+
 const val CHARACTER_CONTROL =
 "character_control"
 
@@ -280,6 +284,27 @@ composable("bundle_control") {
 composable("character_control") {
 
     CharacterControlScreen()
+}
+
+//🧑🏻‍💻Taskedit
+composable(ADMIN_TASK_LIST) {
+
+    AdminTaskListScreen(
+
+        onEditClick = { taskId ->
+
+            // Future Edit Screen
+
+        }
+
+    )
+
+}
+
+composable(ADMIN_CREATE_TASK) {
+
+    AdminCreateTaskScreen()
+
 }
         
 
