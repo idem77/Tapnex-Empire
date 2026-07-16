@@ -48,8 +48,8 @@ fun BottomNavBar(
         ),
         BottomNavItem(
             Routes.TASKS,
-            Icons.Default.Task,
-            "Tasks"
+            Icons.Default.DailyTask,
+            "DailyTasks"
         ),
         BottomNavItem(
             Routes.WALLET,
