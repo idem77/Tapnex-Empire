@@ -12,28 +12,24 @@ class WalletRepository @Inject constructor(
 
     private val walletRef = firestore.collection("wallets")
 
-    // 👀 Real-time wallet listener
-    fun listenToWallet(userId: String, onChange: (WalletModel?) -> Unit) {
 
-        println("🔥 TRYING DOC ID 👉 [$userId]")
+    fun listenToWallet(
+        userId: String,
+        onChange: (WalletModel?) -> Unit
+    ) {
 
         walletRef.document(userId)
             .addSnapshotListener { snapshot, error ->
 
                 if (error != null) {
-                    println("❌ FIRESTORE ERROR 👉 ${error.message}")
                     onChange(null)
                     return@addSnapshotListener
                 }
-                
 
                 if (snapshot != null && snapshot.exists()) {
-                    println("✅ DOCUMENT FOUND")
 
                     val data = snapshot.data
-                    println("📦 RAW DATA 👉 $data")
 
-                    // 🔥 SAFE MANUAL PARSING (NO toObject())
                     val wallet = WalletModel(
                         userId = data?.get("userId") as? String ?: "",
                         depositCoins = (data?.get("depositCoins") as? Long) ?: 0,
@@ -43,39 +39,37 @@ class WalletRepository @Inject constructor(
                         lastWithdrawDate = (data?.get("lastWithdrawDate") as? Long) ?: 0
                     )
 
-                suspend fun addBonusCoins(
-    userId: String,
-    coins: Long
-): Result<Unit> {
-
-    return try {
-
-        walletRef
-            .document(userId)
-            .update(
-                "bonusCoins",
-                FieldValue.increment(coins)
-            )
-            .await()
-
-        Result.success(Unit)
-
-    } catch (e: Exception) {
-
-        Result.failure(e)
-
-    }
-
-                }
-
-                    println("💰 PARSED WALLET 👉 $wallet")
-
                     onChange(wallet)
 
                 } else {
-                    println("❌ DOCUMENT NOT FOUND")
                     onChange(null)
                 }
             }
+    }
+
+
+    // 👇 YE FUNCTION YAHAN HOGA
+    suspend fun addBonusCoins(
+        userId: String,
+        coins: Long
+    ): Result<Unit> {
+
+        return try {
+
+            walletRef
+                .document(userId)
+                .update(
+                    "bonusCoins",
+                    FieldValue.increment(coins)
+                )
+                .await()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+
+            Result.failure(e)
+
+        }
     }
 }
