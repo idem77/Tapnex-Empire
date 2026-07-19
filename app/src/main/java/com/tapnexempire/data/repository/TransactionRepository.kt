@@ -9,6 +9,7 @@ class TransactionRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
+
     fun listenToTransactions(
         userId: String,
         onChange: (List<TransactionModel>) -> Unit
@@ -20,83 +21,102 @@ class TransactionRepository @Inject constructor(
             .orderBy("createdAt")
             .addSnapshotListener { snapshot, error ->
 
+
                 if (error != null || snapshot == null) {
 
                     println("❌ Transaction Listener Error")
 
                     onChange(emptyList())
+
                     return@addSnapshotListener
                 }
 
-                val transactions = snapshot.documents.mapNotNull { doc ->
 
-                    try {
+                val transactions =
+                    snapshot.documents.mapNotNull { doc ->
 
-                        TransactionModel(
+                        try {
 
-                            id =
-                                doc.getString("id") ?: "",
+                            TransactionModel(
 
-                            userId =
-                                doc.getString("userId") ?: "",
+                                id = doc.getString("id") ?: "",
 
-                            type =
-                                doc.getString("type") ?: "",
+                                userId =
+                                    doc.getString("userId") ?: "",
 
-                            amount =
-                                (doc.getLong("amount") ?: 0).toInt(),
+                                type =
+                                    doc.getString("type") ?: "",
 
-                            coins =
-                                (doc.getLong("coins") ?: 0).toInt(),
+                                amount =
+                                    (doc.getLong("amount") ?: 0)
+                                        .toInt(),
 
-                            status =
-                                doc.getString("status") ?: "",
+                                coins =
+                                    (doc.getLong("coins") ?: 0)
+                                        .toInt(),
 
-                            description =
-                                doc.getString("description") ?: "",
+                                status =
+                                    doc.getString("status") ?: "",
 
-                            createdAt =
-                                doc.getTimestamp("createdAt")
-                                    ?.toDate()
-                                    ?.time ?: 0
-                        )
+                                description =
+                                    doc.getString("description")
+                                        ?: "",
 
-                    } catch (e: Exception) {
+                                createdAt =
+                                    doc.getLong("createdAt")
+                                        ?: 0
 
-                        e.printStackTrace()
-                        null
+                            )
+
+                        } catch (e: Exception) {
+
+                            e.printStackTrace()
+
+                            null
+                        }
                     }
-                }
 
-                println("✅ Transactions Loaded: ${transactions.size}")
+
+                println(
+                    "✅ Transactions Loaded: ${transactions.size}"
+                )
+
 
                 onChange(transactions)
+
             }
-    }
-
-            suspend fun addTransaction(
-    transaction: TransactionModel
-): Result<Unit> {
-
-    return try {
-
-        firestore
-            .collection("transactions")
-            .document(transaction.userId)
-            .collection("history")
-            .document(transaction.id)
-            .set(transaction)
-            .await()
-
-        Result.success(Unit)
-
-    } catch (e: Exception) {
-
-        Result.failure(e)
 
     }
 
-     }
-  }
 
 
+    suspend fun addTransaction(
+        transaction: TransactionModel
+    ): Result<Unit> {
+
+
+        return try {
+
+
+            firestore
+                .collection("transactions")
+                .document(transaction.userId)
+                .collection("history")
+                .document(transaction.id)
+                .set(transaction)
+                .await()
+
+
+            Result.success(Unit)
+
+
+        } catch (e: Exception) {
+
+
+            Result.failure(e)
+
+        }
+
+    }
+
+}
