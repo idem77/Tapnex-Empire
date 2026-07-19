@@ -2,6 +2,8 @@ package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.model.WalletModel
+import com.google.firebase.firestore.FieldValue
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class WalletRepository @Inject constructor(
@@ -51,3 +53,28 @@ class WalletRepository @Inject constructor(
             }
     }
 }
+
+   suspend fun addBonusCoins(
+    userId: String,
+    coins: Long
+): Result<Unit> {
+
+    return try {
+
+        walletRef
+            .document(userId)
+            .update(
+                "bonusCoins",
+                FieldValue.increment(coins)
+            )
+            .await()
+
+        Result.success(Unit)
+
+    } catch (e: Exception) {
+
+        Result.failure(e)
+
+    }
+
+   }
