@@ -25,8 +25,25 @@ class WalletRepository @Inject constructor(
                     onChange(null)
                     return@addSnapshotListener
                 }
+                
 
-                  suspend fun addBonusCoins(
+                if (snapshot != null && snapshot.exists()) {
+                    println("✅ DOCUMENT FOUND")
+
+                    val data = snapshot.data
+                    println("📦 RAW DATA 👉 $data")
+
+                    // 🔥 SAFE MANUAL PARSING (NO toObject())
+                    val wallet = WalletModel(
+                        userId = data?.get("userId") as? String ?: "",
+                        depositCoins = (data?.get("depositCoins") as? Long) ?: 0,
+                        bonusCoins = (data?.get("bonusCoins") as? Long) ?: 0,
+                        withdrawableCoins = (data?.get("withdrawableCoins") as? Long) ?: 0,
+                        dailyWithdrawnCoins = (data?.get("dailyWithdrawnCoins") as? Long) ?: 0,
+                        lastWithdrawDate = (data?.get("lastWithdrawDate") as? Long) ?: 0
+                    )
+
+                suspend fun addBonusCoins(
     userId: String,
     coins: Long
 ): Result<Unit> {
@@ -49,24 +66,7 @@ class WalletRepository @Inject constructor(
 
     }
 
-                  }
-                  
-
-                if (snapshot != null && snapshot.exists()) {
-                    println("✅ DOCUMENT FOUND")
-
-                    val data = snapshot.data
-                    println("📦 RAW DATA 👉 $data")
-
-                    // 🔥 SAFE MANUAL PARSING (NO toObject())
-                    val wallet = WalletModel(
-                        userId = data?.get("userId") as? String ?: "",
-                        depositCoins = (data?.get("depositCoins") as? Long) ?: 0,
-                        bonusCoins = (data?.get("bonusCoins") as? Long) ?: 0,
-                        withdrawableCoins = (data?.get("withdrawableCoins") as? Long) ?: 0,
-                        dailyWithdrawnCoins = (data?.get("dailyWithdrawnCoins") as? Long) ?: 0,
-                        lastWithdrawDate = (data?.get("lastWithdrawDate") as? Long) ?: 0
-                    )
+                }
 
                     println("💰 PARSED WALLET 👉 $wallet")
 
