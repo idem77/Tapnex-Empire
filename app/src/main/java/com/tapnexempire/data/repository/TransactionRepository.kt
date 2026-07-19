@@ -2,6 +2,7 @@ package com.tapnexempire.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tapnexempire.data.model.TransactionModel
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
@@ -72,4 +73,30 @@ class TransactionRepository @Inject constructor(
                 onChange(transactions)
             }
     }
-}
+
+            suspend fun addTransaction(
+    transaction: TransactionModel
+): Result<Unit> {
+
+    return try {
+
+        firestore
+            .collection("transactions")
+            .document(transaction.userId)
+            .collection("history")
+            .document(transaction.id)
+            .set(transaction)
+            .await()
+
+        Result.success(Unit)
+
+    } catch (e: Exception) {
+
+        Result.failure(e)
+
+    }
+
+     }
+  }
+
+
