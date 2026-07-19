@@ -26,6 +26,32 @@ class WalletRepository @Inject constructor(
                     return@addSnapshotListener
                 }
 
+                  suspend fun addBonusCoins(
+    userId: String,
+    coins: Long
+): Result<Unit> {
+
+    return try {
+
+        walletRef
+            .document(userId)
+            .update(
+                "bonusCoins",
+                FieldValue.increment(coins)
+            )
+            .await()
+
+        Result.success(Unit)
+
+    } catch (e: Exception) {
+
+        Result.failure(e)
+
+    }
+
+                  }
+                  
+
                 if (snapshot != null && snapshot.exists()) {
                     println("✅ DOCUMENT FOUND")
 
@@ -53,28 +79,3 @@ class WalletRepository @Inject constructor(
             }
     }
 }
-
-   suspend fun addBonusCoins(
-    userId: String,
-    coins: Long
-): Result<Unit> {
-
-    return try {
-
-        walletRef
-            .document(userId)
-            .update(
-                "bonusCoins",
-                FieldValue.increment(coins)
-            )
-            .await()
-
-        Result.success(Unit)
-
-    } catch (e: Exception) {
-
-        Result.failure(e)
-
-    }
-
-   }
