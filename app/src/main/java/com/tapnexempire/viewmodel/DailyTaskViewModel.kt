@@ -66,6 +66,8 @@ val message: StateFlow<String> =
             _isLoading.value = false
 
         }
+    }
+    }
 
     fun checkAnswer(
     userAnswer: String,
