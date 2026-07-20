@@ -10,6 +10,7 @@ import java.util.UUID
 import com.tapnexempire.data.repository.DailyTaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -65,10 +66,6 @@ val message: StateFlow<String> =
             _isLoading.value = false
 
         }
-
-    }
-
-    }
 
     fun checkAnswer(
     userAnswer: String,
