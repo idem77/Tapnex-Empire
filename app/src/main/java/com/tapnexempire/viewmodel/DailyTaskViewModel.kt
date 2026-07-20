@@ -86,7 +86,6 @@ val message: StateFlow<String> =
 
     return user == answer
     }
-}
 
 fun submitAnswer(
     userId: String,
