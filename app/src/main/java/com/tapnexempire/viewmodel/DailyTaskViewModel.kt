@@ -154,3 +154,5 @@ fun submitAnswer(
                 "❌ Reward Failed"
 
         }
+    }
+}
